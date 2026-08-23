@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import io, os
-FILES=["plate","bowl","mug","glass","teapot","spoon","cutlery","tray","vase","candle","ribbon","letter","box","pear"]
-KO={"plate":"접시","bowl":"볼","mug":"머그","glass":"잔","teapot":"주전자","spoon":"수저","cutlery":"포크와 나이프","tray":"트레이","vase":"화병과 꽃","candle":"초","ribbon":"리본 매듭","letter":"편지","box":"선물 상자","pear":"배"}
+FILES=["plate","bowl","mug","glass","teapot","spoon","cutlery","tray","flower","candle","ribbon","letter","box","pear"]
+KO={"plate":"접시","bowl":"볼","mug":"머그","glass":"잔","teapot":"주전자","spoon":"수저","cutlery":"포크와 나이프","tray":"트레이","flower":"꽃","candle":"초","ribbon":"리본 매듭","letter":"편지","box":"선물 상자","pear":"배"}
 d=os.path.dirname(os.path.abspath(__file__))
 svg={f:io.open(os.path.join(d,"motif-%s.svg"%f),encoding="utf-8").read() for f in FILES}
 CH=[("turtle","거북이"),("turtle-gift","선물을 진 거북이"),("turtle-small","작은 거북이")]

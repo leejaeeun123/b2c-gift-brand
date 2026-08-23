@@ -10,7 +10,7 @@
 """
 import math, random, io, os
 
-W = 2.6                # 기본 획 두께
+W = 6.2                # 기본 획 두께 — 마커펜
 SEED = 20260823
 
 def catmull(points, closed=False, samples=8):
@@ -31,7 +31,7 @@ def catmull(points, closed=False, samples=8):
             out.append((x, y))
     return out
 
-def wobble(pts, rng, amp=0.34, freq=0.045, phase=None):
+def wobble(pts, rng, amp=0.95, freq=0.028, phase=None):
     """손떨림 — 사인 노이즈 2겹. 난수는 위상만 흔든다(형태는 유지)."""
     ph1 = rng.uniform(0, 6.28) if phase is None else phase
     ph2 = rng.uniform(0, 6.28)
@@ -79,163 +79,149 @@ def arc(cx, cy, rx, ry, a0, a1, n=18):
 
 # ---- 모티프 정의: (파일명, 한글명, 스트로크 리스트) --------------------------
 # 스트로크 = dict(pts=점열, closed=bool, w=두께배수, gap=열린정도, smooth=bool)
-def S(pts, closed=False, w=1.0, gap=0.0, smooth=True):
-    return dict(pts=pts, closed=closed, w=w, gap=gap, smooth=smooth)
+def S(pts, closed=False, w=1.0, gap=0.0, smooth=True, amp=0.95, solid=False):
+    return dict(pts=pts, closed=closed, w=w, gap=gap, smooth=smooth, amp=amp, solid=solid)
+
+def DOT(x, y, r=3.2):
+    """찍는 점 — 눈, 껍질 무늬"""
+    return dict(dot=(x, y, r))
 
 def motifs():
     M = []
-    # 1 접시
+    # 1 접시 — 테두리 물결 + 가운데 점
     M.append(("plate", "접시", [
-        S(ellipse(50, 52, 36, 36, squash=0.62), closed=True, gap=0.04),
-        S(ellipse(50, 53, 23, 23, squash=0.58), closed=True, w=0.8, gap=0.03),
+        S(ellipse(50, 50, 37, 37, squash=0.80), closed=True),
+        S(ellipse(50, 50, 27, 27, squash=0.78), closed=True, w=0.6, amp=1.4),
     ]))
     # 2 볼
     M.append(("bowl", "볼", [
-        S(ellipse(50, 38, 32, 32, squash=0.34), closed=True, gap=0.05),
-        S(arc(50, 39, 32, 34, 0.05, math.pi-0.05)),
-        S([(41,71),(50,73),(59,71)], w=0.8),
+        S([(16,38),(20,62),(34,76),(50,79),(66,76),(80,62),(84,38)]),
+        S(ellipse(50, 38, 34, 34, squash=0.26), closed=True, w=0.85),
     ]))
     # 3 머그
     M.append(("mug", "머그", [
-        S(ellipse(45, 32, 22, 22, squash=0.36), closed=True, gap=0.05),
-        S([(23,32),(24,52),(28,68),(45,73),(62,68),(66,52),(67,32)]),
-        S(arc(70, 46, 13, 13, -1.25, 1.25), w=0.9),
+        S([(22,30),(24,58),(32,74),(50,78),(68,74),(76,58),(78,30)]),
+        S(ellipse(50, 30, 28, 28, squash=0.30), closed=True, w=0.9),
+        S([(78,42),(90,44),(92,56),(80,60)], w=0.9),
     ]))
     # 4 잔
     M.append(("glass", "잔", [
-        S(ellipse(50, 22, 20, 20, squash=0.32), closed=True, gap=0.05),
-        S([(30,23),(34,50),(37,73)]),
-        S([(70,23),(66,50),(63,73)]),
-        S([(37,73),(50,76),(63,73)], w=0.9),
-        S([(33,44),(50,47),(67,44)], w=0.7),
+        S([(26,24),(32,56),(38,78),(50,80),(62,78),(68,56),(74,24)]),
+        S(ellipse(50, 24, 24, 24, squash=0.30), closed=True, w=0.9),
     ]))
     # 5 주전자
     M.append(("teapot", "주전자", [
-        S(ellipse(46, 58, 25, 23, squash=1.0), closed=True, gap=0.05),
-        S([(68,50),(80,44),(88,34)], w=0.95),
-        S([(88,34),(84,44)], w=0.9),
-        S([(34,38),(46,34),(58,38)], w=0.85),
-        S([(40,34),(46,26),(52,34)], w=0.85),
-        S(arc(24, 58, 13, 15, 1.5, 4.6), w=0.9),
+        S(ellipse(46, 58, 27, 25, squash=1.0), closed=True),
+        S([(70,48),(84,42),(90,30)], w=0.9),
+        S([(34,34),(46,28),(58,34)], w=0.85),
+        S([(20,52),(8,58),(16,72),(26,74)], w=0.9),
     ]))
     # 6 수저
     M.append(("spoon", "수저", [
-        S(ellipse(34, 26, 12, 12, squash=1.35, tilt=0.12), closed=True, gap=0.05),
-        S([(34,42),(35,62),(35,80)]),
-        S([(58,18),(60,80)], w=0.85, smooth=False),
-        S([(70,18),(70,80)], w=0.85, smooth=False),
+        S(ellipse(31, 27, 16, 16, squash=1.25), closed=True, w=0.9),
+        S([(31,47),(32,84)]),
+        S([(58,16),(60,82)], w=0.85, smooth=False),
+        S([(72,16),(72,82)], w=0.85, smooth=False),
     ]))
     # 7 포크와 나이프
     M.append(("cutlery", "포크와 나이프", [
-        S([(30,16),(30,34)], w=0.8, smooth=False),
-        S([(38,16),(38,34)], w=0.8, smooth=False),
-        S([(46,16),(46,34)], w=0.8, smooth=False),
-        S(arc(38, 34, 9, 7, math.pi, 2*math.pi), w=0.9),
-        S([(38,40),(38,84)]),
-        S([(68,16),(76,26),(74,44),(68,48)], w=0.95),
-        S([(68,48),(68,84)]),
+        S([(28,14),(28,30)], w=0.8, smooth=False),
+        S([(38,14),(38,30)], w=0.8, smooth=False),
+        S([(48,14),(48,30)], w=0.8, smooth=False),
+        S([(28,30),(38,38),(48,30)], w=0.9),
+        S([(38,38),(38,86)]),
+        S([(68,14),(78,26),(76,46),(68,50)], w=0.95),
+        S([(68,50),(68,86)]),
     ]))
     # 8 트레이
     M.append(("tray", "트레이", [
-        S([(24,34),(76,34),(80,42),(80,62),(76,68),(24,68),(20,62),(20,42)], closed=True, gap=0.03, smooth=False),
-        S([(20,46),(12,46),(12,56),(20,56)], w=0.85, smooth=False),
-        S([(80,46),(88,46),(88,56),(80,56)], w=0.85, smooth=False),
-        S([(27,41),(73,41)], w=0.7, smooth=False),
+        S([(22,32),(78,32),(82,44),(82,62),(78,70),(22,70),(18,62),(18,44)], closed=True, smooth=False),
+        S([(18,48),(8,50),(9,60),(18,58)], w=0.85, smooth=False),
+        S([(82,48),(92,50),(91,60),(82,58)], w=0.85, smooth=False),
     ]))
-    # 9 화병과 꽃
-    M.append(("vase", "화병과 꽃", [
-        S([(36,46),(33,66),(38,80),(50,83),(62,80),(67,66),(64,46)]),
-        S([(36,46),(50,50),(64,46)], w=0.85),
-        S([(50,50),(51,28)], w=0.9),
-        S(ellipse(51, 20, 9, 9, squash=0.9), closed=True, gap=0.06, w=0.9),
-        S([(51,34),(63,26)], w=0.8),
-        S(ellipse(66, 23, 5, 5, squash=0.9), closed=True, gap=0.08, w=0.8),
+    # 9 꽃 — 화병+꽃은 굵은 선에서 목이 뭉개져 전구처럼 읽혀 폐기. 꽃 한 송이로 단순화.
+    petals = []
+    for i in range(10):
+        r = 23 if i % 2 == 0 else 9.5
+        ang = -math.pi/2 + 2*math.pi*i/10
+        petals.append((50 + r*math.cos(ang), 33 + r*math.sin(ang)))
+    M.append(("flower", "꽃", [
+        S(petals, closed=True, w=0.95, amp=0.6),
+        DOT(50, 33, 5.0),
+        S([(50,52),(51,88)]),
+        S(ellipse(36, 66, 11, 11, squash=0.45, tilt=0.35), closed=True, w=0.8),
+        S(ellipse(65, 74, 11, 11, squash=0.45, tilt=-0.35), closed=True, w=0.8),
     ]))
     # 10 초
     M.append(("candle", "초", [
-        S([(38,44),(38,82),(62,82),(62,44)], closed=False),
-        S(ellipse(50, 44, 12, 12, squash=0.32), closed=True, gap=0.06, w=0.9),
-        S([(50,40),(44,30),(50,16),(56,29),(50,40)], w=0.95),
+        S([(36,44),(36,84),(64,84),(64,44)]),
+        S(ellipse(50, 44, 14, 14, squash=0.30), closed=True, w=0.9),
+        S([(50,38),(41,26),(50,12),(59,25),(50,38)], w=0.95),
     ]))
     # 11 리본 매듭
     M.append(("ribbon", "리본 매듭", [
-        S([(46,48),(28,36),(18,44),(26,58),(46,52)], closed=True, gap=0.05),
-        S([(54,48),(72,36),(82,44),(74,58),(54,52)], closed=True, gap=0.05),
-        S(ellipse(50, 50, 6, 6, squash=1.0), closed=True, gap=0.07, w=0.9),
-        S([(47,56),(40,76)], w=0.9),
-        S([(54,56),(62,74)], w=0.9),
+        S([(44,48),(24,34),(12,44),(22,60),(44,54)], closed=True),
+        S([(56,48),(76,34),(88,44),(78,60),(56,54)], closed=True),
+        S([(46,58),(38,80)], w=0.9),
+        S([(55,58),(64,78)], w=0.9),
+        DOT(50, 51, 5.0),
     ]))
     # 12 편지
     M.append(("letter", "편지", [
-        S([(18,32),(82,32),(82,72),(18,72)], closed=True, gap=0.03, smooth=False),
-        S([(18,32),(50,54),(82,32)], w=0.9, smooth=False),
+        S([(14,30),(86,30),(86,74),(14,74)], closed=True, smooth=False),
+        S([(14,30),(50,56),(86,30)], w=0.9, smooth=False),
     ]))
     # 13 선물 상자
     M.append(("box", "선물 상자", [
-        S([(20,40),(80,40),(80,80),(20,80)], closed=True, gap=0.03, smooth=False),
-        S([(50,40),(50,80)], w=0.85, smooth=False),
-        S([(20,52),(80,52)], w=0.85, smooth=False),
-        S([(50,40),(36,26),(28,32),(50,40)], w=0.9),
-        S([(50,40),(64,25),(72,32),(50,40)], w=0.9),
+        S([(16,40),(84,40),(84,84),(16,84)], closed=True, smooth=False),
+        S([(50,40),(50,84)], w=0.8, smooth=False),
+        S([(16,54),(84,54)], w=0.8, smooth=False),
+        S([(50,40),(34,24),(26,32),(50,40)], w=0.9),
+        S([(50,40),(66,23),(74,31),(50,40)], w=0.9),
     ]))
     # 14 배
     M.append(("pear", "배", [
-        S([(50,26),(38,36),(32,52),(38,72),(50,78),(62,72),(68,52),(62,36),(50,26)], closed=True, gap=0.04),
-        S([(50,25),(53,14)], w=0.9),
-        S([(53,16),(66,17)], w=0.8),
+        S([(50,24),(36,36),(28,56),(36,78),(50,84),(64,78),(72,56),(64,36),(50,24)], closed=True),
+        S([(50,25),(55,11)], w=0.9),
+        S(ellipse(64, 14, 9, 9, squash=0.45, tilt=-0.35), closed=True, w=0.8),
     ]))
     return M
 
 def characters():
     """거북이 — 행운을 등에 지고 천천히 간다"""
-    def poly(cx, cy, r, n=6, rot=0.0, squash=1.0):
-        return [(cx + r*math.cos(rot + 2*math.pi*i/n),
-                 cy + r*math.sin(rot + 2*math.pi*i/n)*squash) for i in range(n)]
-
-    dome  = [(22,60),(25,45),(35,34),(50,31),(65,34),(75,45),(78,60)]
-    belly = [(24,61),(78,61)]
-    # 목과 머리를 한 획으로 — 머리가 붙어 있어야 사탕처럼 안 보인다
-    head  = [(75,54),(84,49),(92,52),(94,59),(88,64),(78,63)]
-    eye   = [(87,55),(88,55)]
-    legF  = [(64,61),(66,73),(76,74)]
-    legB  = [(37,61),(31,73),(22,74)]
-    tail  = [(22,58),(13,62),(17,65)]
-    band  = [(26,49),(50,45),(74,49)]
-    div1  = [(37,36),(35,49)]
-    div2  = [(50,32),(50,45)]
-    div3  = [(63,36),(65,49)]
+    dome  = [(18,62),(22,42),(33,29),(50,25),(67,29),(78,42),(82,62)]
+    belly = [(20,63),(82,63)]
+    head  = [(84,58),(90,50),(97,54),(96,64),(88,68),(81,65)]
+    legF  = [(64,63),(65,76),(74,78)]
+    legB  = [(36,63),(31,76),(22,78)]
+    tail  = [(19,60),(9,64),(15,69)]
+    dots  = [DOT(36,44,4.2), DOT(52,38,4.6), DOT(66,46,4.0), DOT(50,55,3.8)]
 
     C = []
     C.append(("turtle", "거북이", [
         S(dome), S(belly, w=0.85, smooth=False),
-        S(head, w=0.95), S(eye, w=1.25, smooth=False),
-        S(legF, w=0.95), S(legB, w=0.95), S(tail, w=0.8),
-        S(band, w=0.7), S(div1, w=0.65), S(div2, w=0.65), S(div3, w=0.65),
-    ]))
+        S(head, w=0.9), DOT(90, 57, 2.6),
+        S(legF, w=0.95), S(legB, w=0.95), S(tail, w=0.85),
+    ] + dots))
 
-    dy = 4
+    dy = 6
     sh = lambda pts: [(x, y+dy) for x, y in pts]
     C.append(("turtle-gift", "선물을 진 거북이", [
         S(sh(dome)), S(sh(belly), w=0.85, smooth=False),
-        S(sh(head), w=0.95), S(sh(eye), w=1.25, smooth=False),
-        S(sh(legF), w=0.95), S(sh(legB), w=0.95), S(sh(tail), w=0.8),
-        S(sh(band), w=0.7),
-        S([(39,37),(61,37),(61,22),(39,22)], closed=True, gap=0.03, smooth=False, w=0.9),
-        S([(50,37),(50,22)], w=0.7, smooth=False),
-        S([(39,29),(61,29)], w=0.7, smooth=False),
-        S([(50,22),(42,13),(37,18),(50,22)], w=0.8),
-        S([(50,22),(58,12),(63,17),(50,22)], w=0.8),
+        S(sh(head), w=0.9), DOT(90, 63, 2.6),
+        S(sh(legF), w=0.95), S(sh(legB), w=0.95), S(sh(tail), w=0.85),
+        DOT(38,52,4.0), DOT(66,54,3.8),
+        S([(38,34),(62,34),(62,16),(38,16)], closed=True, smooth=False, w=0.85),
+        S([(50,34),(50,16)], w=0.7, smooth=False),
+        S([(50,16),(40,7),(34,13),(50,16)], w=0.8),
+        S([(50,16),(60,6),(66,12),(50,16)], w=0.8),
     ]))
 
-    # 작은 자리용 — 위에서 본 등껍질은 거미줄·구명튜브로 읽혀 폐기.
-    # 옆모습에서 껍질 무늬와 꼬리를 빼고 선을 줄인 것이 24px에서 더 잘 읽힌다.
+    # 작은 자리용 — 점무늬와 꼬리를 빼고 선을 줄인다
     C.append(("turtle-small", "작은 거북이", [
-        S([(24,60),(27,44),(37,33),(50,30),(63,33),(73,44),(77,60)]),
-        S([(26,61),(77,61)], w=0.9, smooth=False),
-        S([(74,54),(84,49),(92,52),(94,59),(88,64),(77,63)], w=1.0),
-        S([(87,55),(88,55)], w=1.35, smooth=False),
-        S([(63,61),(65,73),(74,74)], w=1.0),
-        S([(38,61),(32,73),(23,74)], w=1.0),
+        S(dome), S(belly, w=0.9, smooth=False),
+        S(head, w=0.95), DOT(90, 57, 3.0),
+        S(legF, w=1.0), S(legB, w=1.0),
     ]))
     return C
 
@@ -251,16 +237,24 @@ def build(outdir="."):
         rng = random.Random(SEED + sum(ord(c) for c in name))
         body = []
         for st in strokes:
+            if "dot" in st:
+                x, y, r = st["dot"]
+                body.append('  <circle cx="%.1f" cy="%.1f" r="%.1f" fill="currentColor" stroke="none"/>' % (x, y, r))
+                continue
             pts = st["pts"]
             if st["smooth"]:
                 pts = catmull(pts, closed=st["closed"])
             elif st["closed"]:
                 pts = pts + [pts[0]]
-            pts = wobble(pts, rng, amp=0.34 if st["w"] >= 1 else 0.26)
+            pts = wobble(pts, rng, amp=st.get("amp", 0.95))
             if not st["closed"] and st["gap"] == 0:
-                pts = overshoot(pts, rng.uniform(0.8, 1.8))
+                pts = overshoot(pts, rng.uniform(0.4, 1.0))
             w = round(W * st["w"] * rng.uniform(0.90, 1.10), 2)
-            body.append('  <path d="%s" stroke-width="%s"/>' % (path_d(pts, st["gap"]), w))
+            if st["solid"]:
+                body.append('  <path d="%s Z" fill="currentColor" stroke="currentColor" stroke-width="%s"/>'
+                            % (path_d(pts, 0), round(W*0.5, 2)))
+            else:
+                body.append('  <path d="%s" stroke-width="%s"/>' % (path_d(pts, st["gap"]), w))
         svg = TPL.format(title=ko, body="\n".join(body) + "\n")
         pref = "" if name.startswith("char-") else "motif-"
         p = os.path.join(outdir, "%s%s.svg" % (pref, name))
