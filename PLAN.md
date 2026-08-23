@@ -102,8 +102,8 @@ A축의 약점은 하나뿐이다. 상품이 남과 같다. 그러면 **상품�
 
 | Phase | 내용 | 산출물 |
 |---|---|---|
-| **0 디스커버리** ✅ | 컨텍스트 표화, 축·차별점·가격대 확정, **로파서울 해부 완료**, (남음) 경쟁 편집숍 포지셔닝 맵 | `reference-lofa.md` ✅ · `competitors.md` ⏳ |
-| **1 브랜드 전략** | 큐레이션 기준(축 확정본) · 페르소나 2~3종 · 포지셔닝 · **보이스 3속성** · 비주얼 원칙(회피 방향 포함) | `curation-criteria.md` `personas.md` `positioning.md` `brand-voice.md` `visual-principles.md` |
+| **0 디스커버리** ✅ | 컨텍스트 표화, 축·차별점·가격대 확정, 로파서울 해부, 경쟁 포지셔닝 맵 | `reference-lofa.md` ✅ `competitors.md` ✅ |
+| **1 브랜드 전략** ✅ | 큐레이션 기준(축 확정본) · 페르소나 2~3종 · 포지셔닝 · **보이스 3속성** · 비주얼 원칙(회피 방향 포함) | `curation-criteria.md` ✅ `personas.md` ✅ `positioning.md` ✅ `brand-voice.md` ✅ `visual-principles.md` ✅ `competitors.md` ✅ |
 | **1.5 무드 검증 게이트** | 무드 키워드 **2~3개**로 압축 ↔ 비주얼 원칙 1:1 매핑표. **충돌 셀 0개 = 통과.** 판정은 별도 검증 패스 | `moodboard.md` |
 | **2 네이밍** | 기준 → 후보 ≥7 → 검증(상표류 KIPRIS·도메인·인스타 핸들·해외 검색). 전량 탈락 시 기준 1축 완화 최대 3R | `naming-criteria.md` `candidates.md` `validation.md` |
 | **3 아이덴티티** ← 차별점의 실체 | **손그림 워드마크** 탐색(HTML 시안 → 벡터 아웃라인) · 컬러 · 타이포(손그림과 짝지을 본문 서체) · **일러스트 시스템**(선 규칙 · 모티프 사전 ≥12종 · 그리는 법) · 토큰 | `logo-system.md` `color-palette.md` `typography.md` `illustration-system.md` `design-tokens.md` |
