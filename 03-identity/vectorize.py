@@ -80,6 +80,69 @@ def clusters(ink):
     if cur: rows.append(sorted(cur, key=lambda z: z[0]))
     return [b for r in rows for b in r]
 
+# ---------------------------------------------------------------- 보정 단계
+FACE_SWAP = [("cup", "vase")]      # (대상, 가져올 얼굴)
+
+def _parts(ink, box, frac=0.02):
+    x, y, bw, bh = box
+    sub = ink[y:y+bh, x:x+bw]
+    n, lab, st, _ = cv2.connectedComponentsWithStats(sub, 8)
+    return sub, lab, [(i, st[i]) for i in range(1, n) if st[i][4] < bw*bh*frac]
+
+def face_box(parts, ylo=0.0, yhi=1.0, bh=1):
+    """얼굴로 볼 조각들의 합집합 상자"""
+    sel = [(i, st) for i, st in parts if ylo*bh <= st[1] <= yhi*bh]
+    if not sel: return None, []
+    x0 = min(st[0] for _, st in sel); y0 = min(st[1] for _, st in sel)
+    x1 = max(st[0]+st[2] for _, st in sel); y1 = max(st[1]+st[3] for _, st in sel)
+    return (x0, y0, x1-x0, y1-y0), sel
+
+def swap_faces(ink, boxes, names):
+    """한 모티프의 얼굴을 다른 모티프의 얼굴로 갈아 끼운다 (원본 픽셀 그대로 이식)"""
+    for dst_name, src_name in FACE_SWAP:
+        if dst_name not in names or src_name not in names: continue
+        di, si = names.index(dst_name), names.index(src_name)
+        dx, dy, dbw, dbh = boxes[di]; sx, sy, sbw, sbh = boxes[si]
+        dsub, dlab, dparts = _parts(ink, boxes[di])
+        ssub, slab, sparts = _parts(ink, boxes[si])
+        dfb, dsel = face_box(dparts, 0.25, 0.85, dbh)
+        sfb, ssel = face_box(sparts, 0.60, 0.95, sbh)      # 화병 얼굴은 아래쪽
+        if not dfb or not sfb: continue
+        # 대상 얼굴 지우기
+        for i, st in dsel:
+            ink[dy:dy+dbh, dx:dx+dbw][dlab == i] = 0
+        # 원본 얼굴 오려서 눈 간격 비율로 확대 후 이식
+        fx, fy, fw, fh = sfb
+        patch = np.zeros((fh, fw), np.uint8)
+        for i, st in ssel:
+            m = (slab[fy:fy+fh, fx:fx+fw] == i)
+            patch[m] = 1
+        k = dfb[2] / max(1, fw)
+        nw, nh = max(1, int(round(fw*k))), max(1, int(round(fh*k)))
+        patch = cv2.resize(patch, (nw, nh), interpolation=cv2.INTER_NEAREST)
+        cx = dx + dfb[0] + dfb[2]//2; cy = dy + dfb[1] + dfb[3]//2
+        px, py = cx - nw//2, cy - nh//2
+        region = ink[py:py+nh, px:px+nw]
+        region[patch > 0] = 1
+    return ink
+
+def stroke_width(sub):
+    """획 두께 추정 — 폭 w의 선은 거리변환이 0..w/2 균일 -> 중앙값의 4배"""
+    dt = cv2.distanceTransform(sub, cv2.DIST_L2, 5)
+    v = dt[sub > 0]
+    return float(4*np.median(v)) if len(v) else 1.0
+
+def normalize(sub, target, box=100.0, pad=4.0, cap=1.0):
+    """viewBox로 줄였을 때의 '보이는 두께'를 target에 맞춘다"""
+    h, w = sub.shape
+    scale = (box - pad*2)/max(w, h)
+    cur = stroke_width(sub)*scale
+    r = abs(target - cur)/scale/2*cap
+    k = int(round(min(r, 4.0)))          # 과도한 변형은 디테일을 먹는다
+    if k < 1: return sub
+    ker = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2*k+1, 2*k+1))
+    return cv2.dilate(sub, ker) if cur < target else cv2.erode(sub, ker)
+
 def trace(sub, box=100.0, pad=4.0):
     """윤곽선 → SVG path (evenodd 채움)"""
     m = cv2.copyMakeBorder(sub, 2, 2, 2, 2, cv2.BORDER_CONSTANT, value=0)
@@ -105,10 +168,19 @@ if __name__ == "__main__":
     ink = load(SRC)
     bs = clusters(ink)
     print("clusters:", len(bs))
+    ink = swap_faces(ink, bs, NAMES)
+
+    # 기준 두께 = 하트의 보이는 두께
+    hi = NAMES.index("heart"); hx, hy, hw, hh = bs[hi]
+    hsub = ink[hy:hy+hh, hx:hx+hw]
+    HEART = stroke_width(hsub) * (92.0/max(hw, hh))
+    TARGET = float(os.environ.get("TARGET", "4.6"))
+    print("heart=%.2f  target=%.2f (viewBox units)" % (HEART, TARGET))
+
     made = []
     for i, (x, y, bw, bh) in enumerate(bs):
         name = NAMES[i] if i < len(NAMES) else "item%02d" % i
-        sub = ink[y:y+bh, x:x+bw]
+        sub = normalize(ink[y:y+bh, x:x+bw], TARGET)
         d = trace(sub)
         pre = "char-" if name in CHARS else "motif-"
         p = os.path.join(OUT, pre + name + ".svg")
