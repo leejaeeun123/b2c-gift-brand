@@ -57,6 +57,6 @@ PLAN.md            구축 계획 — 로드맵·수용 기준·리스크
 04-packaging/      패키징 사양 · 언박싱 · 단가
 05-design-system/  우산 문서
 06-commerce/       상세페이지 · 썸네일 · 촬영 가이드 · 에디토리얼 · 도매 선별 기준
-assets/            레퍼런스 · 무드보드 · 목업
+assets/reference/  레퍼런스 이미지 (이나피스퀘어 · 소카모노 · 자체 모티프 시트 v1)
 deck.html          전체 정리 페이지 (build_deck.py로 생성)
 ```

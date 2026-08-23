@@ -67,6 +67,13 @@ td.n{white-space:nowrap}
 .pipe .ar{color:var(--muted)}
 .status{display:flex;gap:8px;align-items:center}
 footer{padding:56px 0 90px;font-size:13px;color:var(--muted)}
+.refs{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:22px 0}
+.refs figure{margin:0}
+.refs img{width:100%;height:auto;display:block;border:1px solid var(--line);border-radius:10px;background:#fff}
+.refs figcaption{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.6}
+.refs figcaption b{color:var(--ink)}
+.wide{grid-column:span 2}
+@media(max-width:720px){.refs{grid-template-columns:1fr}.wide{grid-column:auto}}
 @media(max-width:720px){
  .cards,.two,.map .row{grid-template-columns:1fr}
  .grid-motif{grid-template-columns:repeat(4,1fr)}
@@ -85,7 +92,7 @@ footer{padding:56px 0 90px;font-size:13px;color:var(--muted)}
 
 <nav><div class="wrap">
   <a href="#biz">사업</a><a href="#axis">축과 차별점</a><a href="#market">경쟁</a><a href="#persona">페르소나</a>
-  <a href="#pos">포지셔닝</a><a href="#voice">보이스</a><a href="#mood">무드</a><a href="#curation">큐레이션 기준</a>
+  <a href="#pos">포지셔닝</a><a href="#voice">보이스</a><a href="#mood">무드</a><a href="#ref">레퍼런스</a><a href="#curation">큐레이션 기준</a>
   <a href="#naming">네이밍</a><a href="#identity">아이덴티티</a><a href="#pipeline">제작 방식</a><a href="#next">다음</a>
 </div></nav>
 
@@ -314,6 +321,45 @@ footer{padding:56px 0 90px;font-size:13px;color:var(--muted)}
     <tr><td class="n">캐릭터를 로고 자리에</td><td>캐릭터가 상품을 이기면 그릇이 안 팔린다</td></tr>
     <tr><td class="n">갤러리식 무채색 절제</td><td>로파서울·inapsquare의 자리. 따라가면 열화판</td></tr>
   </table>
+</div></section>
+
+<section id="ref"><div class="wrap">
+  <h2>07-1 레퍼런스</h2>
+  <h3>무엇을 가져오고 무엇을 두고 오는가</h3>
+  <p>선의 성격은 <b>이나피스퀘어(INAP)</b>에서, 아이템 구성과 귀여움의 정도는 <b>소카모노</b>·자체 시트에서 가져왔습니다.
+  둘은 서로 다른 계열이라, 섞을 때 기준이 필요했습니다.</p>
+
+  <h4>이나피스퀘어 — 선의 성격</h4>
+  <div class="refs">
+    <figure><img src="{{R_DOG}}" alt="INAP 강아지 마크">
+      <figcaption><b>가져온 것</b> — 굵은 마커선, 일부러 어긋난 비례. 잘 그린 게 아니라 <b>안 그린 것</b>에 가까운 단순화</figcaption></figure>
+    <figure><img src="{{R_STICKERBOOK}}" alt="INAP 스티커북">
+      <figcaption><b>가져온 것</b> — 흑백 대비, 손글씨 레터링. <b>두고 온 것</b> — 검은 배경. 우리 배경은 흰색입니다</figcaption></figure>
+    <figure><img src="{{R_ANTS}}" alt="INAP 개미">
+      <figcaption><b>가져온 것</b> — 면을 통으로 채우는 강조. 다만 <b>한 화면에 하나</b>까지로 제한했습니다</figcaption></figure>
+    <figure><img src="{{R_ANIMAL}}" alt="INAP LOVE ANIMAL" class="wide">
+      <figcaption><b>가져온 것</b> — 동물 한 마리를 몸통+다리 몇 개로 끝내는 생략. 거북이도 이 정도 정보량입니다.
+      <b>두고 온 것</b> — 동물 컬렉션 자체. 우리는 거북이 하나만 씁니다. 여럿이면 캐릭터 사업이 됩니다</figcaption></figure>
+    <figure><img src="{{R_BEAR}}" alt="INAP x DAELIM BATH">
+      <figcaption><b>두고 온 것</b> — 전면 반복 패턴. 여백을 먹어 우리 무드(넉넉한 여백)와 충돌합니다</figcaption></figure>
+  </div>
+  <figure style="margin:0"><img src="{{R_GRID}}" alt="INAP SQUARE 그리드" style="width:100%;border:1px solid var(--line);border-radius:10px">
+    <figcaption class="sub" style="font-size:12px;margin-top:8px">협업 그리드 — 그림과 손글씨가 한 몸으로 놓이는 방식. 에디토리얼 레이아웃 참조</figcaption></figure>
+
+  <h4>소카모노 — 아이템 구성과 귀여움의 정도</h4>
+  <div class="refs">
+    <figure><img src="{{R_SOKAMONO}}" alt="소카모노 스티커">
+      <figcaption><b>가져온 것</b> — 얇고 고른 선, 둥근 모서리, 사물에 얼굴을 넣는 정도. 생활 오브제를 한 장에 모으는 시트 구성</figcaption></figure>
+    <figure class="wide"><img src="{{R_SHEET}}" alt="자체 모티프 시트 v1">
+      <figcaption><b>우리 시트 v1</b> — 위 둘을 섞어 만든 원본입니다. 이 PNG가 <code>vectorize.py</code>를 거쳐
+      지금의 모티프 16종과 거북이가 됐습니다. <b>다음 시트도 이 이미지를 참조로 넣어 만듭니다</b> — 그래야 같은 손이 유지됩니다</figcaption></figure>
+  </div>
+
+  <div class="note"><b>두 레퍼런스는 서로 다른 계열입니다.</b> 이나피스퀘어는 굵고 거친 마커에 흑백 대비가 강하고,
+  소카모노와 우리 시트는 얇고 동글동글합니다. 최종 선택은 <b>선의 성격은 소카모노 계열(얇고 고른 선), 태도는 이나피스퀘어(생략·비대칭)</b>입니다.
+  굵기는 코드가 5.2로 통일하니 원본이 조금 달라도 흡수됩니다.</div>
+
+  <p class="sub" style="font-size:12px">※ 이나피스퀘어·소카모노 이미지는 <b>레퍼런스 목적</b>으로 인용한 각 브랜드의 저작물입니다. 상업적 사용·재배포 대상이 아닙니다.</p>
 </div></section>
 
 <section id="curation"><div class="wrap">
