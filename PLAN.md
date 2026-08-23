@@ -105,7 +105,7 @@ A축의 약점은 하나뿐이다. 상품이 남과 같다. 그러면 **상품�
 | **0 디스커버리** ✅ | 컨텍스트 표화, 축·차별점·가격대 확정, 로파서울 해부, 경쟁 포지셔닝 맵 | `reference-lofa.md` ✅ `competitors.md` ✅ |
 | **1 브랜드 전략** ✅ | 큐레이션 기준(축 확정본) · 페르소나 2~3종 · 포지셔닝 · **보이스 3속성** · 비주얼 원칙(회피 방향 포함) | `curation-criteria.md` ✅ `personas.md` ✅ `positioning.md` ✅ `brand-voice.md` ✅ `visual-principles.md` ✅ `competitors.md` ✅ |
 | **1.5 무드 검증 게이트** | 무드 키워드 **2~3개**로 압축 ↔ 비주얼 원칙 1:1 매핑표. **충돌 셀 0개 = 통과.** 판정은 별도 검증 패스 | `moodboard.md` |
-| **2 네이밍** | 기준 → 후보 ≥7 → 검증(상표류 KIPRIS·도메인·인스타 핸들·해외 검색). 전량 탈락 시 기준 1축 완화 최대 3R | `naming-criteria.md` `candidates.md` `validation.md` |
+| **2 네이밍** 🟡 | 기준 → 후보 ≥7 → 검증(상표류 KIPRIS·도메인·인스타 핸들·해외 검색). 전량 탈락 시 기준 1축 완화 최대 3R | `naming-criteria.md` ✅ `candidates.md` ✅ `validation.md` 🟡(KIPRIS·도메인 조회 대기) |
 | **3 아이덴티티** ← 차별점의 실체 | **손그림 워드마크** 탐색(HTML 시안 → 벡터 아웃라인) · 컬러 · 타이포(손그림과 짝지을 본문 서체) · **일러스트 시스템**(선 규칙 · 모티프 사전 ≥12종 · 그리는 법) · 토큰 | `logo-system.md` `color-palette.md` `typography.md` `illustration-system.md` `design-tokens.md` |
 | **4 패키징** ← 선물가게의 승부처 | 박스·완충·띠지·스티커·메시지카드·손잡이백 / 파손 리스크 대응 / 언박싱 시퀀스 설계 / 단가표 | `packaging-system.md` `unboxing.md` `cost-sheet.md` |
 | **5 커머스 적용** | 상세페이지 템플릿 · 썸네일 규격/그리드 · 촬영 가이드(스타일링컷:제품컷 비율) · 에디토리얼 포맷 · **도매 상품 선별 기준**(어떤 도매 상품은 안 받는가) · 브랜드 스토리 페이지 | `detail-page.md` `thumbnail-system.md` `photo-guide.md` `editorial-format.md` `sourcing-criteria.md` |
