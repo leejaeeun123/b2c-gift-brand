@@ -114,8 +114,8 @@ def motifs():
         S(ellipse(46, 58, 25, 23, squash=1.0), closed=True, gap=0.05),
         S([(68,50),(80,44),(88,34)], w=0.95),
         S([(88,34),(84,44)], w=0.9),
-        S([(33,37),(46,33),(59,37)], w=0.9),
-        S([(46,33),(46,27)], w=0.85),
+        S([(34,38),(46,34),(58,38)], w=0.85),
+        S([(40,34),(46,26),(52,34)], w=0.85),
         S(arc(24, 58, 13, 15, 1.5, 4.6), w=0.9),
     ]))
     # 6 수저
@@ -181,10 +181,65 @@ def motifs():
     # 14 배
     M.append(("pear", "배", [
         S([(50,26),(38,36),(32,52),(38,72),(50,78),(62,72),(68,52),(62,36),(50,26)], closed=True, gap=0.04),
-        S([(50,26),(52,16)], w=0.9),
-        S([(52,18),(64,14)], w=0.8),
+        S([(50,25),(53,14)], w=0.9),
+        S([(53,16),(66,17)], w=0.8),
     ]))
     return M
+
+def characters():
+    """거북이 — 행운을 등에 지고 천천히 간다"""
+    def poly(cx, cy, r, n=6, rot=0.0, squash=1.0):
+        return [(cx + r*math.cos(rot + 2*math.pi*i/n),
+                 cy + r*math.sin(rot + 2*math.pi*i/n)*squash) for i in range(n)]
+
+    dome  = [(22,60),(25,45),(35,34),(50,31),(65,34),(75,45),(78,60)]
+    belly = [(24,61),(78,61)]
+    # 목과 머리를 한 획으로 — 머리가 붙어 있어야 사탕처럼 안 보인다
+    head  = [(75,54),(84,49),(92,52),(94,59),(88,64),(78,63)]
+    eye   = [(87,55),(88,55)]
+    legF  = [(64,61),(66,73),(76,74)]
+    legB  = [(37,61),(31,73),(22,74)]
+    tail  = [(22,58),(13,62),(17,65)]
+    band  = [(26,49),(50,45),(74,49)]
+    div1  = [(37,36),(35,49)]
+    div2  = [(50,32),(50,45)]
+    div3  = [(63,36),(65,49)]
+
+    C = []
+    C.append(("turtle", "거북이", [
+        S(dome), S(belly, w=0.85, smooth=False),
+        S(head, w=0.95), S(eye, w=1.25, smooth=False),
+        S(legF, w=0.95), S(legB, w=0.95), S(tail, w=0.8),
+        S(band, w=0.7), S(div1, w=0.65), S(div2, w=0.65), S(div3, w=0.65),
+    ]))
+
+    dy = 4
+    sh = lambda pts: [(x, y+dy) for x, y in pts]
+    C.append(("turtle-gift", "선물을 진 거북이", [
+        S(sh(dome)), S(sh(belly), w=0.85, smooth=False),
+        S(sh(head), w=0.95), S(sh(eye), w=1.25, smooth=False),
+        S(sh(legF), w=0.95), S(sh(legB), w=0.95), S(sh(tail), w=0.8),
+        S(sh(band), w=0.7),
+        S([(39,37),(61,37),(61,22),(39,22)], closed=True, gap=0.03, smooth=False, w=0.9),
+        S([(50,37),(50,22)], w=0.7, smooth=False),
+        S([(39,29),(61,29)], w=0.7, smooth=False),
+        S([(50,22),(42,13),(37,18),(50,22)], w=0.8),
+        S([(50,22),(58,12),(63,17),(50,22)], w=0.8),
+    ]))
+
+    # 위에서 본 등껍질 — 아이콘·파비콘용. 동심원은 구명튜브로 읽혀서 육각 갑판으로.
+    hexo = poly(50, 50, 17, 6, rot=math.pi/2, squash=1.0)
+    C.append(("turtle-shell", "등껍질", [
+        S(ellipse(50, 50, 32, 32, squash=0.90), closed=True, gap=0.03),
+        S(hexo, closed=True, gap=0.04, w=0.85),
+        S([hexo[0], (50, 15)], w=0.7, smooth=False),
+        S([hexo[1], (18, 34)], w=0.7, smooth=False),
+        S([hexo[2], (18, 66)], w=0.7, smooth=False),
+        S([hexo[3], (50, 84)], w=0.7, smooth=False),
+        S([hexo[4], (82, 66)], w=0.7, smooth=False),
+        S([hexo[5], (82, 34)], w=0.7, smooth=False),
+    ]))
+    return C
 
 TPL = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100"
      fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" color="#262320">
@@ -194,7 +249,7 @@ TPL = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="10
 
 def build(outdir="."):
     made = []
-    for name, ko, strokes in motifs():
+    for name, ko, strokes in motifs() + [("char-"+n, k, st) for n, k, st in characters()]:
         rng = random.Random(SEED + sum(ord(c) for c in name))
         body = []
         for st in strokes:
@@ -209,7 +264,8 @@ def build(outdir="."):
             w = round(W * st["w"] * rng.uniform(0.90, 1.10), 2)
             body.append('  <path d="%s" stroke-width="%s"/>' % (path_d(pts, st["gap"]), w))
         svg = TPL.format(title=ko, body="\n".join(body) + "\n")
-        p = os.path.join(outdir, "motif-%s.svg" % name)
+        pref = "" if name.startswith("char-") else "motif-"
+        p = os.path.join(outdir, "%s%s.svg" % (pref, name))
         io.open(p, "w", encoding="utf-8").write(svg)
         made.append((name, ko))
     return made

@@ -1,6 +1,6 @@
 <!doctype html><meta charset="utf-8"><title>아이덴티티 시안 v1</title>
 <style>
- :root{--paper:#F6F1E8;--ink:#262320;
+ :root{--paper:#FFFFFF;--ink:#262320;
        --line:rgba(38,35,32,.14);--muted:rgba(38,35,32,.55);--faint:rgba(38,35,32,.06)}
  *{box-sizing:border-box}
  body{background:var(--paper);color:var(--ink);font-family:"Wanted Sans","Pretendard",system-ui,sans-serif;
@@ -9,7 +9,7 @@
  .sub{color:var(--muted);font-size:13px;margin:0 0 24px}
  .row{margin-top:64px}
  .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:16px;max-width:1180px}
- .cell{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 8px 10px;text-align:center}
+ .cell{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 8px 10px;text-align:center}
  .cell svg{width:100%;height:auto;display:block}
  .cell span{font-size:12px;color:var(--muted);display:block;margin-top:8px}
  .swatches{display:flex;gap:16px;flex-wrap:wrap;margin-top:16px}
@@ -22,7 +22,7 @@
  .bar i{display:block}.bar em{font-style:normal;font-size:11px}
  /* 적용 예시 */
  .mock{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;max-width:1000px;margin-top:20px}
- .card{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+ .card{background:var(--paper);border:1px solid var(--line);border-radius:12px;overflow:hidden}
  .ph{height:150px;background:var(--faint);display:flex;align-items:center;justify-content:center;color:rgba(38,35,32,.25);font-size:12px}
  .body{padding:16px 18px 20px}
  .tag{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.02em;border:1px solid var(--line);
@@ -39,17 +39,24 @@
 </style>
 
 <h1>아이덴티티 시안 v1</h1>
-<p class="sub">모티프 14종 · 컬러 2색 · Wanted Sans &nbsp;|&nbsp; 재현 = gen_motifs.py</p>
+<p class="sub">모티프 14종 · 캐릭터 거북이 · 컬러 2색 · Wanted Sans &nbsp;|&nbsp; 재현 = gen_motifs.py</p>
 
 <h1 style="margin-top:40px">모티프 사전 — 14종</h1>
 <p class="sub">한 선으로 · 면 없음 · 끝은 둥글게 · 닫힌 도형도 완전히 닫지 않는다 · 좌우 비대칭 · 끝을 살짝 지나친다</p>
 <div class="grid">{{GRID}}</div>
 
 <div class="row">
+<h1>캐릭터 — 거북이</h1>
+<p class="sub">행운을 함께 보낸다 · 등에 지고 간다 · 오래 곁에 둔다</p>
+<div class="grid" style="grid-template-columns:repeat(3,1fr);max-width:520px">{{CHAR}}</div>
+<p class="note" style="margin-top:14px">가운데가 주 형태입니다. 오른쪽 등껍질은 파비콘·스티커처럼 작게 쓰는 자리입니다.</p>
+</div>
+
+<div class="row">
 <h1>컬러 — 2색</h1>
 <p class="sub">포인트 컬러 없음. 위계는 잉크의 농도로, 강조는 면 반전과 굵기로 만든다</p>
 <div class="swatches">
-<div class="sw"><i style="background:#F6F1E8"></i><b>종이</b><em>#F6F1E8</em></div>
+<div class="sw"><i style="background:#FFFFFF"></i><b>종이</b><em>#FFFFFF</em></div>
 <div class="sw"><i style="background:#262320"></i><b>잉크</b><em>#262320</em></div>
 <div class="sw"><i style="background:rgba(38,35,32,.55)"></i><b>잉크 55%</b><em>캡션</em></div>
 <div class="sw"><i style="background:rgba(38,35,32,.14)"></i><b>잉크 14%</b><em>경계선</em></div>
