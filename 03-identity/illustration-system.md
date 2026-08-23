@@ -34,7 +34,8 @@
 | `motif-box` 선물 상자 | `motif-pear` 배 | |
 
 - 사양: `viewBox 0 0 100 100`, `fill="none"`, `stroke="currentColor"`, 기본 잉크 `#262320`
-- **`currentColor`이므로 부모의 `color`만 바꾸면 감·청자·종이 어느 색으로도 쓴다.** 파일을 색깔별로 복제하지 않는다.
+- **`currentColor`이므로 부모의 `color`만 바꾸면 잉크·종이 양방향으로 쓴다.** 파일을 색깔별로 복제하지 않는다.
+- 팔레트가 2색이라 **모티프가 화면의 유일한 그래픽 요소**다. 그만큼 선의 완성도가 중요해졌다.
 - 시안: [`motifs-preview.html`](./motifs-preview.html) · 재현: `python gen_motifs.py`
 
 ### 구성 원칙
