@@ -1,0 +1,42 @@
+<!doctype html><meta charset="utf-8"><title>모티프 사전 v1</title>
+<style>
+ body{background:#F6F1E8;color:#262320;font-family:"Wanted Sans","Pretendard",system-ui,sans-serif;margin:0;padding:44px}
+ h1{font-size:19px;font-weight:700;margin:0 0 6px}
+ p.sub{color:#6d675f;font-size:13px;margin:0 0 26px}
+ .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:16px;max-width:1160px}
+ .cell{background:#fff;border:1px solid #E4DCCD;border-radius:10px;padding:12px 8px 10px;text-align:center}
+ .cell svg{width:100%;height:auto;display:block}
+ .cell span{font-size:11px;color:#6d675f;display:block;margin-top:6px}
+ .row{margin-top:40px}
+ .swatches{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px}
+ .sw{width:110px}.sw i{display:block;height:56px;border-radius:8px;border:1px solid rgba(0,0,0,.08)}
+ .sw b{font-size:12px;display:block;margin-top:6px}.sw em{font-size:11px;color:#6d675f;font-style:normal}
+ .onink{background:#262320;padding:20px 24px;border-radius:10px;margin-top:16px;display:flex;gap:20px}
+ .onink svg{width:60px;height:60px}
+ .small{display:flex;gap:22px;align-items:flex-end;margin-top:14px}
+ .small svg{display:block}
+</style>
+<h1>모티프 사전 v1 — 14종</h1>
+<p class="sub">규칙: 한 선으로 · 면 없음 · 끝은 둥글게 · 닫힌 도형도 완전히 닫지 않는다 · 좌우 비대칭 &nbsp;|&nbsp; 재현 = gen_motifs.py</p>
+<div class="grid">{{GRID}}</div>
+
+<div class="row"><h1>컬러</h1>
+<div class="swatches">
+<div class="sw"><i style="background:#F6F1E8"></i><b>종이</b><em>#F6F1E8</em></div>
+<div class="sw"><i style="background:#262320"></i><b>잉크</b><em>#262320</em></div>
+<div class="sw"><i style="background:#D2502A"></i><b>감</b><em>#D2502A</em></div>
+<div class="sw"><i style="background:#4A7A6B"></i><b>청자</b><em>#4A7A6B</em></div>
+<div class="sw"><i style="background:#C9BFAE"></i><b>먼지</b><em>#C9BFAE</em></div>
+</div>
+<div class="onink">{{INK}}</div></div>
+
+<div class="row"><h1>포인트 컬러 적용</h1>
+<div class="grid" style="margin-top:12px">{{PERS}}{{CELA}}</div></div>
+
+<div class="row"><h1>축소 테스트 — 64 / 40 / 24 / 16px</h1>
+<div class="small">
+<svg viewBox="0 0 100 100" width="64" height="64"><use href="#x"/></svg>
+</div>
+<p class="sub" style="margin-top:8px">※ 아래 줄은 같은 모티프를 크기만 줄인 것</p>
+<div class="small">{{PERS}}</div>
+</div>

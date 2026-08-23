@@ -5,7 +5,7 @@
 
 ## 현재 상태 (2026-08-23)
 
-**Phase 0·1 완료, Phase 2 네이밍 후보 도출. 상표·도메인 조회 후 확정.**
+**Phase 0·1 완료 · Phase 2 네이밍 보류 · Phase 3 아이덴티티 진행 중(로고 제외).**
 
 | | |
 |---|---|
@@ -21,14 +21,18 @@
 | 진열 축 | 🟢 1차 **상황**(집들이·이사 / 결혼·신혼 / 감사 / 생일 / 나에게) · 2차 **무게**(가벼운/기본/조금 특별한) · 카테고리는 필터 |
 | 보이스 | 🟢 **다정한데 호들갑스럽지 않은 · 구체적인 · 솔직한** |
 | 무드 | 🟢 **손의 흔적 · 담백한 밝음 · 넉넉한 여백** (회피: 파스텔·AI티·핸드메이드 클리셰·갤러리 무채색) |
+| 컬러 | 🟢 종이 `#F6F1E8` · 잉크 `#262320` · 감 `#D2502A` · 청자 `#4A7A6B` · 먼지 `#C9BFAE` |
+| 서체 | 🟢 **Wanted Sans** 400/700 2웨이트 (제목 자리는 손그림이 맡는다) |
+| 일러스트 | 🟢 **모티프 14종 v1** + 선 규칙 6개 ([시안](./03-identity/motifs-preview.html)) |
+| 로고 | ⏸ 워드마크 단독·손그림으로 방향만 확정. 네이밍 대기 |
 | 네이밍 | 🟡 40안 → 결선 4안 **건네 · 겸상 · 포개 · 나란히** (전부 검색 충돌 없음). 방향 선택 대기 |
 | 레퍼런스 | 29CM 룩북 211890 · inapsquare |
 
 ## 다음 액션
 
-1. **네이밍 확정** — [`02-naming/validation.md` §4](./02-naming/validation.md) 체크리스트 6건 (KIPRIS 35류·21류, 도메인, 인스타 핸들)
-2. Phase 1.5 무드 게이트 — 무드 키워드 ↔ 비주얼 원칙 충돌 0 확인
-3. Phase 3 손그림 아이덴티티 — 워드마크 + 일러스트 시스템(모티프 ≥12종)
+1. **모티프 손으로 다시 그리기** (권장) — v1은 코드 생성 시안. 규칙은 이미 고정돼 있다
+2. **네이밍 결정** → KIPRIS 35류·21류 조회 → 워드마크 착수
+3. Phase 4 패키징 — 띠지·카드·박스 사양 + 인쇄 별색 확정
 
 > ⚠️ KIPRIS 조회 전에는 로고 제작에 들어가지 않는다.
 
@@ -41,7 +45,8 @@ PLAN.md            구축 계획 — 로드맵·수용 기준·리스크
 01-strategy/       reference-lofa · competitors · personas · positioning · curation-criteria
                    brand-voice · visual-principles
 02-naming/         네이밍 기준 · 후보 · 검증
-03-identity/       로고 · 컬러 · 타이포 · 일러스트 시스템(차별점 실체) · 토큰
+03-identity/       illustration-system(차별점 실체) · color-palette · typography · design-tokens
+                   logo-direction · motif-*.svg 14종 · gen_motifs.py · motifs-preview.html
 04-packaging/      패키징 사양 · 언박싱 · 단가
 05-design-system/  우산 문서
 06-commerce/       상세페이지 · 썸네일 · 촬영 가이드 · 에디토리얼 · 도매 선별 기준

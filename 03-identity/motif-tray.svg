@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100"
+     fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" color="#262320">
+  <title>트레이</title>
+  <path d="M 24.00 34.29 L 75.76 34.12 L 79.76 42.00 L 79.82 61.88 L 76.00 67.81 L 24.13 67.91 L 20.13 62.00 L 20.10 42.05" stroke-width="2.8"/>
+  <path d="M 21.30 46.02 L 20.00 46.02 L 12.02 46.00 L 12.00 55.98 L 20.00 56.00 L 21.30 56.00" stroke-width="2.13"/>
+  <path d="M 78.35 46.01 L 80.00 46.01 L 87.97 46.00 L 88.00 55.96 L 80.00 56.00 L 78.35 56.01" stroke-width="2.23"/>
+  <path d="M 27.00 41.06 L 73.00 41.00" stroke-width="1.73"/>
+</svg>
