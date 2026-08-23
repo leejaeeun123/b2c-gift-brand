@@ -137,11 +137,12 @@ def normalize(sub, target, box=100.0, pad=4.0, cap=1.0):
     h, w = sub.shape
     scale = (box - pad*2)/max(w, h)
     cur = stroke_width(sub)*scale
-    r = abs(target - cur)/scale/2*cap
+    if cur >= target: return sub          # 원본보다 얇게 깎지 않는다
+    r = (target - cur)/scale/2*cap
     k = int(round(min(r, 4.0)))          # 과도한 변형은 디테일을 먹는다
     if k < 1: return sub
     ker = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2*k+1, 2*k+1))
-    return cv2.dilate(sub, ker) if cur < target else cv2.erode(sub, ker)
+    return cv2.dilate(sub, ker)
 
 def trace(sub, box=100.0, pad=4.0):
     """윤곽선 → SVG path (evenodd 채움)"""
@@ -174,7 +175,7 @@ if __name__ == "__main__":
     hi = NAMES.index("heart"); hx, hy, hw, hh = bs[hi]
     hsub = ink[hy:hy+hh, hx:hx+hw]
     HEART = stroke_width(hsub) * (92.0/max(hw, hh))
-    TARGET = float(os.environ.get("TARGET", "4.6"))
+    TARGET = float(os.environ.get("TARGET", "5.2"))
     print("heart=%.2f  target=%.2f (viewBox units)" % (HEART, TARGET))
 
     made = []
