@@ -12,7 +12,7 @@
   --faint:rgba(38,35,32,.06);        /* 면 구분 */
 
   /* type */
-  --font:"Wanted Sans","Pretendard",-apple-system,system-ui,sans-serif;
+  --font:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
   --w-regular:400; --w-bold:700;
   --fs-title:28px; --fs-section:20px; --fs-sub:16px;
   --fs-body:15px;  --fs-caption:13px; --fs-label:12px;

@@ -325,7 +325,7 @@ S.append(slide(u"""
         <div><div class="k" style="font-size:12px;font-weight:700;letter-spacing:.1em;color:#6E6559">컬러</div>
           <p style="font-size:14.5px;line-height:1.6;margin-top:5px">잉크 단색. 포인트 컬러를 쓰지 않는다 — 따뜻함의 예산은 이미 그림이 쓰고 있다</p></div>
         <div><div class="k" style="font-size:12px;font-weight:700;letter-spacing:.1em;color:#6E6559">타이포</div>
-          <p style="font-size:14.5px;line-height:1.6;margin-top:5px">Wanted Sans 400 / 700. 제목 자리를 손그림이 맡으므로 서체는 담백하게</p></div>
+          <p style="font-size:14.5px;line-height:1.6;margin-top:5px">Pretendard 400 / 700. 제목 자리를 손그림이 맡으므로 서체는 담백하게</p></div>
         <div><div class="k" style="font-size:12px;font-weight:700;letter-spacing:.1em;color:#6E6559">로고</div>
           <p style="font-size:14.5px;line-height:1.6;margin-top:5px">손그림 워드마크 단독. 심볼은 만들지 않는다 — 그림이 둘이면 서로를 깎는다</p></div>
         <div><div class="k" style="font-size:12px;font-weight:700;letter-spacing:.1em;color:#6E6559">회피</div>
