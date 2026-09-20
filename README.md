@@ -35,6 +35,13 @@
 
 [`deck.html`](./deck.html) — 전략·큐레이션 기준·아이덴티티·남은 결정을 한 페이지로 정리. `python build_deck.py`로 빌드.
 
+공유용 덱 — 파일 하나로 열립니다(이미지·SVG 내장).
+
+| 덱 | 내용 | 빌드 |
+|---|---|---|
+| [`deck-logo-package.html`](./deck-logo-package.html) | 로고 확정 + 패키지 계획 (2026-09-13) | `python build_deck_0913.py` |
+| [`deck-update-0920.html`](./deck-update-0920.html) | 바다 모티프 12종 · 포장 방식 확정 · 단품 판매 (2026-09-20) | `python build_deck_0920.py` |
+
 ## 다음 액션
 
 1. **없는 모티프 추가 시트** — 편지·선물 상자·트레이·주전자 + 상황 라벨 아이콘 5종 + 선물을 진 거북이. 같은 도구로 시트를 만들어 `vectorize.py`로 따면 된다
