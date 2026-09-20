@@ -5,7 +5,9 @@
 
 ---
 
-## 0. 모티프 16종 + 캐릭터 2종
+## 0. 모티프 28종 + 캐릭터 2종
+
+### 시트 v1 — 선물·테이블웨어 16종
 
 | | | | |
 |---|---|---|---|
@@ -14,6 +16,19 @@
 | `motif-candle` 초 | `motif-ribbon` 리본 | `motif-book` 책 | `motif-heart` 하트 |
 | `motif-clover` 클로버 | `motif-star` 별 | `motif-fish` 물고기 | `motif-pear` 배 |
 | **`char-turtle` 거북이** | `char-dog` 강아지 *(예비)* | | |
+
+### 시트 v2 — 바다 12종
+
+| | | | |
+|---|---|---|---|
+| `motif-urchin` 성게 | `motif-anemone` 말미잘 | `motif-starfish` 불가사리 | `motif-clam` 진주조개 |
+| `motif-coral` 산호 | `motif-seahorse` 해마 | `motif-wave` 파도 | `motif-seaweed` 해초 |
+| `motif-sea-clover` 바다클로버 | `motif-conch` 소라 | `motif-sparkle-star` 반짝별 | `motif-crab` 게 |
+
+원본 시트 16칸 중 **4칸(거북이·물고기·하트·리본)은 채택하지 않았다** — 앞의 넷은 v1에 이미 정본이 있고(중복), 리본은 패키지에서 실물 리본으로 쓰므로 그림으로 또 쓰지 않는다.
+이름이 겹치는 둘은 구분해서 둔다: v1 `motif-clover`/`motif-star` ↔ v2 `motif-sea-clover`/`motif-sparkle-star`.
+
+> **여름 시즌·해산물 품목·아동 선물 쪽으로 넓힐 때 쓰는 세트다.** 기본 세트는 여전히 v1이고, v2를 v1과 한 화면에 섞을 때는 §3의 조합 규칙을 그대로 따른다.
 
 시안: [`motifs-preview.html`](./motifs-preview.html)
 
@@ -25,8 +40,18 @@
 코드로 형태를 만들지 않는다. 그림이 먼저 있고, 코드는 그걸 **따기만** 한다.
 
 ```
-그림(PNG)  →  vectorize.py  →  motif-*.svg / char-*.svg
+그림(PNG)  →  vectorize.py       →  motif-*.svg / char-*.svg   (시트 v1)
+그림(PNG)  →  vectorize_sea.py   →  motif-*.svg                (시트 v2)
 ```
+
+`vectorize_sea.py`는 `vectorize.py`의 두께 정규화·윤곽선 추출을 그대로 쓰되, 시트 형식이 달라진 두 가지만 다르다.
+
+| 차이 | 내용 |
+|---|---|
+| 파란 X 제거 | 채택하지 않을 칸에 그은 **파란 선은 색으로 걸러낸다** (무채색 어두운 픽셀만 잉크로 인정) |
+| 칸 분할 | 조각 묶기 대신 **4×4 균등 분할** 후, 옆 칸에서 넘어온 파편만 제거 |
+
+- 재현: `python vectorize_sea.py [png경로]` · 두께 기준(`TARGET=5.2`)은 v1과 동일해 두 시트가 같은 굵기로 보인다
 
 `vectorize.py`가 하는 일:
 
@@ -63,6 +88,7 @@
 | `assets/reference/inap-*.jpg` — 이나피스퀘어 | **선의 태도** — 생략, 어긋난 비례, 흑백 대비, 면 통채움(한 화면 하나까지) |
 | `assets/reference/sokamono-stickers.jpg` — 소카모노 | **선의 성격** — 얇고 고른 선, 둥근 모서리, 사물에 얼굴, 시트 구성 |
 | `assets/reference/motif-sheet-v1.jpg` | **정본의 원본.** 이 PNG가 `vectorize.py`를 거쳐 지금의 16종이 됐다 |
+| `assets/reference/motif-sheet-v2-sea.png` | **바다 세트의 원본.** 채택하지 않은 4칸에 파란 X가 그어진 그대로 보관한다 |
 
 최종 선택은 **선의 성격은 소카모노 계열, 태도는 이나피스퀘어**다.
 두고 온 것 — 검은 배경, 전면 반복 패턴, 동물 컬렉션(우리는 거북이 하나).
@@ -177,8 +203,9 @@ viewBox 0 0 100 100 · fill="currentColor" · fill-rule="evenodd" · stroke="non
 ## 6. 완료 조건
 
 - [x] 스타일 정의 + 정본 확보 방식(벡터화) 문서화
-- [x] 모티프 16종 + 캐릭터 2종
+- [x] 모티프 16종(v1) + 캐릭터 2종
+- [x] 바다 모티프 12종(v2)
 - [x] `currentColor` 단일 소스, 색 복제 없음
 - [ ] 24px 축소용 세트
-- [ ] 없는 모티프 5종
+- [ ] 없는 모티프 5종 *(v2로 일부 해소)*
 - [ ] 상황 라벨 아이콘 5종
