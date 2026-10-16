@@ -239,24 +239,6 @@
   "crossed_out": false,
   "parts": []
  },
- "care-no-microwave": {
-  "src": "ChatGPT 이미지 2026년 10월 11일 오후 06_06_59-1.png",
-  "title": "전자레인지 사용 금지",
-  "crossed_out": false,
-  "parts": []
- },
- "care-no-fire-oven": {
-  "src": "직화 및 오븐 사용 금지 아이콘.png",
-  "title": "직화·오븐 사용 금지",
-  "crossed_out": false,
-  "parts": []
- },
- "care-no-dishwasher": {
-  "src": "ChatGPT 이미지 2026년 10월 11일 오후 06_07_02-2.png",
-  "title": "식기세척기 사용 금지",
-  "crossed_out": false,
-  "parts": []
- },
  "pattern-seaweed-band": {
   "src": "유기적인 검은 잉크 블롭 실루엣.png",
   "title": "해초 실루엣 띠",
@@ -266,18 +248,6 @@
  "pattern-seaweed-bubbles": {
   "src": "손그림 느낌의 추상 해초와 거품.png",
   "title": "해초와 거품",
-  "crossed_out": false,
-  "parts": []
- },
- "care-dishwasher": {
-  "src": "ChatGPT 이미지 2026년 10월 11일 오후 09_44_02-1.png",
-  "title": "식기세척기",
-  "crossed_out": false,
-  "parts": []
- },
- "care-microwave": {
-  "src": "ChatGPT 이미지 2026년 10월 16일 오후 09_12_39.png",
-  "title": "전자레인지",
   "crossed_out": false,
   "parts": []
  },
@@ -686,6 +656,36 @@
  "pattern-wave-turtle": {
   "src": "파도 속 귀여운 바다거북.png",
   "title": "파도 속 거북이",
+  "crossed_out": false,
+  "parts": []
+ },
+ "care-microwave": {
+  "src": "전자레인지·식기세척기·불꽃 금지 아이콘.png",
+  "title": "전자레인지 사용 가능",
+  "crossed_out": false,
+  "parts": []
+ },
+ "care-dishwasher": {
+  "src": "전자레인지·식기세척기·불꽃 금지 아이콘.png",
+  "title": "식기세척기 사용 가능",
+  "crossed_out": false,
+  "parts": []
+ },
+ "care-no-fire-oven": {
+  "src": "전자레인지·식기세척기·불꽃 금지 아이콘.png",
+  "title": "직화·오븐 사용 금지",
+  "crossed_out": false,
+  "parts": []
+ },
+ "care-no-microwave": {
+  "src": "금지된 전자레인지, 식기, 모닥불 아이콘.png",
+  "title": "전자레인지 사용 금지",
+  "crossed_out": false,
+  "parts": []
+ },
+ "care-no-dishwasher": {
+  "src": "금지된 전자레인지, 식기, 모닥불 아이콘.png",
+  "title": "식기세척기 사용 금지",
   "crossed_out": false,
   "parts": []
  }

@@ -25,13 +25,8 @@ SRCS = [
  ("silhouette-board",      "미니멀 흑백 주방용품과 동물 아이콘 보드.png",     "식기·거북이 실루엣 보드", True),
  ("text-a-little-care",    "작은 배려.png",                                  "A Little Care", False),
  ("text-use-and-care",     "손글씨 스타일의 Use & Care.png",                 "Use & Care", False),
- ("care-no-microwave",     "ChatGPT 이미지 2026년 10월 11일 오후 06_06_59-1.png", "전자레인지 사용 금지", False),
- ("care-no-fire-oven",     "직화 및 오븐 사용 금지 아이콘.png",               "직화·오븐 사용 금지", False),
- ("care-no-dishwasher",    "ChatGPT 이미지 2026년 10월 11일 오후 06_07_02-2.png", "식기세척기 사용 금지", False),
  ("pattern-seaweed-band",  "유기적인 검은 잉크 블롭 실루엣.png",              "해초 실루엣 띠", False),
  ("pattern-seaweed-bubbles","손그림 느낌의 추상 해초와 거품.png",             "해초와 거품", False),
- ("care-dishwasher",       "ChatGPT 이미지 2026년 10월 11일 오후 09_44_02-1.png", "식기세척기", False),
- ("care-microwave",        "ChatGPT 이미지 2026년 10월 16일 오후 09_12_39.png",   "전자레인지", False),
  ("line-sheet-a",          "4a5c7b52-aa24-4372-ac75-9085bf272d81=.png",     "선 그림 시트 A", True),
  ("line-sheet-b",          "2b851922-6212-4dda-ae0e-d74d197c0028.png",      "선 그림 시트 B", True),
  ("line-sheet-c",          "bc0ecf07-56b7-4501-90a1-8f742d4161e4.png",      "선 그림 시트 C", True),
@@ -39,6 +34,31 @@ SRCS = [
  ("pattern-wave-band",     "흑백 유기적 물결 추상 배너.png",                  "물결 실루엣 띠", False),
  ("pattern-wave-turtle",   "파도 속 귀여운 바다거북.png",                    "파도 속 거북이", False),
 ]
+
+# 가로로 나열된 아이콘 시트 — 빈 열에서 잘라 이름 순서대로 저장 (viewBox 100 정사각)
+COL_SHEETS = [
+ ("전자레인지·식기세척기·불꽃 금지 아이콘.png", [("care-microwave","전자레인지 사용 가능"),("care-dishwasher","식기세척기 사용 가능"),("care-no-fire-oven","직화·오븐 사용 금지")]),
+ ("금지된 전자레인지, 식기, 모닥불 아이콘.png", [("care-no-microwave","전자레인지 사용 금지"),("care-no-dishwasher","식기세척기 사용 금지")]),
+]
+
+def split_cols(ink, n):
+    """잉크 없는 열 구간으로 n개 아이콘 분할"""
+    col = ink.sum(axis=0) > 0
+    runs, start = [], None
+    for x, v in enumerate(col):
+        if v and start is None: start = x
+        if not v and start is not None: runs.append((start, x)); start = None
+    if start is not None: runs.append((start, len(col)))
+    # 작은 간격은 합쳐서 n개가 될 때까지 가장 좁은 틈부터 병합
+    while len(runs) > n:
+        gaps = [(runs[i+1][0]-runs[i][1], i) for i in range(len(runs)-1)]
+        _, i = min(gaps)
+        runs[i:i+2] = [(runs[i][0], runs[i+1][1])]
+    out = []
+    for x0, x1 in runs:
+        sub = ink[:, x0:x1]; ys = np.nonzero(sub.sum(axis=1))[0]
+        out.append(sub[ys.min():ys.max()+1])
+    return out
 
 def load(path):
     img = cv2.imdecode(np.fromfile(path, dtype=np.uint8), cv2.IMREAD_UNCHANGED)
@@ -172,4 +192,10 @@ if __name__ == "__main__":
                 entry["parts"].append({"file": "%02d.svg" % i, "box": [int(x), int(y), int(bw), int(bh)]})
         manifest[slug] = entry
         print("%-26s %-4s parts=%2d  blue=%s" % (slug, full.shape, len(entry["parts"]), bool(blue.sum() > 0)))
+    for fn, names in COL_SHEETS:
+        ink, blue = load(os.path.join(DL, fn)); ink = clean(ink)
+        for sub, (slug, ko) in zip(split_cols(ink, len(names)), names):
+            io.open(os.path.join(OUT, slug + ".svg"), "w", encoding="utf-8").write(TPL.format(t=escape(ko), d=trace(sub)))
+            manifest[slug] = {"src": fn, "title": ko, "crossed_out": False, "parts": []}
+            print("%-26s %-4s (열 분할)" % (slug, sub.shape))
     io.open(os.path.join(OUT, "manifest.json"), "w", encoding="utf-8").write(json.dumps(manifest, ensure_ascii=False, indent=1))
