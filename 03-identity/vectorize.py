@@ -7,7 +7,7 @@
 """
 import cv2, numpy as np, io, os, sys
 
-SRC = sys.argv[1] if len(sys.argv) > 1 else r"C:\Users\jaeeu\Downloads\ChatGPT Image 2026년 8월 23일 오후 06_46_31.png"
+SRC = sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "assets", "motif-source", "sheet-v1.png")
 OUT = os.path.dirname(os.path.abspath(__file__))
 
 NAMES = ["turtle","heart","flower","vase",
@@ -145,21 +145,28 @@ def normalize(sub, target, box=100.0, pad=4.0, cap=1.0):
     return cv2.dilate(sub, ker)
 
 def trace(sub, box=100.0, pad=4.0):
-    """윤곽선 → SVG path (evenodd 채움)"""
-    m = cv2.copyMakeBorder(sub, 2, 2, 2, 2, cv2.BORDER_CONSTANT, value=0)
-    cs, _ = cv2.findContours(m, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_NONE)
-    h, w = m.shape
-    s = (box - pad*2) / max(w, h)
-    ox = (box - w*s)/2; oy = (box - h*s)/2
-    eps = max(0.45, min(w, h) * 0.0035)
+    """윤곽선 → SVG path (evenodd 채움). potrace 베지어 — 직선 근사 대신 매끈한 곡선."""
+    import potrace
+    SCALE = 2
+    m = cv2.resize(sub, None, fx=SCALE, fy=SCALE, interpolation=cv2.INTER_LINEAR)
+    m = cv2.GaussianBlur(m.astype(np.float32), (0, 0), 1.2) > 0.5
+    m = np.pad(m, 4)
+    H, W = m.shape
+    s = (box - pad*2) / max(W, H)
+    ox = (box - W*s)/2; oy = (box - H*s)/2
+    path = potrace.Bitmap(np.logical_not(m)).trace(turdsize=10, alphamax=1.0, opticurve=True, opttolerance=0.3)
     d = []
-    for c in cs:
-        if cv2.contourArea(c) < 6: continue
-        c = cv2.approxPolyDP(c, eps, True).reshape(-1, 2)
-        if len(c) < 3: continue
-        pts = [(ox + x*s, oy + y*s) for x, y in c]
-        d.append("M " + " L ".join("%.2f %.2f" % p for p in pts) + " Z")
-    return " ".join(d)
+    for c in path:
+        p = c.start_point; d.append("M%.2f,%.2f" % (ox + p.x*s, oy + p.y*s))
+        for seg in c:
+            e = seg.end_point
+            if seg.is_corner:
+                d.append("L%.2f,%.2fL%.2f,%.2f" % (ox+seg.c.x*s, oy+seg.c.y*s, ox+e.x*s, oy+e.y*s))
+            else:
+                d.append("C%.2f,%.2f %.2f,%.2f %.2f,%.2f" % (ox+seg.c1.x*s, oy+seg.c1.y*s,
+                         ox+seg.c2.x*s, oy+seg.c2.y*s, ox+e.x*s, oy+e.y*s))
+        d.append("Z")
+    return "".join(d)
 
 TPL = ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100"\n'
        '     fill="currentColor" fill-rule="evenodd" stroke="none" color="#262320">\n'

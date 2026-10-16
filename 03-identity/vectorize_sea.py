@@ -6,7 +6,7 @@
 import cv2, numpy as np, io, os, sys
 from vectorize import normalize, trace, stroke_width, TPL
 
-SRC = sys.argv[1] if len(sys.argv) > 1 else r"C:\Users\jaeeu\Downloads\9144fa50-00b7-4e65-a4d8-4c354a11991b.png"
+SRC = sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "assets", "motif-source", "sheet-v2-sea.png")
 OUT = os.path.dirname(os.path.abspath(__file__))
 
 GRID = [["turtle",     "urchin",  "anemone",   "fish"],
