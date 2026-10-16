@@ -682,5 +682,11 @@
   "title": "물결 실루엣 띠",
   "crossed_out": false,
   "parts": []
+ },
+ "pattern-wave-turtle": {
+  "src": "파도 속 귀여운 바다거북.png",
+  "title": "파도 속 거북이",
+  "crossed_out": false,
+  "parts": []
  }
 }
