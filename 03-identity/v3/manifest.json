@@ -676,5 +676,11 @@
   "title": "Slowly is wonderful.",
   "crossed_out": false,
   "parts": []
+ },
+ "pattern-wave-band": {
+  "src": "흑백 유기적 물결 추상 배너.png",
+  "title": "물결 실루엣 띠",
+  "crossed_out": false,
+  "parts": []
  }
 }

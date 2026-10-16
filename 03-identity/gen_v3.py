@@ -36,6 +36,7 @@ SRCS = [
  ("line-sheet-b",          "2b851922-6212-4dda-ae0e-d74d197c0028.png",      "선 그림 시트 B", True),
  ("line-sheet-c",          "bc0ecf07-56b7-4501-90a1-8f742d4161e4.png",      "선 그림 시트 C", True),
  ("text-slowly",           "천천히, 멋지게.png",                             "Slowly is wonderful.", False),
+ ("pattern-wave-band",     "흑백 유기적 물결 추상 배너.png",                  "물결 실루엣 띠", False),
 ]
 
 def load(path):
