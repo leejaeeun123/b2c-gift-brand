@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>오하리상점 패키지 발주처 비교</title>
+<style>body{margin:0}</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700&family=Noto+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* layout: 상단 요약 카드 → 품목별 비교표(sticky 목차) → 발주처별 장바구니 → 세트 원가. 견적서 괘선 톤, 추천행은 초록 띠 */
+:root{
+  --bg:#f6f3ec; --paper:#fffdf9; --fg:#231f1a; --muted:#6e675c; --line:#e0d9cb; --line-strong:#b9af9c;
+  --accent:#9a4a2b; --accent-soft:#f4e4da; --best:#2c6a47; --best-soft:#e1efe5; --warn:#8a6512; --warn-soft:#f7ebcc; --no:#8d3a3a; --no-soft:#f4dede;
+  --display:"Noto Serif KR",serif; --body:"Noto Sans KR",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+  --radius:6px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1916;--paper:#242019;--fg:#ede7dc;--muted:#a79d8f;--line:#3a3429;--line-strong:#5a5141;--accent:#dd906b;--accent-soft:#3b2a21;--best:#86c9a0;--best-soft:#213427;--warn:#dcb65a;--warn-soft:#3a311d;--no:#dd8585;--no-soft:#3a2323;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1b1916;--paper:#242019;--fg:#ede7dc;--muted:#a79d8f;--line:#3a3429;--line-strong:#5a5141;--accent:#dd906b;--accent-soft:#3b2a21;--best:#86c9a0;--best-soft:#213427;--warn:#dcb65a;--warn-soft:#3a311d;--no:#dd8585;--no-soft:#3a2323;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.6;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 72px}
+.wrap{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:44px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.3}
+h1{font-size:clamp(26px,4vw,38px);font-weight:700}
+h2{font-size:22px;font-weight:700;display:flex;align-items:baseline;gap:12px;padding-bottom:10px;border-bottom:2px solid var(--fg)}
+h2 .k{font-family:var(--mono);font-size:13px;color:var(--accent);font-weight:500}
+h3{font-size:17px;font-weight:600}
+header{display:flex;flex-direction:column;gap:12px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.lead{color:var(--muted);max-width:68ch;margin:0}
+.meta{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--muted)}
+.meta b{color:var(--fg);font-weight:500}
+nav.toc{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);margin:0 -4px;padding:8px 4px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+nav.toc::-webkit-scrollbar{display:none}
+nav.toc a{flex:0 0 auto;font-size:13px;color:var(--muted);text-decoration:none;padding:4px 10px;border:1px solid var(--line);border-radius:999px;background:var(--paper);white-space:nowrap}
+nav.toc a:hover,nav.toc a:focus-visible{color:var(--accent);border-color:var(--accent);outline:none}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+section{display:flex;flex-direction:column;gap:18px;scroll-margin-top:64px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;display:flex;flex-direction:column;gap:6px;min-width:0;position:relative}
+.card.best{border-color:var(--best)}
+.card.best::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--best);border-radius:var(--radius) 0 0 var(--radius)}
+.card .item{font-size:12.5px;color:var(--muted);letter-spacing:.02em}
+.card .vendor{font-family:var(--display);font-size:19px;font-weight:700;display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.card .vendor a{color:inherit;text-decoration:none;border-bottom:1px solid var(--line-strong)}
+.card .vendor a:hover{border-color:var(--accent);color:var(--accent)}
+.card .price{font-size:13.5px}
+.card .why{font-size:13px;color:var(--muted);margin:0;line-height:1.5}
+.tag{display:inline-block;font-size:11.5px;font-weight:500;padding:1px 8px;border-radius:999px;white-space:nowrap;vertical-align:middle;line-height:1.6}
+.t-best{background:var(--best-soft);color:var(--best)}
+.t-warn{background:var(--warn-soft);color:var(--warn)}
+.t-no{background:var(--no-soft);color:var(--no)}
+.t-acc{background:var(--accent-soft);color:var(--accent)}
+.tbl{overflow-x:auto;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius)}
+table{border-collapse:collapse;width:100%;min-width:680px;font-size:14px}
+th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;letter-spacing:.04em;color:var(--muted);font-weight:500;background:var(--bg);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td.r,th.r{text-align:right}
+tr.best td{background:var(--best-soft)}
+tr.best td:first-child{box-shadow:inset 4px 0 0 var(--best)}
+td small{display:block;color:var(--muted);font-size:12.5px;line-height:1.45;margin-top:2px;white-space:normal}
+td .num{display:inline-block}
+a{color:var(--accent)}
+a.p{color:inherit;text-decoration:none;border-bottom:1px solid var(--line-strong)}
+a.p:hover,a.p:focus-visible{color:var(--accent);border-color:var(--accent);outline:none}
+a.p::after{content:"↗";font-size:11px;margin-left:3px;color:var(--accent)}
+.vn{font-weight:500}
+.vn a.p{font-weight:500}
+.note{font-size:13.5px;color:var(--muted);margin:0;max-width:76ch;line-height:1.65}
+.block{display:flex;flex-direction:column;gap:10px;scroll-margin-top:64px}
+.block-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 14px}
+.block-head .sz{font-size:13px;color:var(--muted)}
+.carts{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+.cart{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.cart h3{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.cart h3 .site{font-family:var(--mono);font-size:12px;font-weight:400}
+.cart ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:7px}
+.cart li{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed var(--line);padding-bottom:7px;font-size:14px}
+.cart li:last-child{border-bottom:0}
+.cart li span:first-child{min-width:0}
+.cart li span:last-child{text-align:right;flex:0 0 auto}
+.cart .sum{display:flex;justify-content:space-between;font-weight:700;padding-top:4px;border-top:1px solid var(--line-strong)}
+.cart .hint{font-size:12.5px;color:var(--muted);margin:0}
+.cart.skip{border-style:dashed;opacity:.85}
+.unit{display:grid;grid-template-columns:1fr auto;gap:5px 16px;font-size:14px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;align-content:start}
+.unit .h{grid-column:1/-1;font-family:var(--display);font-weight:700;font-size:16px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.unit .tot{border-top:1px solid var(--fg);padding-top:6px;font-weight:700}
+.unit .tot+.tot{border-top:0;padding-top:0}
+.unit .sub{color:var(--muted)}
+footer{font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
+@media (max-width:480px){body{font-size:14px}h2{font-size:20px}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">Ohari Store · Gift Set Packaging · Sourcing Sheet</div>
+  <h1>오하리상점 선물세트 패키지 발주처 비교</h1>
+  <p class="lead">8개 품목(쇼핑백 추가 구성 포함)·10개 발주처의 가격을 한 표로 모았습니다. 장당 단가는 VAT 포함으로 통일했고, 품목명을 누르면 원문 상품 페이지로 이동합니다.</p>
+  <div class="meta"><span>기준일 <b>2026-10-18</b></span><span>출처 <b>NMWC 태스크 + 엠유플랜박스 견적서(10/12) + 상자연구소 카톡 견적</b></span><span>상자 규격 <b>큰 36×27×11 · 작은 27×22×11</b></span></div>
+</header>
+
+<nav class="toc" aria-label="목차">
+  <a href="#summary">추천 요약</a><a href="#box">상자</a><a href="#string">끈</a><a href="#tissue">습자지</a><a href="#sticker">스티커</a><a href="#postcard">엽서</a><a href="#etc">에어캡·기타</a><a href="#bag">쇼핑백</a><a href="#carts">발주처별 묶음</a><a href="#unit">세트 원가</a>
+</nav>
+
+<section id="summary">
+  <h2><span class="k">01</span>품목별 추천 발주처</h2>
+  <div class="grid">
+    <div class="card best"><div class="item">선물세트 상자</div><div class="vendor"><a href="https://www.upackage.co.kr/" target="_blank" rel="noopener">유패키지</a></div><div class="price"><span class="num">1,573 ~ 2,146원</span>/장 (VAT·서울 택배 포함) · 인쇄 최소 300~400장</div><p class="why">시안 인쇄 면적·먹1도 기준 견적. 조건을 만족하는 유일한 후보. 래포리는 간단 로고만 가능해 제외, 엠유는 G형 불가.</p></div>
+    <div class="card best"><div class="item">포장 끈 (리본·묶음)</div><div class="vendor"><a href="https://hangarampackage.shop/" target="_blank" rel="noopener">래포리패키지</a></div><div class="price"><span class="num">900 ~ 10,800원</span>/롤</div><p class="why">비교처 없음. 쇼핑백 재입고 전까지는 끈만 단독 주문.</p></div>
+    <div class="card best"><div class="item">습자지 (포장 종이)</div><div class="vendor"><a href="https://hanapapermall.co.kr/product/detail.html?product_no=4952" target="_blank" rel="noopener">하나페이퍼몰</a></div><div class="price"><span class="num">8,300원</span> / 2절 250매 · <span class="num">33원</span>/매</div><p class="why">신식상점(49원/매)보다 30% 저렴. 단, 색화지라 질감이 다름.</p></div>
+    <div class="card best"><div class="item">원형 스티커 50mm</div><div class="vendor"><a href="https://www.swadpia.co.kr/goods/goods_view/CST2000/GST2001" target="_blank" rel="noopener">성원애드피아</a></div><div class="price"><span class="num">14,300원</span> / 500장(1,000개) · <span class="num">약 15원</span>/개</div><p class="why">인쇄 포함 최저. 엠유플랜박스는 같은 500장에 66,000원(VAT 포함).</p></div>
+    <div class="card best"><div class="item">브랜드 엽서</div><div class="vendor"><a href="https://www.swadpia.co.kr/goods/goods_view/COD3000/GOD3001" target="_blank" rel="noopener">성원애드피아</a></div><div class="price"><span class="num">6,490원</span> / 100매 · <span class="num">65원</span>/매</div><p class="why">먹1도 양면 토너 기준. 엠유(176~385원)·포스트링(290원)보다 압도적.</p></div>
+    <div class="card best"><div class="item">에어캡 (뽁뽁이)</div><div class="vendor">동네 철물점·잡화상</div><div class="price">롤당 <span class="num">약 5,000원</span> (사용자 경험담)</div><p class="why">유패키지 18,000원의 1/3. 롤 폭·길이가 같은지 확인 후 비교. 배송비 없음.</p></div>
+    <div class="card"><div class="item">쇼핑백 (추가 구성 · 무지 + 사각 스티커)</div><div class="vendor"><a href="https://hangarampackage.shop/" target="_blank" rel="noopener">래포리패키지</a> <span class="tag t-warn">품절 중</span></div><div class="price">큰 <span class="num">2,500원</span> · 작은 <span class="num">3,300원</span> / 장</div><p class="why">상자 규격에 맞는 유일한 후보. 핸즈픽 31·33호는 상자가 안 들어가거나 너무 깊음. 사각 스티커는 성원 재견적.</p></div>
+    <div class="card"><div class="item">품명 스티커 · 완충 스티로폼</div><div class="vendor">발주 없음</div><div class="price">자체 출력 · 거래처 조달</div><p class="why">품명 스티커는 프린터 라벨지(한글 템플릿), 스티로폼은 아빠 거래처.</p></div>
+  </div>
+</section>
+
+<section id="detail">
+  <h2><span class="k">02</span>품목별 상세 비교</h2>
+
+  <div class="block" id="box">
+    <div class="block-head"><h3>1. 선물세트 상자</h3><span class="sz">흰색 G형 일체형 · 큰 36×27×11 / 작은 27×22×11 (25×22×10 검토)</span></div>
+    <div class="tbl"><table>
+      <thead><tr><th>발주처</th><th>제품 · 사이즈</th><th class="r">기재 가격</th><th class="r">장당 (VAT 포함)</th><th>비고</th></tr></thead>
+      <tbody>
+        <tr class="best"><td class="vn"><a class="p" href="https://www.upackage.co.kr/" target="_blank" rel="noopener">유패키지</a></td><td>G형 일체형 화이트 36×27×11</td><td class="r"><span class="num">585,360원</span><small>VAT 별도 · 300장</small></td><td class="r"><span class="num">2,146원</span><small>VAT 별도 1,951원</small></td><td><span class="tag t-best">추천</span> <span class="tag t-warn">인쇄 최소 300장</span> 시안 기준 먹1도 인쇄 + 서울 택배비 포함 · 초기 투입 643,896원</td></tr>
+        <tr class="best"><td class="vn"><a class="p" href="https://www.upackage.co.kr/" target="_blank" rel="noopener">유패키지</a></td><td>G형 일체형 화이트 27×22×11</td><td class="r"><span class="num">571,860원</span><small>VAT 별도 · 400장</small></td><td class="r"><span class="num">1,573원</span><small>VAT 별도 1,430원</small></td><td><span class="tag t-best">추천</span> <span class="tag t-warn">인쇄 최소 400장</span> 시안 기준 먹1도 인쇄 + 서울 택배비 포함 · 초기 투입 629,046원</td></tr>
+        <tr><td class="vn">엠유플랜박스<small>견적서 2026-10-12</small></td><td><a class="p" href="https://muplanbox.com/product/%EA%B3%A8%ED%8C%90%EC%A7%80%EB%B0%95%EC%8A%A4-mb-1327/928/category/75/display/1/" target="_blank" rel="noopener">골판지 단상자 MB-1355</a><br>270×110×360H</td><td class="r"><span class="num">1,070,600원</span> / 200개<br><span class="num">1,337,500원</span> / 500개<small>+ 목형 120,000원 · VAT 별도 · 배송비 별도</small></td><td class="r"><span class="num">6,548원</span><br><span class="num">3,207원</span><small>목형 포함 · VAT 포함</small></td><td><span class="tag t-warn">G형 아님</span> 단면 먹1도 로고인쇄 · 무광코팅. 유패키지의 1.5~3배</td></tr>
+        <tr><td class="vn">엠유플랜박스<small>견적서 2026-10-12</small></td><td><a class="p" href="https://muplanbox.com/product/%EA%B3%A8%ED%8C%90%EC%A7%80%EB%B0%95%EC%8A%A4-mb-1327/928/category/75/display/1/" target="_blank" rel="noopener">골판지 단상자 MB-1355</a><br>220×110×270H</td><td class="r"><span class="num">990,600원</span> / 200개<br><span class="num">1,202,000원</span> / 500개<small>+ 목형 100,000원 · VAT 별도 · 배송비 별도</small></td><td class="r"><span class="num">5,998원</span><br><span class="num">2,864원</span><small>목형 포함 · VAT 포함</small></td><td><span class="tag t-warn">G형 아님</span> 목형비는 재발주 시 차감. 유패키지의 1.8~3.8배</td></tr>
+        <tr><td class="vn">상자연구소<small>카톡 오픈채팅 견적 · 합지 먹1도 3면</small></td><td>합지 상자 300×300×100<br>합지 상자 350×300×100<small>현재 규격은 미견적</small></td><td class="r"><span class="num">1,900원</span> × 500개<br><span class="num">2,140원</span> × 500개<small>+ 목형 170,000 / 180,000원 · VAT 별도 · 배송비 별도</small></td><td class="r"><span class="num">2,464원</span><br><span class="num">2,750원</span><small>목형 포함 · VAT 포함</small></td><td><span class="tag t-acc">참고</span> 합지라 재질 등급이 위. 36×27×11로 줄여도 약 2,450원 추정, 유패키지보다 15% 비싸고 최소 500개. 목형비는 재발주 시 없어 2회차부터 격차 거의 소멸</td></tr>
+        <tr><td class="vn"><a class="p" href="https://hangarampackage.shop/" target="_blank" rel="noopener">래포리패키지</a></td><td><a class="p" href="https://hangarampackage.shop/product/%EC%9D%BC%EC%B2%B4%ED%98%95-%EC%84%A0%EB%AC%BC%EC%83%81%EC%9E%90-%ED%99%94%EC%9D%B4%ED%8A%B8-36x27x11cm/3096/category/82/display/1/" target="_blank" rel="noopener">36×27×11</a> · <a class="p" href="https://hangarampackage.shop/product/%EC%9D%BC%EC%B2%B4%ED%98%95-%EC%84%A0%EB%AC%BC%EC%83%81%EC%9E%90-%ED%99%94%EC%9D%B4%ED%8A%B8-27x22x11cm/3085/category/82/display/1/" target="_blank" rel="noopener">27×22×11</a> · <a class="p" href="https://hangarampackage.shop/product/%EC%9D%BC%EC%B2%B4%ED%98%95-%EC%84%A0%EB%AC%BC%EC%83%81%EC%9E%90-%ED%99%94%EC%9D%B4%ED%8A%B8-25x22x10cm/3364/category/82/display/1/" target="_blank" rel="noopener">25×22×10</a></td><td class="r"><span class="num">2,580 / 1,970 / 1,610원</span></td><td class="r">—</td><td><span class="tag t-no">제외</span> 간단한 로고 인쇄만 가능, 원하는 인쇄 불가</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">인쇄 조건과 가격을 함께 보면 유패키지 한 곳만 남습니다. 유패키지 견적은 디자인 시안의 인쇄 면적·먹1도 기준에 서울 택배 배송비까지 포함한 금액이고, 300·400장은 인쇄 가능 최소수량입니다. 엠유 단상자는 재질과 인쇄(먹1도 로고)가 래포리와 같은 수준인데 값은 유패키지의 1.5~3.8배이고 배송비 별도입니다. 두 사이즈 합쳐 약 127만 원(VAT 포함)이니, 먼저 한 사이즈만 최소수량으로 시작하는 쪽이 재고 부담이 적습니다.</p>
+  </div>
+
+  <div class="block" id="string">
+    <div class="block-head"><h3>2. 포장 끈</h3><span class="sz">래포리패키지 단일 후보 · 품목 리본은 마끈, 상자 묶음은 공단 또는 스웨이드</span></div>
+    <div class="tbl"><table>
+      <thead><tr><th>품목</th><th>규격</th><th class="r">가격</th><th class="r">m당</th><th>용도</th></tr></thead>
+      <tbody>
+        <tr class="best"><td><a class="p" href="https://hangarampackage.shop/product/%EC%BB%AC%EB%9F%AC-%EB%A7%88%EB%81%88-%EB%B8%94%EB%9E%99-2mm-50m/4952/category/125/display/1/" target="_blank" rel="noopener">컬러 마끈 블랙</a></td><td>2mm × 50m</td><td class="r num">2,300원</td><td class="r num">46원</td><td><span class="tag t-best">품목 리본</span></td></tr>
+        <tr class="best"><td><a class="p" href="https://hangarampackage.shop/product/%EA%B3%B5%EB%8B%A8%EB%A6%AC%EB%B3%B8%EB%81%88-%EB%B2%84%EA%B1%B4%EB%94%94-6mm-22m/9784/category/261/display/1/" target="_blank" rel="noopener">공단리본끈 버건디</a></td><td>6mm × 22m</td><td class="r num">900원</td><td class="r num">41원</td><td><span class="tag t-best">상자 묶음 (기본)</span></td></tr>
+        <tr><td><a class="p" href="https://hangarampackage.shop/product/%EA%B3%B5%EB%8B%A8%EB%A6%AC%EB%B3%B8%EB%81%88-%EC%96%91%EB%A9%B4-%EB%B8%94%EB%9E%99-3mm-45m/9789/category/261/display/1/" target="_blank" rel="noopener">공단리본끈 양면 블랙</a></td><td>3mm × 45m</td><td class="r num">2,700원</td><td class="r num">60원</td><td>상자 묶음 대안</td></tr>
+        <tr><td><a class="p" href="https://hangarampackage.shop/product/%EC%8A%A4%EC%9B%A8%EC%9D%B4%EB%93%9C%EB%81%88-%EC%98%A4%EB%A0%8C%EC%A7%80%EB%B8%8C%EB%9D%BC%EC%9A%B4-25mm-20m/4876/category/127/display/1/" target="_blank" rel="noopener">스웨이드끈 오렌지브라운</a> / <a class="p" href="https://hangarampackage.shop/product/%EC%8A%A4%EC%9B%A8%EC%9D%B4%EB%93%9C%EB%81%88-%EB%B8%94%EB%9E%99-25mm-20m/4856/category/127/display/1/" target="_blank" rel="noopener">블랙</a></td><td>2.5mm × 20m</td><td class="r num">3,900원</td><td class="r num">195원</td><td>상자 묶음 (고급)</td></tr>
+        <tr><td><a class="p" href="https://hangarampackage.shop/product/%EC%8A%A4%EC%9B%A8%EC%9D%B4%EB%93%9C%EB%81%88-%EC%98%A4%EB%A0%8C%EC%A7%80%EB%B8%8C%EB%9D%BC%EC%9A%B4-25mm-90m/4877/category/127/display/1/" target="_blank" rel="noopener">스웨이드끈 오렌지브라운</a> / <a class="p" href="https://hangarampackage.shop/product/%EC%8A%A4%EC%9B%A8%EC%9D%B4%EB%93%9C%EB%81%88-%EB%B8%94%EB%9E%99-25mm-90m/4857/category/127/display/1/" target="_blank" rel="noopener">블랙</a></td><td>2.5mm × 90m</td><td class="r num">10,800원</td><td class="r num">120원</td><td>스웨이드를 쓸 거면 90m 롤 (20m 대비 m당 38% 저렴)</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="block" id="tissue">
+    <div class="block-head"><h3>3. 습자지 (포장 종이)</h3><span class="sz">품목당 2~3장</span></div>
+    <div class="tbl"><table>
+      <thead><tr><th>발주처</th><th>품목</th><th class="r">가격</th><th class="r">2절 1매당</th><th>비고</th></tr></thead>
+      <tbody>
+        <tr class="best"><td class="vn">하나페이퍼몰</td><td><a class="p" href="https://hanapapermall.co.kr/product/detail.html?product_no=4952" target="_blank" rel="noopener">포장용 색화지 2절 250매 화이트</a></td><td class="r num">8,300원</td><td class="r num">33원</td><td><span class="tag t-best">추천</span> 소량·재단 불필요. 습자지가 아닌 색화지</td></tr>
+        <tr><td class="vn">신식상점</td><td><a class="p" href="https://sinsic.co.kr/product/%EC%8A%B5%EC%9E%90%EC%A7%80-14g-%EC%8B%A0%EC%8B%9D%EC%83%81%EC%A0%90-%EC%9E%AC%EB%8B%A8%EC%83%81%ED%92%88/53/" target="_blank" rel="noopener">습자지 14g 전지 500매</a><small>무료 재단 → 2절 1,000매</small></td><td class="r num">49,000원</td><td class="r num">49원</td><td>진짜 습자지 질감. 1,000매 한 번에 재고</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="block" id="sticker">
+    <div class="block-head"><h3>4. 원형 스티커 50×50mm</h3><span class="sz">세트당 1개 · 쇼핑백용 사각 스티커는 별도 구성</span></div>
+    <div class="tbl"><table>
+      <thead><tr><th>발주처</th><th>제품 · 사양</th><th class="r">가격</th><th class="r">개당</th><th>비고</th></tr></thead>
+      <tbody>
+        <tr class="best"><td class="vn">성원애드피아</td><td><a class="p" href="https://www.swadpia.co.kr/goods/goods_view/CST2000/GST2001" target="_blank" rel="noopener">도무송형 스티커</a><small>75 아트지 · 보유목형 · 단면칼라 · 1장에 2개</small></td><td class="r"><span class="num">14,300원</span> / 500장<small>+ 택배비</small></td><td class="r num">15원</td><td><span class="tag t-best">추천</span> 실제 스티커 1,000개. 엽서와 묶어 택배비 1회</td></tr>
+        <tr><td class="vn">하나페이퍼몰</td><td><a class="p" href="https://hanapapermall.co.kr/product/detail.html?product_no=5411&amp;cate_no=454&amp;display_group=1" target="_blank" rel="noopener">스티커 50×50mm 1,000매</a></td><td class="r"><span class="num">17,850원</span><small>+ 택배비</small></td><td class="r num">18원</td><td>인쇄 여부 확인 필요. 무지 라벨이면 성원과 용도 다름</td></tr>
+        <tr><td class="vn">엠유플랜박스<small>견적서 2026-10-12</small></td><td><a class="p" href="https://muplanbox.com/product/%EC%8A%A4%ED%8B%B0%EC%BB%A4-ms-2098/952/category/97/display/1/" target="_blank" rel="noopener">스티커 MS-2098</a><small>아트지 · 단면 원색4도 · 코팅 없음</small></td><td class="r"><span class="num">47,000원</span> / 200장<br><span class="num">60,000원</span> / 500장<small>VAT 별도 · 무료배송</small></td><td class="r"><span class="num">259원</span><br><span class="num">132원</span><small>VAT 포함</small></td><td><span class="tag t-no">제외</span> 성원의 9배</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="block" id="postcard">
+    <div class="block-head"><h3>5. 브랜드 엽서</h3><span class="sz">약 100×130~148mm · 세트당 1매</span></div>
+    <div class="tbl"><table>
+      <thead><tr><th>발주처</th><th>제품 · 사양</th><th class="r">가격</th><th class="r">장당</th><th>비고</th></tr></thead>
+      <tbody>
+        <tr class="best"><td class="vn">성원애드피아</td><td><a class="p" href="https://www.swadpia.co.kr/goods/goods_view/COD3000/GOD3001" target="_blank" rel="noopener">디지털 엽서/상품권</a><small>토너 · 아르떼 울트라화이트 230g · 앞뒤 먹1도</small></td><td class="r"><span class="num">6,490원</span> / 100매</td><td class="r num">65원</td><td><span class="tag t-best">추천</span> 100매 단위라 초기 물량에 맞음. 700매 한 번에 견적 받으면 더 내려갈 여지</td></tr>
+        <tr><td class="vn">엠유플랜박스<small>견적서 2026-10-12</small></td><td><a class="p" href="https://muplanbox.com/product/%EC%97%BD%EC%84%9C%EC%B9%B4%EB%93%9C-ms-2079/790/category/143/display/1/" target="_blank" rel="noopener">엽서카드 100×130</a><small>랑데뷰 네추럴 240g / 스노우지 200g · 양면 먹1도 · 코팅 없음</small></td><td class="r"><span class="num">55,000원</span> / 200장<br><span class="num">80,000원</span> / 500장<small>VAT 별도 · 무료배송</small></td><td class="r"><span class="num">303원</span><br><span class="num">176원</span><small>VAT 포함</small></td><td>성원과 같은 먹1도 사양에 2.7~4.7배</td></tr>
+        <tr><td class="vn">엠유플랜박스<small>견적서 2026-10-12</small></td><td><a class="p" href="https://muplanbox.com/product/%EC%97%BD%EC%84%9C%EC%B9%B4%EB%93%9C-ms-2079/790/category/143/display/1/" target="_blank" rel="noopener">엽서카드 100×130</a><small>M러프 190g · 양면 먹1도 · 코팅 없음</small></td><td class="r"><span class="num">70,000원</span> / 200장<br><span class="num">100,000원</span> / 500장<small>VAT 별도 · 무료배송</small></td><td class="r"><span class="num">385원</span><br><span class="num">220원</span><small>VAT 포함</small></td><td></td></tr>
+        <tr><td class="vn">포스트링</td><td><a class="p" href="https://www.postring.co.kr/shop/goods/goods_view.php?goodsno=2379&amp;upload_method=irock" target="_blank" rel="noopener">규격 엽서 148×100</a><small>아르떼 230g · 양면</small></td><td class="r"><span class="num">34,800원</span> / 120장</td><td class="r num">290원</td><td>성원의 4.5배</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">성원이 먹1도 토너여서 가장 싼 것이기도 합니다. 컬러 그림 엽서로 가려면 성원에서 컬러 옵션 재견적을 받아 비교하는 편이 엠유로 가는 것보다 여전히 유리할 가능성이 큽니다.</p>
+  </div>
+
+  <div class="block" id="etc">
+    <div class="block-head"><h3>6. 에어캡 · 7. 완충 스티로폼 · 품명 스티커</h3></div>
+    <div class="tbl"><table>
+      <thead><tr><th>품목</th><th>발주처</th><th class="r">가격</th><th>비고</th></tr></thead>
+      <tbody>
+        <tr class="best"><td>에어캡 롤</td><td class="vn">동네 철물점·잡화상</td><td class="r num">약 5,000원 / 롤</td><td><span class="tag t-best">추천</span> 사용자 경험담 기준. 폭·길이가 유패키지 롤과 같은지 확인. 당일 구매, 배송비 없음</td></tr>
+        <tr><td><a class="p" href="https://www.upackage.co.kr/sub/item_zoom.asp?num=24" target="_blank" rel="noopener">에어캡롤 50×50cm</a></td><td class="vn">유패키지</td><td class="r num">18,000원</td><td>철물점 규격이 작거나 재고가 없을 때 상자 발주에 동봉</td></tr>
+        <tr><td>완충 스티로폼</td><td class="vn">아빠 거래처</td><td class="r">—</td><td>발주 없음</td></tr>
+        <tr><td>품명 스티커</td><td class="vn">자체 출력</td><td class="r">—</td><td>초기 주문량이 적어 프린터 라벨지 사용. 한글 라벨 템플릿 활용</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="block" id="bag">
+    <div class="block-head"><h3>8. 쇼핑백 (추가 구성)</h3><span class="sz">무지 화이트 쇼핑백 + 사각 스티커 · 상자가 들어가야 함 (큰 36×27×11 / 작은 27×22×11)</span></div>
+    <div class="tbl"><table>
+      <thead><tr><th>발주처</th><th>제품</th><th>규격 (가로×높이×옆폭)</th><th class="r">가격</th><th>상자 적합</th><th>비고</th></tr></thead>
+      <tbody>
+        <tr class="best"><td class="vn">래포리패키지</td><td><a class="p" href="https://hangarampackage.shop/product/%EA%B3%A0%EA%B8%89-%EC%87%BC%ED%95%91%EB%B0%B1-%ED%99%94%EC%9D%B4%ED%8A%B8-40x28x12cm/4744/category/122/display/1/" target="_blank" rel="noopener">고급 쇼핑백 화이트 40×28×12</a></td><td>40 × 28 × 12cm</td><td class="r num">2,500원 / 장</td><td><span class="tag t-best">큰 상자 OK</span><small>여유 4·1·1cm</small></td><td><span class="tag t-warn">현재 품절</span> 낱장 주문, 10만 원 이상 무료배송</td></tr>
+        <tr class="best"><td class="vn">래포리패키지</td><td><a class="p" href="https://hangarampackage.shop/product/%EA%B3%A0%EA%B8%89-%EC%87%BC%ED%95%91%EB%B0%B1-%ED%99%94%EC%9D%B4%ED%8A%B8-30x25x15cm/4741/category/122/display/1/" target="_blank" rel="noopener">고급 쇼핑백 화이트 30×25×15</a></td><td>30 × 25 × 15cm</td><td class="r num">3,300원 / 장</td><td><span class="tag t-best">작은 상자 OK</span><small>여유 3·3·4cm</small></td><td><span class="tag t-warn">현재 품절</span> 작은 쪽이 더 비쌈(옆폭 15cm)</td></tr>
+        <tr><td class="vn">핸즈픽</td><td><a class="p" href="https://m.hanzpick.com/product/detail.html?product_no=127&amp;cate_no=54&amp;display_group=1" target="_blank" rel="noopener">화이트 버튼 고급 종이쇼핑백 33호</a></td><td>33 × 28 × 10cm</td><td class="r"><span class="num">7,800원</span><small>단위 불명(1장인지 묶음인지) · 100/200매 옵션</small></td><td><span class="tag t-no">둘 다 불가</span><small>옆폭 10cm &lt; 상자 11cm</small></td><td>블랙 면끈 손잡이, 인쇄 제작 가능. 현재 품절 표시</td></tr>
+        <tr><td class="vn">핸즈픽</td><td><a class="p" href="https://m.hanzpick.com/product/detail.html?product_no=127&amp;cate_no=54&amp;display_group=1" target="_blank" rel="noopener">화이트 버튼 고급 종이쇼핑백 31호</a></td><td>31 × 43 × 12cm</td><td class="r"><span class="num">7,800원</span><small>단위 불명</small></td><td><span class="tag t-warn">작은 상자만</span><small>높이 43cm라 21cm 남음</small></td><td>큰 상자(36cm)는 가로가 모자람</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">규격만 보면 래포리 두 종이 큰·작은 상자에 각각 맞는 유일한 조합입니다. 둘 다 품절이라 재입고 알림을 걸고, 핸즈픽은 가격 단위와 41호(41×31×12, 큰 상자 적합) 재고를 문의해 볼 만합니다. 쇼핑백용 사각 스티커는 원형과 별도 구성이라 성원애드피아 도무송(보유 목형 사각)으로 사이즈 정해서 재견적이 필요합니다. 추가 구성 원가는 쇼핑백 2,500~3,300원 + 사각 스티커 약 15~30원입니다.</p>
+  </div>
+</section>
+
+<section id="carts">
+  <h2><span class="k">03</span>발주처별 묶음 주문</h2>
+  <p class="note">배송비를 한 번씩만 내도록 같은 발주처 품목을 묶었습니다. 온라인 4곳 + 동네 철물점(에어캡)에서 끝납니다.</p>
+  <div class="carts">
+    <div class="cart">
+      <h3>① 유패키지 <a class="site" href="https://www.upackage.co.kr/" target="_blank" rel="noopener">upackage.co.kr</a></h3>
+      <ul>
+        <li><span>G형 상자 36×27×11 · 300장</span><span class="num">643,896원 (VAT 포함)</span></li>
+        <li><span>G형 상자 27×22×11 · 400장</span><span class="num">629,046원 (VAT 포함)</span></li>
+        <li><span><a class="p" href="https://www.upackage.co.kr/sub/item_zoom.asp?num=24" target="_blank" rel="noopener">에어캡롤 50×50cm</a> (철물점에 없을 때만)</span><span class="num">18,000원</span></li>
+      </ul>
+      <p class="hint">상자 금액은 서울 택배비 포함. 두 사이즈 동시 발주 시 약 127만 원, 한 사이즈만 시작하면 약 63~65만 원. 에어캡은 동네 철물점(롤당 약 5,000원)이 먼저.</p>
+    </div>
+    <div class="cart">
+      <h3>② 래포리패키지 <a class="site" href="https://hangarampackage.shop/" target="_blank" rel="noopener">hangarampackage.shop</a></h3>
+      <ul>
+        <li><span><a class="p" href="https://hangarampackage.shop/product/%EC%BB%AC%EB%9F%AC-%EB%A7%88%EB%81%88-%EB%B8%94%EB%9E%99-2mm-50m/4952/category/125/display/1/" target="_blank" rel="noopener">마끈 블랙 2mm 50m</a> (품목 리본)</span><span class="num">2,300원/롤</span></li>
+        <li><span><a class="p" href="https://hangarampackage.shop/product/%EA%B3%B5%EB%8B%A8%EB%A6%AC%EB%B3%B8%EB%81%88-%EB%B2%84%EA%B1%B4%EB%94%94-6mm-22m/9784/category/261/display/1/" target="_blank" rel="noopener">공단 버건디 6mm 22m</a> 또는 <a class="p" href="https://hangarampackage.shop/product/%EC%8A%A4%EC%9B%A8%EC%9D%B4%EB%93%9C%EB%81%88-%EC%98%A4%EB%A0%8C%EC%A7%80%EB%B8%8C%EB%9D%BC%EC%9A%B4-25mm-90m/4877/category/127/display/1/" target="_blank" rel="noopener">스웨이드 90m</a> (상자 묶음)</span><span class="num">900 / 10,800원</span></li>
+        <li><span><a class="p" href="https://hangarampackage.shop/product/%EA%B3%A0%EA%B8%89-%EC%87%BC%ED%95%91%EB%B0%B1-%ED%99%94%EC%9D%B4%ED%8A%B8-40x28x12cm/4744/category/122/display/1/" target="_blank" rel="noopener">고급 쇼핑백 40×28×12</a> (큰 상자용)</span><span class="num">2,500원/장 · 품절</span></li>
+        <li><span><a class="p" href="https://hangarampackage.shop/product/%EA%B3%A0%EA%B8%89-%EC%87%BC%ED%95%91%EB%B0%B1-%ED%99%94%EC%9D%B4%ED%8A%B8-30x25x15cm/4741/category/122/display/1/" target="_blank" rel="noopener">고급 쇼핑백 30×25×15</a> (작은 상자용)</span><span class="num">3,300원/장 · 품절</span></li>
+      </ul>
+      <p class="hint">끈 + 쇼핑백을 한 장바구니로. 쇼핑백 40장 정도면 10만 원을 넘겨 무료배송입니다. 재입고 전까지는 끈만.</p>
+    </div>
+    <div class="cart">
+      <h3>③ 성원애드피아 <a class="site" href="https://www.swadpia.co.kr/" target="_blank" rel="noopener">swadpia.co.kr</a></h3>
+      <ul>
+        <li><span><a class="p" href="https://www.swadpia.co.kr/goods/goods_view/CST2000/GST2001" target="_blank" rel="noopener">원형 스티커 50mm 도무송 500장</a></span><span class="num">14,300원</span></li>
+        <li><span><a class="p" href="https://www.swadpia.co.kr/goods/goods_view/COD3000/GOD3001" target="_blank" rel="noopener">엽서 먹1도 양면 100매</a></span><span class="num">6,490원</span></li>
+        <li><span>쇼핑백용 사각 스티커 (사이즈 미정)</span><span>재견적</span></li>
+      </ul>
+      <div class="sum"><span>소계</span><span class="num">20,790원 + 사각 스티커 + 택배비</span></div>
+      <p class="hint">인쇄물 3종을 한 주문으로. 택배비 1회로 끝.</p>
+    </div>
+    <div class="cart">
+      <h3>④ 하나페이퍼몰 <a class="site" href="https://hanapapermall.co.kr/" target="_blank" rel="noopener">hanapapermall.co.kr</a></h3>
+      <ul>
+        <li><span><a class="p" href="https://hanapapermall.co.kr/product/detail.html?product_no=4952" target="_blank" rel="noopener">포장용 색화지 2절 250매 화이트</a></span><span class="num">8,300원</span></li>
+      </ul>
+      <div class="sum"><span>소계</span><span class="num">8,300원 × 팩 수 + 택배비</span></div>
+      <p class="hint">1회 상자 물량이면 11~21팩. 습자지 질감이 꼭 필요하면 <a class="p" href="https://sinsic.co.kr/product/%EC%8A%B5%EC%9E%90%EC%A7%80-14g-%EC%8B%A0%EC%8B%9D%EC%83%81%EC%A0%90-%EC%9E%AC%EB%8B%A8%EC%83%81%ED%92%88/53/" target="_blank" rel="noopener">신식상점 49,000원(1,000매)</a>으로 대체.</p>
+    </div>
+    <div class="cart">
+      <h3>⑤ 동네 철물점·잡화상</h3>
+      <ul>
+        <li><span>에어캡 롤 (폭·길이 확인)</span><span class="num">약 5,000원/롤</span></li>
+      </ul>
+      <p class="hint">직접 구매. 1회 상자 물량 기준 약 17롤.</p>
+    </div>
+    <div class="cart skip">
+      <h3>엠유플랜박스 <span class="tag t-no">발주 안 함</span></h3>
+      <ul>
+        <li><span>골판지 단상자 (G형 아님, 먹1도 로고)</span><span class="num">개당 2,864~6,548원</span></li>
+        <li><span>스티커 50mm 4도</span><span>성원의 9배</span></li>
+        <li><span>엽서 먹1도</span><span>성원의 2.7~6배</span></li>
+      </ul>
+      <p class="hint">10/12 견적서 기준. 세 품목 모두 다른 곳이 낫습니다. 견적 유효기간은 11/11까지.</p>
+    </div>
+    <div class="cart skip">
+      <h3>보류 <span class="tag t-no">래포리 상자 · 상자연구소 · 포스트링 · 핸즈픽</span></h3>
+      <ul>
+        <li><span>래포리 G형 상자</span><span>간단 로고 인쇄만 가능 → 제외</span></li>
+        <li><span>상자연구소 합지 상자 500개</span><span class="num">개당 2,464~2,750원 · 합지 원하면 재견적</span></li>
+        <li><span>포스트링 엽서 120장</span><span class="num">34,800원 · 성원의 4.5배</span></li>
+        <li><span>핸즈픽 쇼핑백 31·33호</span><span>상자 규격 불일치 · 41호 문의</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="unit">
+  <h2><span class="k">04</span>세트 1개당 자재비</h2>
+  <p class="note">세트 구성: 상자 1개 + 품목마다 에어캡·습자지 2~3장·마끈 리본 + 상자 묶는 끈 + 스티커 1개 + 엽서 1매. 큰 세트는 품목 3개, 작은 세트는 품목 1~2개. 단가는 모두 VAT 포함이고, 스티로폼(아빠 거래처)은 0원으로 두었습니다. 쇼핑백은 추가 구성이라 별도입니다.</p>
+  <div class="grid">
+    <div class="unit">
+      <span class="h">큰 세트 · 36×27×11 · 품목 3개</span>
+      <span>상자 (유패키지 300장)</span><span class="num">2,146원</span>
+      <span>습자지 6~9매 × 33원</span><span class="num">198 ~ 297원</span>
+      <span>에어캡 3품목 × 약 0.5m</span><span class="num">150원</span>
+      <span>마끈 리본 3개 × 약 0.6m</span><span class="num">90원</span>
+      <span>상자 묶는 끈 약 2m (공단 버건디)</span><span class="num">82원</span>
+      <span>원형 스티커 1 + 엽서 1</span><span class="num">80원</span>
+      <span class="tot">합계</span><span class="tot num">약 2,750 ~ 2,850원</span>
+      <span class="tot sub" style="font-weight:400">묶는 끈을 스웨이드로 하면</span><span class="tot sub num" style="font-weight:400">+ 160원</span>
+      <span class="tot sub" style="font-weight:400">쇼핑백 추가 시</span><span class="tot sub num" style="font-weight:400">+ 2,500원 + 사각 스티커</span>
+    </div>
+    <div class="unit">
+      <span class="h">작은 세트 · 27×22×11 · 품목 1~2개</span>
+      <span>상자 (유패키지 400장)</span><span class="num">1,573원</span>
+      <span>습자지 2~6매 × 33원</span><span class="num">66 ~ 198원</span>
+      <span>에어캡 1~2품목</span><span class="num">50 ~ 100원</span>
+      <span>마끈 리본 1~2개</span><span class="num">30 ~ 60원</span>
+      <span>상자 묶는 끈 약 1.7m (공단 버건디)</span><span class="num">70원</span>
+      <span>원형 스티커 1 + 엽서 1</span><span class="num">80원</span>
+      <span class="tot">합계 (품목 1개)</span><span class="tot num">약 1,870 ~ 1,900원</span>
+      <span class="tot">합계 (품목 2개)</span><span class="tot num">약 2,000 ~ 2,080원</span>
+      <span class="tot sub" style="font-weight:400">쇼핑백 추가 시</span><span class="tot sub num" style="font-weight:400">+ 3,300원 + 사각 스티커</span>
+    </div>
+  </div>
+  <p class="note">상자가 큰 세트 자재비의 75%, 작은 세트의 80%를 차지합니다. 에어캡은 철물점 롤을 50cm×50m 5,000원(m당 100원)으로 가정했고, 마끈은 블랙 2mm 50m 2,300원(m당 46원) 기준입니다. 롤 길이가 다르면 품목당 50~150원 범위에서 움직이지만 세트 합계에는 큰 영향이 없습니다.</p>
+
+  <h3>1회 상자 물량(큰 300 + 작은 400 세트) 소모량</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>자재</th><th class="r">필요량</th><th>발주 단위</th><th class="r">발주 수량</th><th class="r">금액</th></tr></thead>
+    <tbody>
+      <tr><td>습자지 2절<small>큰 6~9매, 작은 2~6매 기준</small></td><td class="r num">2,600 ~ 5,100매</td><td><a class="p" href="https://hanapapermall.co.kr/product/detail.html?product_no=4952" target="_blank" rel="noopener">하나페이퍼몰 250매</a> 8,300원</td><td class="r num">11 ~ 21팩</td><td class="r num">91,300 ~ 174,300원</td></tr>
+      <tr><td>에어캡<small>1,700품목 × 0.5m</small></td><td class="r num">약 850m</td><td>철물점 롤 50m 5,000원</td><td class="r num">17롤</td><td class="r num">85,000원</td></tr>
+      <tr><td>마끈 리본<small>1,700품목 × 0.6m</small></td><td class="r num">약 1,020m</td><td><a class="p" href="https://hangarampackage.shop/product/%EC%BB%AC%EB%9F%AC-%EB%A7%88%EB%81%88-%EB%B8%94%EB%9E%99-2mm-50m/4952/category/125/display/1/" target="_blank" rel="noopener">래포리 마끈 블랙 50m</a> 2,300원</td><td class="r num">21롤</td><td class="r num">48,300원</td></tr>
+      <tr><td>상자 묶는 끈<small>큰 2m × 300 + 작은 1.7m × 400</small></td><td class="r num">약 1,280m</td><td><a class="p" href="https://hangarampackage.shop/product/%EA%B3%B5%EB%8B%A8%EB%A6%AC%EB%B3%B8%EB%81%88-%EB%B2%84%EA%B1%B4%EB%94%94-6mm-22m/9784/category/261/display/1/" target="_blank" rel="noopener">공단 버건디 22m</a> 900원 / <a class="p" href="https://hangarampackage.shop/product/%EC%8A%A4%EC%9B%A8%EC%9D%B4%EB%93%9C%EB%81%88-%EC%98%A4%EB%A0%8C%EC%A7%80%EB%B8%8C%EB%9D%BC%EC%9A%B4-25mm-90m/4877/category/127/display/1/" target="_blank" rel="noopener">스웨이드 90m</a> 10,800원</td><td class="r num">59롤 / 15롤</td><td class="r num">53,100 / 162,000원</td></tr>
+      <tr><td>원형 스티커</td><td class="r num">700개</td><td><a class="p" href="https://www.swadpia.co.kr/goods/goods_view/CST2000/GST2001" target="_blank" rel="noopener">성원 500장(1,000개)</a> 14,300원</td><td class="r num">1건</td><td class="r num">14,300원 + 택배</td></tr>
+      <tr><td>엽서</td><td class="r num">700매</td><td><a class="p" href="https://www.swadpia.co.kr/goods/goods_view/COD3000/GOD3001" target="_blank" rel="noopener">성원 100매</a> 6,490원</td><td class="r num">7건분</td><td class="r num">45,430원 + 택배</td></tr>
+      <tr><td>상자</td><td class="r num">300 + 400개</td><td><a class="p" href="https://www.upackage.co.kr/" target="_blank" rel="noopener">유패키지</a> 최소수량 그대로</td><td class="r num">—</td><td class="r num">1,272,942원</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">습자지는 한 번에 10팩 이상 필요하니, 2절 재단된 신식상점 1,000매(49,000원, 매당 49원)와 질감까지 포함해 다시 비교해 볼 만합니다. 가격만 보면 하나페이퍼몰이 여전히 30% 쌉니다. 엽서는 성원에서 700매를 한 번에 견적 받으면 100매 단가보다 내려갈 가능성이 큽니다.</p>
+</section>
+
+<footer>모든 가격은 2026-10-18 기준 태스크·견적서 기재 금액이며, 장당 단가는 기재 금액을 수량으로 나눈 뒤 VAT 별도 표기분에 10%를 더한 값입니다. 품절·가격은 상품 페이지에서 다시 확인하세요.</footer>
+</div>
+
+</body>
+</html>
