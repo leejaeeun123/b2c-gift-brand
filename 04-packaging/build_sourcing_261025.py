@@ -105,7 +105,7 @@ def box_net(folder, label, size, top_cap):
 DESIGNS = f"""
 <section id="designs">
   <h2><span class="k">00</span>패키지 시안 (2026-10-25)</h2>
-  <p class="note">인쇄물 시안 7종입니다. 각 카드의 발주처·견적은 01 최종 발주처와 연결되고, 사이즈는 시안 기준 확정값입니다. 상자 아랫면은 인쇄하지 않습니다(품명 스티커는 라벨지 자체 출력). 10-25 낮에 만든 종이 목업 사진을 함께 넣었습니다.</p>
+  <p class="note">인쇄물 시안 7종입니다. 각 카드의 발주처·견적은 01 최종 발주처와 연결되고, 사이즈는 시안 기준 확정값입니다. 상자 아랫면은 인쇄하지 않습니다(품명 스티커는 보류 · 자체 출력/발주 미정). 10-25 낮에 만든 종이 목업 사진을 함께 넣었습니다.</p>
   <div class="designs">
     <div class="design wide">
       <div class="dh"><h3>1. 선물세트 상자</h3><span class="sz">흰색 G형 일체형 · 먹1도 · 윗면 + 옆면 4면 · 큰 360×270×110 / 작은 270×220×110mm</span></div>
@@ -180,7 +180,7 @@ sub("핸즈픽 31·33호는 상자가 안 들어가거나 너무 깊음. 사각 
     "10-25 상품 페이지 재확인: 두 규격 모두 SOLD OUT 표기, 최대 주문수량 0(카테고리 목록에는 품절이 안 보일 수 있음). 핸즈픽 31·33호는 상자가 안 들어가거나 너무 깊음. 사각 스티커는 성원애드피아(위 카드).")
 
 sub('<div class="vendor">발주 없음</div><div class="price">자체 출력 · 거래처 조달</div><p class="why">품명 스티커는 프린터 라벨지(한글 템플릿), 스티로폼은 아빠 거래처.</p>',
-    '<div class="vendor">발주 없음 · 스티로폼 <span class="tag t-warn">보류</span></div><div class="price">자체 출력 · 스티로폼은 당분간 미사용</div><p class="why">품명 스티커는 프린터 라벨지(한글 템플릿). 스티로폼은 10-25 보류 결정, 에어캡+습자지로만 완충.</p>')
+    '<div class="vendor">둘 다 <span class="tag t-warn">보류</span></div><div class="price">품명 스티커는 자체 출력/성원 발주 미정 · 스티로폼은 당분간 미사용</div><p class="why">10-25 결정. 스티로폼은 에어캡+습자지로만 완충.</p>')
 
 # ── 02 상세: 사이즈 표기 + 신규 인쇄물 블록 ─────────────────────────────
 sub('<span class="sz">약 100×130~148mm · 세트당 1매</span>', '<span class="sz">100×148mm (시안 확정) · 세트당 1매</span>')
@@ -316,9 +316,9 @@ SUMMARY = """<section id="summary">
       <div class="vt"><span>합계</span><span class="num">약 5,000원</span></div>
     </div>
     <div class="vcard">
-      <div class="vh"><h3>발주 없음 · 보류</h3></div>
+      <div class="vh"><h3>보류 2종</h3><span class="vs">오픈 전 결정</span></div>
       <ul>
-        <li><span>품명 스티커<small>프린터 라벨지 자체 출력 (한글 템플릿)</small></span><span class="num">0원</span></li>
+        <li><span>품명 스티커 (상자 안 품목 표시) <span class="tag t-warn">보류</span><small>자체 출력(라벨지)으로 갈지 성원에 추가 발주할지 미정 · 발주 시 성원 주문에 얹기</small></span><span class="num">—</span></li>
         <li><span>완충 스티로폼 <span class="tag t-warn">보류</span><small>10-25 결정 · 에어캡 + 습자지로만 완충</small></span><span class="num">—</span></li>
       </ul>
     </div>
