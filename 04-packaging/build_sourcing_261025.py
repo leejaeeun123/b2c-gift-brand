@@ -239,5 +239,142 @@ sub('<a href="#tissue">습자지</a><a href="#sticker">',
 sub("<footer>모든 가격은 2026-10-18 기준 태스크·견적서 기재 금액이며,",
     "<footer>시안은 2026-10-25 기준. 가격은 2026-10-18 기준 태스크·견적서 기재 금액이며(네임택·사각 스티커·명함·트레이싱지는 추정 또는 오픈마켓 시세),")
 
+# ── 10-25 실제 견적 반영 + 01 발주처별 묶음 ──────────────────────────────
+import re as _re
+
+VCSS = """
+.vendors{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:14px}
+.vcard{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;display:flex;flex-direction:column;gap:8px}
+.vcard.wide{grid-column:1/-1}
+.vcard .vh{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.vcard .vh h3{font-size:16px}
+.vcard .vh h3 a{color:inherit;text-decoration:none;border-bottom:1px solid var(--line-strong)}
+.vcard .vh .vs{font-size:12.5px;color:var(--muted)}
+.vcard ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.vcard li{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-top:1px dashed var(--line);font-size:13.5px}
+.vcard li:first-child{border-top:0}
+.vcard li .num{white-space:nowrap}
+.vcard li small{display:block;color:var(--muted);font-size:12px}
+.vcard .vt{display:flex;justify-content:space-between;gap:12px;padding-top:10px;border-top:2px solid var(--ink);font-weight:700;font-size:14.5px}
+.vcard .vt small{font-weight:400;color:var(--muted);font-size:12px}
+.vcard .vn{font-size:12.5px;color:var(--muted);margin:0;line-height:1.55}
+.grand{margin-top:14px;background:#16130F;color:#FAF7F0;border-radius:var(--radius);padding:14px 18px;display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.grand .num{font-size:20px;font-weight:700}
+.grand small{opacity:.75;font-size:12.5px;color:#FAF7F0}
+.grand .num{color:#FAF7F0}
+"""
+sub("</style>", VCSS + "</style>")
+
+SUMMARY = """<section id="summary">
+  <h2><span class="k">01</span>최종 발주처 · 발주처별 합계</h2>
+  <p class="note">같은 발주처 품목을 한 카드에 모았습니다. 금액은 10-25 자동견적·견적서 기준, <b>VAT 포함</b>으로 통일했고, 성원애드피아·래포리·하나페이퍼몰은 <b>배송비 별도</b>입니다. 상자는 큰 300 + 작은 400장 최소수량, 인쇄물은 최소수량 1회분입니다. 명함만 견적 전(추정).</p>
+  <div class="vendors">
+    <div class="vcard wide">
+      <div class="vh"><h3>① <a href="https://www.upackage.co.kr/" target="_blank" rel="noopener">유패키지</a> — 선물세트 상자 2종</h3><span class="vs">자동견적 NO. 2026102517371044 · 2026-10-25 · G형 · E골 · WT.S.K · 검정 1도 · 5면 인쇄(정면·후면·좌·우·윗면) · 서울 마포 택배</span></div>
+      <ul>
+        <li><span>큰 360×270×110 (내경 345×267×107) · 300장<small>상품 321,560 + 목형 150,000 + 인쇄판 121,860 + 택배 30,000 = 623,420원 (VAT 별도)</small></span><span class="num">685,762원<small>장당 2,286원</small></span></li>
+        <li><span>작은 270×220×110 (내경 255×217×107) · 400장<small>상품 335,740 (839.35/장) + 목형 150,000 + 인쇄판 65,880 + 택배 30,000 = 581,620원 (VAT 별도)</small></span><span class="num">639,782원<small>장당 1,599원</small></span></li>
+      </ul>
+      <div class="vt"><span>유패키지 합계 <small>견적서 합계 1,325,540원 (VAT 별도) 기준</small></span><span class="num">1,458,094원</span></div>
+      <p class="vn">⚠ 견적서 합계(1,325,540)가 두 줄 항목 합(1,205,040)보다 120,500원 많습니다(상품합계 723,030 / 추가금액 602,510). 자동견적 집계 방식 차이로 보이니 발주 전 유패키지에 확인. ⚠ 기성 규격인데 목형비 150,000원이 사이즈마다 잡혀 있어 함께 확인(인쇄 신규제작 때문일 수 있음). 10-18 수기 견적(585,360 / 571,860)보다 각각 올랐습니다.</p>
+    </div>
+    <div class="vcard">
+      <div class="vh"><h3>② <a href="https://www.swadpia.co.kr/" target="_blank" rel="noopener">성원애드피아</a> — 인쇄물 5종</h3><span class="vs">견적서 2026-10-25 · 최소수량 · VAT 포함 · <b>배송비 별도</b></span></div>
+      <ul>
+        <li><span>포장 스티커 (원형 50×50) · 500장 = 1,000개<small>도무송 58×112 1장에 2개 · 아트 75g · 단면칼라</small></span><span class="num">14,300원<small>14원/개</small></span></li>
+        <li><span>쇼핑백 스티커 (사각 70×160) · 500매<small>아트 75g · 단면칼라</small></span><span class="num">13,530원<small>27원/개</small></span></li>
+        <li><span>브랜드 엽서 100×148 · 100매<small>랑데뷰 240g · 양면 먹1도 · 200매는 11,330원(57원/매)</small></span><span class="num">7,040원<small>70원/매</small></span></li>
+        <li><span>주의사항 네임택 80×140 · 100매<small>랑데뷰 240g · 양면 먹1도 · 200매는 9,570원(48원/매)</small></span><span class="num">6,160원<small>62원/매</small></span></li>
+        <li><span>명함 90×50 양면 · 200매 <span class="est">추정</span><small>견적 전 · 운영용이라 세트 원가 미포함</small></span><span class="num">약 5,000~8,000원</span></li>
+      </ul>
+      <div class="vt"><span>성원애드피아 합계 <small>명함 제외 · 배송비 별도</small></span><span class="num">41,030원</span></div>
+      <p class="vn">엽서·네임택을 200매로 올리면 48,730원. 다섯 품목을 한 주문으로 묶어 배송비 1회.</p>
+    </div>
+    <div class="vcard">
+      <div class="vh"><h3>③ <a href="https://hangarampackage.shop/" target="_blank" rel="noopener">래포리패키지</a> — 끈</h3><span class="vs">10-18 가격 · 배송비 3,500원 (10만 원 이상 무료)</span></div>
+      <ul>
+        <li><span>컬러 마끈 블랙 2mm × 50m (품목 리본) <span class="tag t-best">필수</span></span><span class="num">2,300원</span></li>
+        <li><span>공단리본끈 버건디 6mm × 22m (상자 묶음) <span class="tag t-acc">추가</span></span><span class="num">900원</span></li>
+        <li><span>고급 쇼핑백 화이트 40×28×12 / 30×25×15 (추가 구성)<small>10-25 재확인: 두 규격 모두 SOLD OUT · 재입고 시 2,500 / 3,300원</small></span><span class="num">—</span></li>
+      </ul>
+      <div class="vt"><span>래포리패키지 합계 <small>1롤씩 · 배송비 별도</small></span><span class="num">3,200원</span></div>
+      <p class="vn">물량 기준 소모량(마끈 21롤 · 공단 59롤)은 04 세트 원가 표 참고. 스웨이드로 바꾸면 90m 롤 10,800원.</p>
+    </div>
+    <div class="vcard">
+      <div class="vh"><h3>④ <a href="https://hanapapermall.co.kr/" target="_blank" rel="noopener">하나페이퍼몰</a> — 종이류</h3><span class="vs">배송비 별도</span></div>
+      <ul>
+        <li><span><a href="https://hanapapermall.co.kr/product/detail.html?product_no=4952" target="_blank" rel="noopener">포장용 색화지 2절 250매 화이트</a> (습자지 대용)</span><span class="num">8,300원<small>33원/매</small></span></li>
+        <li><span><a href="https://hanapapermall.co.kr/product/detail.html?product_no=4228&amp;cate_no=307&amp;display_group=1" target="_blank" rel="noopener">트레싱지 전지 22매</a> = 4절 88매 (맨 위 덮는 용) <span class="tag t-acc">신규</span><small>50g / 82g 선택 · 페이지에 SOLD OUT 이미지, 재입고 확인 · 대안 G마켓 4절 100매 6,590원</small></span><span class="num">9,500원<small>108원/매</small></span></li>
+      </ul>
+      <div class="vt"><span>하나페이퍼몰 합계 <small>1팩씩 · 배송비 별도</small></span><span class="num">17,800원</span></div>
+    </div>
+    <div class="vcard">
+      <div class="vh"><h3>⑤ 동네 철물점·잡화상 — 에어캡</h3><span class="vs">배송비 없음</span></div>
+      <ul><li><span>에어캡 롤 (폭·길이 확인)<small>유패키지 18,000원은 대안</small></span><span class="num">약 5,000원</span></li></ul>
+      <div class="vt"><span>합계</span><span class="num">약 5,000원</span></div>
+    </div>
+    <div class="vcard">
+      <div class="vh"><h3>발주 없음 · 보류</h3></div>
+      <ul>
+        <li><span>품명 스티커<small>프린터 라벨지 자체 출력 (한글 템플릿)</small></span><span class="num">0원</span></li>
+        <li><span>완충 스티로폼 <span class="tag t-warn">보류</span><small>10-25 결정 · 에어캡 + 습자지로만 완충</small></span><span class="num">—</span></li>
+      </ul>
+    </div>
+  </div>
+  <div class="grand"><span>1회 최소 발주 합계 <small>상자 700장 + 인쇄물 최소수량 + 끈·종이 1단위 · VAT 포함 · 명함 제외</small></span><span><span class="num">약 1,525,000원</span> <small>+ 택배비 3건(성원·래포리·하나)</small></span></div>
+</section>"""
+html = _re.sub(r'<section id="summary">.*?</section>', lambda m: SUMMARY, html, count=1, flags=_re.S)
+assert 'class="vendors"' in html
+
+# 00 시안 카드 문구
+sub('큰 2,146원 × 300장 = 643,896원 · 작은 1,573원 × 400장 = 629,046원 (VAT·서울 택배 포함, 10-18 견적). 견적의 인쇄 면적 기준(윗면+옆면)과 시안이 일치.',
+    '10-25 자동견적: 큰 300장 685,762원(2,286원/장) · 작은 400장 639,782원(1,599원/장), VAT·목형·인쇄판·서울 택배 포함. 인쇄면은 윗면+옆 4면으로 시안과 일치.')
+sub('도무송 500장(1장 2개) 14,300원 · 약 15원/개.', '견적서 10-25: 도무송 58×112 500장(1장 2개=1,000개) 14,300원 · 14원/개 · 배송비 별도.')
+sub('디지털 엽서 먹1도 양면 100매 6,490원 · 65원/매.', '견적서 10-25: 랑데뷰 240g 양면 먹1도 100매 7,040원(70원/매) · 200매 11,330원(57원/매) · 배송비 별도.')
+sub('엽서와 같은 디지털 인쇄로 비규격 사이즈 입력 · <span class="est">추정</span> 100매 약 6,500원 · 약 65원/매.', '견적서 10-25: 랑데뷰 240g 양면 먹1도 100매 6,160원(62원/매) · 200매 9,570원(48원/매) · 배송비 별도.')
+sub('도무송 사각라운드 비규격 · <span class="est">추정</span> 500개 약 15,000~20,000원 · 약 30~40원/개.', '견적서 10-25: 아트 75g 단면칼라 500매 13,530원 · 27원/개 · 배송비 별도.')
+
+# 02 상세: 신규 인쇄물 블록을 실제값으로
+sub('<h3>5-1. 신규 인쇄물 3종 — 성원애드피아 <span class="est">추정 견적</span></h3><span class="sz">10-25 시안에서 추가된 품목 · 사이트 주문창 계산 전</span>',
+    '<h3>5-1. 신규 인쇄물 3종 — 성원애드피아 견적서 (10-25)</h3><span class="sz">VAT 포함 · 배송비 별도 · 명함만 추정</span>')
+sub('<thead><tr><th>품목</th><th>사양</th><th class="r">추정 가격</th><th class="r">개당</th><th>환산 근거</th></tr></thead>',
+    '<thead><tr><th>품목</th><th>사양</th><th class="r">가격</th><th class="r">개당</th><th>비고</th></tr></thead>')
+sub('<td class="r"><span class="num">약 6,500원</span> / 100매</td><td class="r num">약 65원</td><td>엽서 100×148 100매 6,490원과 같은 상품·용지. 면적이 작아 같거나 조금 낮을 것</td>',
+    '<td class="r"><span class="num">6,160원</span> / 100매<br><span class="num">9,570원</span> / 200매</td><td class="r num">62원<br>48원</td><td>견적서 기준(랑데뷰 240g · 양면 먹1도 · 목형비 1,500 포함). 품목당 1매라 200매부터 시작해도 됨</td>')
+sub('<td class="r"><span class="num">약 15,000 ~ 20,000원</span> / 500개</td><td class="r num">약 30~40원</td><td>원형 50mm 500장(1,000개) 14,300원. 면적 약 3배라 1장 1개 배치로 가정. 쇼핑백 옵션 선택분만 필요하니 수량은 줄여도 됨</td>',
+    '<td class="r"><span class="num">13,530원</span> / 500매</td><td class="r num">27원</td><td>견적서 기준(아트 75g · 단면칼라). 쇼핑백 옵션 선택분만 필요하니 500매면 충분</td>')
+sub('<td class="r"><span class="num">약 5,000 ~ 8,000원</span> / 200매</td><td class="r num">약 25~40원</td><td>업계 일반 명함 시세. 운영용이라 세트 원가 미포함</td>',
+    '<td class="r"><span class="num">약 5,000 ~ 8,000원</span> / 200매 <span class="est">추정</span></td><td class="r num">약 25~40원</td><td>견적 전. 운영용이라 세트 원가 미포함</td>')
+sub('세 품목 모두 원형 스티커·엽서와 같은 주문으로 묶으면 택배비는 1회입니다. 정확한 금액은 성원애드피아 주문창에 사이즈·수량을 넣으면 바로 계산되므로, 발주 직전에 이 표의 추정값을 실제값으로 바꿔 주세요.',
+    '네임택·사각 스티커는 10-25 견적서 금액으로 교체했습니다(명함만 추정). 원형 스티커·엽서와 한 주문으로 묶으면 택배비 1회. 견적서 PDF는 assets/quotes-261025/.')
+sub('<span class="sz">100×148mm (시안 확정) · 세트당 1매</span>', '<span class="sz">100×148mm (시안 확정) · 세트당 1매 · 10-25 견적 100매 7,040 / 200매 11,330원</span>')
+
+# 03 발주처별 묶음 (성원 li)
+sub('<li><span>주의사항 네임택 80×140 양면 100매 <span class="est">추정</span></span><span class="num">약 6,500원</span></li>',
+    '<li><span>주의사항 네임택 80×140 양면 100매 (200매 9,570원)</span><span class="num">6,160원</span></li>')
+sub('<li><span>쇼핑백 사각 스티커 70×160 500개 <span class="est">추정</span></span><span class="num">약 15,000~20,000원</span></li>',
+    '<li><span>쇼핑백 사각 스티커 70×160 500매</span><span class="num">13,530원</span></li>')
+
+# 04 세트 원가
+sub('<span>상자 (유패키지 300장)</span><span class="num">2,146원</span>', '<span>상자 (유패키지 300장 · 10-25 자동견적)</span><span class="num">2,286원</span>')
+sub('<span>상자 (유패키지 400장)</span><span class="num">1,573원</span>', '<span>상자 (유패키지 400장 · 10-25 자동견적)</span><span class="num">1,599원</span>')
+sub('<span>원형 스티커 1 + 엽서 1</span><span class="num">80원</span>', '<span>원형 스티커 1 + 엽서 1 (100매 / 200매 단가)</span><span class="num">71 ~ 84원</span>', 2)
+sub('주의사항 네임택 3매 × 약 65원 <span class="est">추정</span></span><span class="num">195원</span>', '주의사항 네임택 3매 × 48~62원</span><span class="num">144 ~ 186원</span>')
+sub('주의사항 네임택 1~2매 × 약 65원 <span class="est">추정</span></span><span class="num">65 ~ 130원</span>', '주의사항 네임택 1~2매 × 48~62원</span><span class="num">48 ~ 124원</span>')
+sub('<span class="tot">합계</span><span class="tot num">약 3,020 ~ 3,160원</span>', '<span class="tot">합계</span><span class="tot num">약 3,090 ~ 3,290원</span>')
+sub('약 2,010 ~ 2,080원', '약 2,000 ~ 2,100원')
+sub('약 2,200 ~ 2,320원', '약 2,190 ~ 2,350원')
+sub('네임택·트레이싱지는 추정 단가라 ±50원 범위로 보면 됩니다. 스티로폼(보류)은 0원.', '상자·인쇄물은 10-25 견적 실제값, 트레이싱지만 오픈마켓 시세입니다. 스티로폼(보류)은 0원.')
+sub('<td class="r num">1,272,942원</td>', '<td class="r num">1,458,094원<small>10-25 자동견적 합계 · VAT 포함</small></td>')
+sub('<td>성원 100매 약 6,500원</td><td class="r num">17건분</td><td class="r num">약 110,500원 + 택배</td>', '<td>성원 200매 9,570원</td><td class="r num">9건분</td><td class="r num">86,130원 + 택배</td>')
+sub('<td class="r num">7건분</td><td class="r num">45,430원 + 택배</td>', '<td class="r num">4건분 (200매)</td><td class="r num">45,320원 + 택배</td>')
+sub('<a class="p" href="https://www.swadpia.co.kr/goods/goods_view/COD3000/GOD3001" target="_blank" rel="noopener">성원 100매</a> 6,490원', '<a class="p" href="https://www.swadpia.co.kr/goods/goods_view/COD3000/GOD3001" target="_blank" rel="noopener">성원 200매</a> 11,330원')
+sub('(네임택·사각 스티커·명함·트레이싱지는 추정 또는 오픈마켓 시세),', '상자·성원 인쇄물은 2026-10-25 자동견적·견적서 금액(명함·트레이싱지만 추정),')
+sub('<span>기준일 <b>2026-10-25</b> (가격은 10-18 견적, 신규 3종은 추정)</span>', '<span>기준일 <b>2026-10-25</b> (상자·인쇄물은 10-25 견적, 끈·종이는 10-18)</span>')
+sub('<a href="#designs">시안</a><a href="#summary">최종 발주처</a>', '<a href="#designs">시안</a><a href="#summary">발주처별 합계</a>')
+
+sub('<p class="note">인쇄 조건과 가격을 함께 보면 유패키지 한 곳만 남습니다.',
+    '<p class="note"><b>10-25 자동견적 갱신:</b> 위 표의 유패키지 두 줄은 10-18 수기 견적입니다. 10-25 사이트 자동견적(5면 검정 1도, 목형 150,000 + 인쇄판 포함, 서울 택배)은 큰 300장 685,762원(2,286원/장), 작은 400장 639,782원(1,599원/장), 견적서 합계 1,458,094원(VAT 포함)으로 올랐습니다. 01 발주처별 합계 참고.</p>\n    <p class="note">인쇄 조건과 가격을 함께 보면 유패키지 한 곳만 남습니다.')
+
 OUT.write_text(html, encoding="utf-8")
 print(OUT, f"{OUT.stat().st_size/1024:.0f} KB")
