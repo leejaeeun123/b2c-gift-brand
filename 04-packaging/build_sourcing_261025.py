@@ -401,10 +401,7 @@ sub('<p class="note">인쇄 조건과 가격을 함께 보면 유패키지 한 �
     '<p class="note"><b>10-25 자동견적 갱신:</b> 위 표의 유패키지 두 줄은 10-18 수기 견적입니다. 10-25 사이트 자동견적(5면 검정 1도, 목형 150,000 + 인쇄판 포함, 서울 택배)은 큰 300장 685,762원(2,286원/장), 작은 400장 639,782원(1,599원/장), 견적서 합계 1,458,094원(VAT 포함)으로 올랐습니다. 01 발주처별 합계 참고.</p>\n    <p class="note">인쇄 조건과 가격을 함께 보면 유패키지 한 곳만 남습니다.')
 
 # 03 발주처별 묶음 섹션 제거 — 01 발주처별 합계와 중복(숫자도 10-18 기준이라 충돌)
-html = _re.sub(r'
-<section id="carts">.*?</section>
-', '
-', html, count=1, flags=_re.S)
+html = _re.sub(r'\n<section id="carts">.*?</section>\n', '\n', html, count=1, flags=_re.S)
 assert 'id="carts"' not in html
 sub('<a href="#carts">발주처별 묶음</a>', '')
 sub('<h2><span class="k">04</span>세트 1개당 자재비</h2>', '<h2><span class="k">03</span>세트 1개당 자재비</h2>')
