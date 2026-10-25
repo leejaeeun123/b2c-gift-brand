@@ -688,5 +688,17 @@
   "title": "식기세척기 사용 금지",
   "crossed_out": false,
   "parts": []
+ },
+ "care-oven": {
+  "src": "오븐과 금지 표시 아이콘_d.png",
+  "title": "오븐 사용 가능",
+  "crossed_out": false,
+  "parts": []
+ },
+ "care-no-oven": {
+  "src": "오븐과 금지 표시 아이콘_d.png",
+  "title": "오븐 사용 금지",
+  "crossed_out": false,
+  "parts": []
  }
 }

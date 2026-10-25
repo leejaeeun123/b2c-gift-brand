@@ -243,6 +243,22 @@ sub("<footer>모든 가격은 2026-10-18 기준 태스크·견적서 기재 금�
 import re as _re
 
 VCSS = """
+
+/* 표 가독성 (10-25) */
+table{font-size:13.5px}
+th,td{padding:12px 14px;line-height:1.55}
+td small{font-size:12px;line-height:1.5;margin-top:4px}
+td .num{display:inline-block;line-height:1.5}
+td.r{min-width:118px}
+td.r .num{display:block}
+td.r small{text-align:right}
+td:last-child{min-width:240px}
+td.vn{min-width:128px}
+td.vn small{white-space:normal}
+td .tag{margin:0 2px 4px 0}
+.vn small{margin-top:3px}
+.unit span{line-height:1.5;padding:5px 0}
+.unit span.tot{padding-top:9px}
 .vendors{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:14px}
 .vcard{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;display:flex;flex-direction:column;gap:8px}
 .vcard.wide{grid-column:1/-1}
