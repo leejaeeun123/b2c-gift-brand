@@ -134,7 +134,7 @@ DESIGNS = f"""
     </div>
     <div class="design">
       <div class="dh"><h3>4. 주의사항 네임택</h3><span class="sz">80×140mm · 양면 · 품목에 거는 택</span></div>
-      <div class="imgs">{fig("nametag-front.jpg", "앞 — OHARI + 거북이 + 문구", "tall")}{fig("nametag-back.jpg", "뒤 — USE &amp; CARE 아이콘 4종", "tall")}</div>
+      <div class="imgs">{fig("nametag-front.jpg", "앞 — OHARI + 거북이 + 문구", "tall")}{fig("nametag-back.jpg", "뒤 — USE &amp; CARE 아이콘 4종 (전자레인지·식기세척기 가능, 오븐·직화 금지)", "tall")}</div>
       <p class="dn">발주처 <b>성원애드피아</b> · 엽서와 같은 디지털 인쇄로 비규격 사이즈 입력 · <span class="est">추정</span> 100매 약 6,500원 · 약 65원/매. 마끈 리본에 함께 묶는 구성. <a href="#print-new">신규 인쇄물 견적 보기</a></p>
     </div>
     <div class="design">
