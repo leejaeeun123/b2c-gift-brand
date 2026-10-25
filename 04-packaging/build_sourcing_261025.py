@@ -23,6 +23,9 @@ def data_uri(rel, maxw=900):
         im.convert("RGB").save(buf, "JPEG", quality=82, optimize=True); mime = "image/jpeg"
     return f"data:{mime};base64," + base64.b64encode(buf.getvalue()).decode()
 
+def mock(rel, cap):
+    return f'<figure><img src="{data_uri("mockup/" + rel, 800)}" alt="{cap}"><figcaption>{cap}</figcaption></figure>'
+
 def fig(rel, cap, cls="", maxw=900):
     return f'<figure class="{cls}"><img src="{data_uri(rel, maxw)}" alt="{cap}"><figcaption>{cap}</figcaption></figure>'
 
@@ -66,6 +69,14 @@ CSS = """
 .ref figure{margin:0;flex:0 0 160px}
 .ref img{display:block;width:100%;border:1px solid var(--line);border-radius:4px}
 .ref p{margin:0;font-size:13px;color:var(--muted);line-height:1.55;flex:1 1 260px}
+.mock{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding-top:10px;border-top:1px dashed var(--line)}
+@media (max-width:760px){.mock{grid-template-columns:1fr 1fr}}
+.mock figure{margin:0;display:flex;flex-direction:column;gap:4px}
+.mock img{display:block;width:100%;height:auto;aspect-ratio:3/4;object-fit:cover;border:1px solid var(--line);border-radius:4px}
+.mock figcaption{font-size:11.5px;color:var(--muted);text-align:center}
+.mock.two{grid-template-columns:repeat(2,minmax(0,360px));justify-content:start;border-top:0;padding-top:0}
+.steps{margin:0;padding-left:18px;font-size:13px;color:var(--muted);line-height:1.7}
+.steps b{color:var(--ink)}
 .est{font-size:11px;border:1px solid var(--line-strong);border-radius:3px;padding:1px 5px;color:var(--muted);vertical-align:middle}
 """
 sub("</style>", CSS + "</style>")
@@ -89,22 +100,27 @@ def box_net(folder, label, size, top_cap):
         {f("side-back.jpg", "옆면 뒤 — 테이블웨어 실루엣")}
         {f("side-left.jpg", "옆면 왼 — OHARI + 브랜드 문안")}
         {f("side-right.jpg", "옆면 오 — Slowly is wonderful. + 거북이")}
-        {f("bottom.jpg", "아랫면 — 품명 스티커 자리", "full")}
       </div></div>"""
 
 DESIGNS = f"""
 <section id="designs">
   <h2><span class="k">00</span>패키지 시안 (2026-10-25)</h2>
-  <p class="note">인쇄물 시안 7종입니다. 각 카드의 발주처·견적은 01 최종 발주처와 연결되고, 사이즈는 시안 기준 확정값입니다. 상자 아랫면의 회색 영역은 라벨지로 자체 출력하는 품명 스티커 자리입니다.</p>
+  <p class="note">인쇄물 시안 7종입니다. 각 카드의 발주처·견적은 01 최종 발주처와 연결되고, 사이즈는 시안 기준 확정값입니다. 상자 아랫면은 인쇄하지 않습니다(품명 스티커는 라벨지 자체 출력). 10-25 낮에 만든 종이 목업 사진을 함께 넣었습니다.</p>
   <div class="designs">
     <div class="design wide">
-      <div class="dh"><h3>1. 선물세트 상자</h3><span class="sz">흰색 G형 일체형 · 먹1도 · 윗면 + 옆면 4면 + 아랫면 · 큰 360×270×110 / 작은 270×220×110mm</span></div>
+      <div class="dh"><h3>1. 선물세트 상자</h3><span class="sz">흰색 G형 일체형 · 먹1도 · 윗면 + 옆면 4면 · 큰 360×270×110 / 작은 270×220×110mm</span></div>
       <div class="ref">{fig("box-reference.jpg", "G형 일체형 상자 (유패키지 기성 규격)", "")}<p>G형 일체형: 뚜껑과 몸체가 한 장으로 이어진 조립식 상자. 기성 규격이라 목형비 없음. 큰 사이즈는 품목 3개, 작은 사이즈는 품목 1~2개 세트용.</p></div>
       <div class="box-faces">
         {box_net("box-large", "큰 사이즈", "360×270×110mm · 300장", "윗면 — 해초 패턴")}
         {box_net("box-small", "작은 사이즈", "270×220×110mm · 400장", "윗면 — 거북이 + 클로버")}
       </div>
-      <p class="dn">발주처 <b>유패키지</b> · 큰 2,146원 × 300장 = 643,896원 · 작은 1,573원 × 400장 = 629,046원 (VAT·서울 택배 포함, 10-18 견적). 이 견적의 인쇄 면적 기준은 윗면+옆면이었으므로 아랫면 인쇄 추가분은 발주 시 재확인. <a href="#box">상자 비교 보기</a></p>
+      <div class="mock">
+        {mock("boxes-01.jpg", "큰·작은 상자 나란히 — 윗면 패턴 + 옆면 OHARISTORE")}
+        {mock("boxes-02.jpg", "큰 상자 옆면 실루엣 · 작은 상자 옆면 선 그림")}
+        {mock("boxes-03.jpg", "쌓았을 때 — Slowly is wonderful. 면")}
+        {mock("boxes-04.jpg", "큰 상자 정면 — 테이블웨어 실루엣")}
+      </div>
+      <p class="dn">종이 목업(10-25): 시안을 A4로 뽑아 기성 상자에 붙여 비례만 확인한 것. 발주처 <b>유패키지</b> · 큰 2,146원 × 300장 = 643,896원 · 작은 1,573원 × 400장 = 629,046원 (VAT·서울 택배 포함, 10-18 견적). 견적의 인쇄 면적 기준(윗면+옆면)과 시안이 일치. <a href="#box">상자 비교 보기</a></p>
     </div>
     <div class="design">
       <div class="dh"><h3>2. 포장 스티커 (원형)</h3><span class="sz">50×50mm · 세트당 1개 · 봉인용</span></div>
@@ -131,6 +147,21 @@ DESIGNS = f"""
       <div class="imgs">{fig("sticker-bag.jpg", "사각 — OHARISTORE + 테이블웨어 실루엣", "tall")}</div>
       <p class="dn">발주처 <b>성원애드피아</b> · 도무송 사각라운드 비규격 · <span class="est">추정</span> 500개 약 15,000~20,000원 · 약 30~40원/개. 쇼핑백 자체는 래포리 재입고 대기. <a href="#bag">쇼핑백 비교 보기</a></p>
     </div>
+    <div class="design wide">
+      <div class="dh"><h3>7. 포장 구성 목업 — 상자를 열었을 때</h3><span class="sz">습자지 → 마끈 십자 + 네임택 → 트레이싱지 덮기 → 뚜껑 안쪽 원형 스티커</span></div>
+      <div class="mock two">
+        {mock("inside-01.jpg", "품목마다 습자지로 싸고 마끈 십자 매듭, 네임택·사각 스티커를 끈 아래에")}
+        {mock("inside-02.jpg", "맨 위를 트레이싱지 한 장으로 덮고, 뚜껑 안쪽에 원형 스티커")}
+      </div>
+      <ol class="steps">
+        <li><b>에어캡</b>으로 품목 개별 감싸기 (사진에는 생략)</li>
+        <li><b>습자지</b> 2~3장으로 싸기 — 낮은 품목은 더 감아 높이 맞춤</li>
+        <li><b>마끈 십자 + 리본 매듭</b>, 끈 아래에 <b>주의사항 네임택</b>(80×140) 끼우기. 사진의 사각 라벨 자리가 네임택 자리</li>
+        <li>같은 높이로 나란히 넣고 맨 위를 <b>트레이싱지</b> 1장으로 덮기 (신규 품목 → 아래 3-1)</li>
+        <li>뚜껑 안쪽 가운데 <b>원형 스티커</b>, 엽서는 트레이싱지 위</li>
+      </ol>
+      <p class="dn">완충 스티로폼은 <b>보류</b>(일단 에어캡+습자지로만). 상자 묶는 끈과 쇼핑백은 10-18 결론 그대로. <a href="#tissue">습자지</a> · <a href="#tracing">트레이싱지</a></p>
+    </div>
   </div>
 </section>
 """
@@ -140,12 +171,16 @@ sub('<section id="summary">', DESIGNS + '\n<section id="summary">')
 sub('<h2><span class="k">01</span>품목별 추천 발주처</h2>',
     '<h2><span class="k">01</span>최종 발주처 · 대략 견적</h2>\n  <p class="note">상자·끈·습자지·원형 스티커·엽서·에어캡은 10-18 비교 결론 그대로 확정. 주의사항 네임택·명함·쇼핑백 사각 스티커는 성원애드피아에서 함께 발주하며, 금액은 사이트 주문창 계산 전이라 기존 엽서·스티커 단가로 환산한 <span class="est">추정</span>값입니다.</p>')
 sub('<div class="card"><div class="item">쇼핑백 (추가 구성 · 무지 + 사각 스티커)</div>',
-    '<div class="card best"><div class="item">주의사항 네임택 80×140</div><div class="vendor"><a href="https://www.swadpia.co.kr/goods/goods_view/COD3000/GOD3001" target="_blank" rel="noopener">성원애드피아</a> <span class="est">추정</span></div><div class="price"><span class="num">약 6,500원</span> / 100매 · <span class="num">약 65원</span>/매</div><p class="why">엽서와 같은 디지털 인쇄(토너·먹1도 양면)에 사이즈만 직접 입력. 엽서와 한 주문으로 묶어 택배비 1회.</p></div>\n'
+    '<div class="card best"><div class="item">트레이싱지 (덮는 용) <span class="tag t-acc">신규</span></div><div class="vendor"><a href="https://hanapapermall.co.kr/product/detail.html?product_no=4228&amp;cate_no=307&amp;display_group=1" target="_blank" rel="noopener">하나페이퍼몰</a> 또는 오픈마켓 4절 100매</div><div class="price">4절 <span class="num">약 66 ~ 110원</span>/매</div><p class="why">큰 상자(360×270)를 한 장으로 덮으려면 4절(394×272) 이상. 하나페이퍼몰 전지 22매 9,500원(=4절 88매, 108원/매)은 습자지와 묶어 배송 1회, 단 품절 표기 확인 필요. G마켓·옥션 80g 4절 100매 6,590원(66원/매)이 최저.</p></div>\n'
+    '    <div class="card best"><div class="item">주의사항 네임택 80×140</div><div class="vendor"><a href="https://www.swadpia.co.kr/goods/goods_view/COD3000/GOD3001" target="_blank" rel="noopener">성원애드피아</a> <span class="est">추정</span></div><div class="price"><span class="num">약 6,500원</span> / 100매 · <span class="num">약 65원</span>/매</div><p class="why">엽서와 같은 디지털 인쇄(토너·먹1도 양면)에 사이즈만 직접 입력. 엽서와 한 주문으로 묶어 택배비 1회.</p></div>\n'
     '    <div class="card best"><div class="item">쇼핑백 사각 스티커 70×160</div><div class="vendor"><a href="https://www.swadpia.co.kr/goods/goods_view/CST2000/GST2001" target="_blank" rel="noopener">성원애드피아</a> <span class="est">추정</span></div><div class="price"><span class="num">약 15,000 ~ 20,000원</span> / 500개 · <span class="num">약 30~40원</span>/개</div><p class="why">도무송 사각라운드 비규격. 원형 50mm(1장 2개 14,300원)보다 면적이 커 1장 1개로 환산.</p></div>\n'
     '    <div class="card best"><div class="item">명함 90×50</div><div class="vendor"><a href="https://www.swadpia.co.kr/" target="_blank" rel="noopener">성원애드피아</a> <span class="est">추정</span></div><div class="price"><span class="num">약 5,000 ~ 8,000원</span> / 200매</div><p class="why">아트지 양면 기준. 운영용이라 세트 원가 미포함.</p></div>\n'
     '    <div class="card"><div class="item">쇼핑백 (추가 구성 · 무지 + 사각 스티커)</div>')
 sub("핸즈픽 31·33호는 상자가 안 들어가거나 너무 깊음. 사각 스티커는 성원 재견적.",
-    "핸즈픽 31·33호는 상자가 안 들어가거나 너무 깊음. 사각 스티커는 성원애드피아(위 카드).")
+    "10-25 상품 페이지 재확인: 두 규격 모두 SOLD OUT 표기, 최대 주문수량 0(카테고리 목록에는 품절이 안 보일 수 있음). 핸즈픽 31·33호는 상자가 안 들어가거나 너무 깊음. 사각 스티커는 성원애드피아(위 카드).")
+
+sub('<div class="vendor">발주 없음</div><div class="price">자체 출력 · 거래처 조달</div><p class="why">품명 스티커는 프린터 라벨지(한글 템플릿), 스티로폼은 아빠 거래처.</p>',
+    '<div class="vendor">발주 없음 · 스티로폼 <span class="tag t-warn">보류</span></div><div class="price">자체 출력 · 스티로폼은 당분간 미사용</div><p class="why">품명 스티커는 프린터 라벨지(한글 템플릿). 스티로폼은 10-25 보류 결정, 에어캡+습자지로만 완충.</p>')
 
 # ── 02 상세: 사이즈 표기 + 신규 인쇄물 블록 ─────────────────────────────
 sub('<span class="sz">약 100×130~148mm · 세트당 1매</span>', '<span class="sz">100×148mm (시안 확정) · 세트당 1매</span>')
@@ -176,24 +211,33 @@ sub('<li><span><a class="p" href="https://www.swadpia.co.kr/goods/goods_view/COD
 
 # ── 04 세트 원가: 네임택 반영 ──────────────────────────────────────────
 sub("세트 구성: 상자 1개 + 품목마다 에어캡·습자지 2~3장·마끈 리본 + 상자 묶는 끈 + 스티커 1개 + 엽서 1매.",
-    "세트 구성: 상자 1개 + 품목마다 에어캡·습자지 2~3장·마끈 리본·주의사항 네임택 + 상자 묶는 끈 + 스티커 1개 + 엽서 1매.")
+    "세트 구성: 상자 1개 + 품목마다 에어캡·습자지 2~3장·마끈 리본·주의사항 네임택 + 맨 위 트레이싱지 1매 + 상자 묶는 끈 + 스티커 1개 + 엽서 1매. 완충 스티로폼은 보류.")
 sub('<span>마끈 리본 3개 × 약 0.6m</span><span class="num">90원</span>',
     '<span>마끈 리본 3개 × 약 0.6m</span><span class="num">90원</span>\n      <span>주의사항 네임택 3매 × 약 65원 <span class="est">추정</span></span><span class="num">195원</span>')
 sub('<span class="tot">합계</span><span class="tot num">약 2,750 ~ 2,850원</span>',
-    '<span class="tot">합계</span><span class="tot num">약 2,950 ~ 3,050원</span>')
+    '<span>트레이싱지 1매 (4절)</span><span class="num">66 ~ 110원</span>\n      <span class="tot">합계</span><span class="tot num">약 3,020 ~ 3,160원</span>')
 sub('<span>마끈 리본 1~2개</span><span class="num">30 ~ 60원</span>',
     '<span>마끈 리본 1~2개</span><span class="num">30 ~ 60원</span>\n      <span>주의사항 네임택 1~2매 × 약 65원 <span class="est">추정</span></span><span class="num">65 ~ 130원</span>')
 sub('<span class="tot">합계 (품목 1개)</span><span class="tot num">약 1,870 ~ 1,900원</span>',
-    '<span class="tot">합계 (품목 1개)</span><span class="tot num">약 1,940 ~ 1,970원</span>')
+    '<span>트레이싱지 1매 (4절)</span><span class="num">66 ~ 110원</span>\n      <span class="tot">합계 (품목 1개)</span><span class="tot num">약 2,010 ~ 2,080원</span>')
 sub('<span class="tot">합계 (품목 2개)</span><span class="tot num">약 2,000 ~ 2,080원</span>',
-    '<span class="tot">합계 (품목 2개)</span><span class="tot num">약 2,130 ~ 2,210원</span>')
+    '<span class="tot">합계 (품목 2개)</span><span class="tot num">약 2,200 ~ 2,320원</span>')
 sub("상자가 큰 세트 자재비의 75%, 작은 세트의 80%를 차지합니다.",
-    "상자가 큰 세트 자재비의 약 70%, 작은 세트의 75~80%를 차지합니다. 네임택은 추정 단가라 ±30원 범위로 보면 됩니다.")
+    "상자가 큰 세트 자재비의 약 70%, 작은 세트의 75~80%를 차지합니다. 네임택·트레이싱지는 추정 단가라 ±50원 범위로 보면 됩니다. 스티로폼(보류)은 0원.")
 sub('<tr><td>엽서</td><td class="r num">700매</td>',
-    '<tr><td>주의사항 네임택<small>1,700품목 × 1매 · 추정</small></td><td class="r num">1,700매</td><td>성원 100매 약 6,500원</td><td class="r num">17건분</td><td class="r num">약 110,500원 + 택배</td></tr>\n      <tr><td>엽서</td><td class="r num">700매</td>')
+    '<tr><td>트레이싱지 4절<small>700세트 × 1매</small></td><td class="r num">700매</td><td>하나페이퍼몰 전지 22매(=4절 88매) 9,500원 / G마켓 4절 100매 6,590원</td><td class="r num">8팩 / 7팩</td><td class="r num">76,000 / 46,130원</td></tr>\n      <tr><td>주의사항 네임택<small>1,700품목 × 1매 · 추정</small></td><td class="r num">1,700매</td><td>성원 100매 약 6,500원</td><td class="r num">17건분</td><td class="r num">약 110,500원 + 택배</td></tr>\n      <tr><td>엽서</td><td class="r num">700매</td>')
+
+sub('  <div class="block" id="sticker">',
+    '  <div class="block" id="tracing">\n    <div class="block-head"><h3>3-1. 트레이싱지 (맨 위 덮는 용) <span class="tag t-acc">신규 10-25</span></h3><span class="sz">세트당 1매 · 큰 상자 안치수 약 360×270 → 4절(394×272) 또는 A3(420×297)</span></div>\n    <div class="tbl"><table>\n      <thead><tr><th>발주처</th><th>제품 · 사양</th><th class="r">가격</th><th class="r">매당</th><th>비고</th></tr></thead>\n      <tbody>\n        <tr class="best"><td class="vn">G마켓 · 옥션</td><td>트레싱지 트레팔지 미농지 4절 100매<small>80g</small></td><td class="r"><span class="num">6,590원</span><small>+ 배송비</small></td><td class="r num">66원</td><td><span class="tag t-best">최저</span> 다나와 \'트레이싱지 4절\' 최저가. 판매자·실제 규격(394×272인지) 확인</td></tr>\n        <tr class="best"><td class="vn">하나페이퍼몰</td><td><a class="p" href="https://hanapapermall.co.kr/product/detail.html?product_no=4228&amp;cate_no=307&amp;display_group=1" target="_blank" rel="noopener">트레싱지</a> 전지 22매 (= 2절 44 · 4절 88 · A3 52매)<small>50g / 82g 선택</small></td><td class="r"><span class="num">9,500원</span></td><td class="r num">108원 (4절)</td><td><span class="tag t-best">추천</span> 습자지와 같은 곳이라 배송 1회. 50g이 더 비치고 부드러움. 페이지에 SOLD OUT 이미지가 보여 재입고 확인</td></tr>\n        <tr><td class="vn">11번가</td><td>삼원 크리스탈 트레싱지 A3 80g 100매</td><td class="r"><span class="num">16,500원</span><small>+ 3,500원</small></td><td class="r num">165원</td><td>A3라 여유 있게 덮임. A4 100매는 8,800원이지만 A4(297×210)는 작은 상자(270×220)도 10mm 모자람</td></tr>\n        <tr><td class="vn">G마켓</td><td>신한 트레싱지 4절 75g 50매</td><td class="r"><span class="num">15,040원</span></td><td class="r num">301원</td><td>브랜드품. 비쌈</td></tr>\n        <tr><td class="vn">옥션</td><td>삼원 트레싱지 4절 100매 80g</td><td class="r"><span class="num">20,710원</span></td><td class="r num">207원</td><td>브랜드품. 비쌈</td></tr>\n      </tbody>\n    </table></div>\n    <p class="note">트레이싱지는 A4 100매 묶음이 3,000~9,000원대로 흔하지만 A4는 작은 상자도 덮지 못합니다. 4절 기준으로 보면 오픈마켓 6,590원(66원/매)이 최저이고, 하나페이퍼몰은 108원/매지만 습자지와 한 번에 받을 수 있습니다. 평량은 50~80g 중 얇은 쪽(50g)이 목업 사진처럼 아래 그림이 은은하게 비칩니다.</p>\n  </div>\n\n  <div class="block" id="sticker">')
+
+sub('<li><span><a class="p" href="https://hanapapermall.co.kr/product/detail.html?product_no=4952" target="_blank" rel="noopener">포장용 색화지 2절 250매 화이트</a></span><span class="num">8,300원</span></li>',
+    '<li><span><a class="p" href="https://hanapapermall.co.kr/product/detail.html?product_no=4952" target="_blank" rel="noopener">포장용 색화지 2절 250매 화이트</a></span><span class="num">8,300원</span></li>\n        <li><span><a class="p" href="https://hanapapermall.co.kr/product/detail.html?product_no=4228&amp;cate_no=307&amp;display_group=1" target="_blank" rel="noopener">트레싱지 전지 22매</a> (4절 88매 환산, 재입고 확인) · 대안 G마켓 4절 100매 6,590원</span><span class="num">9,500원</span></li>')
+
+sub('<a href="#tissue">습자지</a><a href="#sticker">',
+    '<a href="#tissue">습자지</a><a href="#tracing">트레이싱지</a><a href="#sticker">')
 
 sub("<footer>모든 가격은 2026-10-18 기준 태스크·견적서 기재 금액이며,",
-    "<footer>시안은 2026-10-25 기준. 가격은 2026-10-18 기준 태스크·견적서 기재 금액이며(네임택·사각 스티커·명함은 추정),")
+    "<footer>시안은 2026-10-25 기준. 가격은 2026-10-18 기준 태스크·견적서 기재 금액이며(네임택·사각 스티커·명함·트레이싱지는 추정 또는 오픈마켓 시세),")
 
 OUT.write_text(html, encoding="utf-8")
 print(OUT, f"{OUT.stat().st_size/1024:.0f} KB")
