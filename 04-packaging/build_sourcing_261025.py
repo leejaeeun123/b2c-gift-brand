@@ -3,15 +3,20 @@
 시안 섹션(00) 삽입 + 최종 발주처·대략 견적 반영. 이미지는 assets/package-proofs-261025/ 를 base64 인라인.
 실행: python 04-packaging/build_sourcing_261025.py  (레포 루트에서)
 """
-import base64, io, pathlib, re
+import base64, io, os, pathlib, re
 from PIL import Image
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SRC = ROOT / "04-packaging" / "sourcing-comparison.html"
-OUT = ROOT / "04-packaging" / "sourcing-comparison-2026-10-25.html"
+OUT = ROOT / "04-packaging" / ("sourcing-comparison-2026-10-25-wiki.html" if os.environ.get("SOURCING_REMOTE_IMG") else "sourcing-comparison-2026-10-25.html")
 IMG = ROOT / "assets" / "package-proofs-261025"
 
+REMOTE = os.environ.get("SOURCING_REMOTE_IMG")  # 위키 첨부용: 이미지를 GitHub raw URL로 참조 (파일 1.4MB → 약 90KB)
+RAW = "https://raw.githubusercontent.com/leejaeeun123/b2c-gift-brand/main/assets/package-proofs-261025/"
+
 def data_uri(rel, maxw=900):
+    if REMOTE:
+        return RAW + rel
     p = IMG / rel
     im = Image.open(p)
     if im.width > maxw:
