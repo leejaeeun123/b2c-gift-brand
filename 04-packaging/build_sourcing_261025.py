@@ -254,6 +254,12 @@ td.r .num{display:block}
 td.r small{text-align:right}
 td:last-child{min-width:240px}
 td.vn{min-width:128px}
+.cart li{flex-wrap:wrap;line-height:1.5}
+.cart li span:first-child{flex:1 1 180px}
+.cart li span:last-child{flex:0 1 auto;max-width:100%;white-space:normal}
+.cart li span:last-child.num{white-space:normal}
+.vcard li span:first-child{flex:1 1 200px;min-width:0}
+.vcard li{flex-wrap:wrap}
 td.vn small{white-space:normal}
 td .tag{margin:0 2px 4px 0}
 .vn small{margin-top:3px}
@@ -393,6 +399,17 @@ sub('<a href="#designs">시안</a><a href="#summary">최종 발주처</a>', '<a 
 
 sub('<p class="note">인쇄 조건과 가격을 함께 보면 유패키지 한 곳만 남습니다.',
     '<p class="note"><b>10-25 자동견적 갱신:</b> 위 표의 유패키지 두 줄은 10-18 수기 견적입니다. 10-25 사이트 자동견적(5면 검정 1도, 목형 150,000 + 인쇄판 포함, 서울 택배)은 큰 300장 685,762원(2,286원/장), 작은 400장 639,782원(1,599원/장), 견적서 합계 1,458,094원(VAT 포함)으로 올랐습니다. 01 발주처별 합계 참고.</p>\n    <p class="note">인쇄 조건과 가격을 함께 보면 유패키지 한 곳만 남습니다.')
+
+# 03 발주처별 묶음 섹션 제거 — 01 발주처별 합계와 중복(숫자도 10-18 기준이라 충돌)
+html = _re.sub(r'
+<section id="carts">.*?</section>
+', '
+', html, count=1, flags=_re.S)
+assert 'id="carts"' not in html
+sub('<a href="#carts">발주처별 묶음</a>', '')
+sub('<h2><span class="k">04</span>세트 1개당 자재비</h2>', '<h2><span class="k">03</span>세트 1개당 자재비</h2>')
+sub('은 04 세트 원가 표 참고.', '은 03 세트 원가 표 참고.')
+sub('10-18 비교표는 아래 02~04에 그대로 두었습니다.', '10-18 비교표는 아래 02에 그대로 두었습니다.')
 
 OUT.write_text(html, encoding="utf-8")
 print(OUT, f"{OUT.stat().st_size/1024:.0f} KB")
