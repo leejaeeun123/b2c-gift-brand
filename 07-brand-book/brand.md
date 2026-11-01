@@ -1,7 +1,7 @@
 # OHARI — Brand
 
 > 오하리상점 비주얼 아이덴티티 시스템.
-> 확정본 (2026-11-01). 로고=손글씨 영문 워드마크 2종(심볼 없음) · 컬러=종이·잉크 2색 · 폰트=Pretendard Light/Regular, 제목은 손글씨 · 일러스트=모티프 28종 + 선 그림 4종 + 실루엣 7종 + 거북이.
+> 확정본 (2026-11-01). 로고=손글씨 영문 워드마크 2종(심볼 없음) · 컬러=종이·잉크 2색 · 폰트=Pretendard Light/Regular, 제목은 손글씨 · 일러스트=클로버 2종 + 선 그림 4종 + 실루엣 7종 + 거북이 — 패키지에 쓰는 것만.
 
 **목차**: Logo · Color · Typography · Illustration · Imagery · Assets
 
@@ -145,45 +145,14 @@ LABEL · 집들이 · 이사 | 400 | 12 | label · 400 · 1.4
 | 5 | **디테일은 무늬로.** 물결·점·빗금 |
 | 6 | **면을 칠하지 않는다.** 하트만 예외 |
 
-### 모티프 — 시트 v1 선물·테이블웨어 16종
+### 모티프 — 클로버 2종
+패키지에 쓰는 선 그림 모티프는 **클로버**뿐이다(엽서 위 3개, 상자 옆면 거북이 옆 3개). 원본 시트 v1·v2의 나머지 그림(접시·볼·잔·바다생물 등 26종)은 패키지에 쓰지 않아 브랜드북에서 뺐다 — 정본은 `03-identity/motif-*.svg`에 그대로 있고, 카드·에디토리얼에 필요해지면 그때 같은 규칙으로 꺼낸다.
 
-아이콘을 누르면 SVG가 내려받아진다. 전부 `viewBox 0 0 100 100` · `fill="currentColor"` · 단일 패스.
+아이콘을 누르면 SVG가 내려받아진다. `viewBox 0 0 100 100` · `fill="currentColor"` · 단일 패스.
 
 ```tl-pictos zip=ohari-motifs.zip
-assets/motif/motif-plate.svg | 접시
-assets/motif/motif-bowl.svg | 볼
-assets/motif/motif-cup.svg | 잔
-assets/motif/motif-spoon.svg | 수저
-assets/motif/motif-fork.svg | 포크
-assets/motif/motif-knife.svg | 나이프
-assets/motif/motif-flower.svg | 꽃
-assets/motif/motif-vase.svg | 화병과 꽃
-assets/motif/motif-candle.svg | 초
-assets/motif/motif-ribbon.svg | 리본
-assets/motif/motif-book.svg | 책
-assets/motif/motif-heart.svg | 하트
 assets/motif/motif-clover.svg | 클로버
-assets/motif/motif-star.svg | 별
-assets/motif/motif-fish.svg | 물고기
-assets/motif/motif-pear.svg | 배
-```
-
-### 모티프 — 시트 v2 바다 12종
-여름 시즌·해산물 품목·아동 선물 쪽으로 넓힐 때 쓰는 세트. 기본 세트는 v1이고, v1과 한 화면에 섞을 때는 같은 굵기 규칙을 따른다.
-
-```tl-pictos quiet zip=ohari-motifs.zip
-assets/motif/motif-urchin.svg | 성게
-assets/motif/motif-anemone.svg | 말미잘
-assets/motif/motif-starfish.svg | 불가사리
-assets/motif/motif-clam.svg | 진주조개
-assets/motif/motif-coral.svg | 산호
-assets/motif/motif-seahorse.svg | 해마
-assets/motif/motif-wave.svg | 파도
-assets/motif/motif-seaweed.svg | 해초
 assets/motif/motif-sea-clover.svg | 바다클로버
-assets/motif/motif-conch.svg | 소라
-assets/motif/motif-sparkle-star.svg | 반짝별
-assets/motif/motif-crab.svg | 게
 ```
 
 ### 캐릭터 — 거북이
@@ -213,7 +182,7 @@ assets/v3/care-no-fire-oven.svg | 직화 · 오븐 불가
 ```
 
 ### 선 그림 — 작은 상자 후면 4종
-작은 상자 뒷면에 한 줄로 들어가는 선 그림. 시트 v1·v2와 같은 손이지만 **무늬가 들어간 변형**(클로버 머그 · 점 접시 · 수저포크 · 물결 볼)이라 따로 둔다. Figma 최종 시안에서 그대로 내보낸 패스.
+작은 상자 뒷면에 한 줄로 들어가는 선 그림 — 클로버 머그 · 점 접시 · 수저포크 · 물결 볼. Figma 최종 시안에서 그대로 내보낸 패스.
 
 ```tl-pictos quiet zip=ohari-motifs.zip
 assets/v3/line-mug-clover.svg | 머그 (클로버)
@@ -299,7 +268,7 @@ assets/v3/pattern-seaweed-band.svg | 패턴 · 해초 띠
 ## 06. Assets
 
 ```tl-kit zip=ohari-brand-kit.zip
-브랜드 킷 전체 | 워드마크 6종 · 모티프 28종 + 거북이 + 실루엣 7종 + 선 그림 4종 · 케어 아이콘 7종 · 손글씨·패턴 4종 · 패키지 시안 · 문서 md 4종 | Download all ↓
+브랜드 킷 전체 | 워드마크 6종 · 클로버 2종 + 거북이 + 실루엣 7종 + 선 그림 4종 · 케어 아이콘 7종 · 손글씨·패턴 4종 · 패키지 시안 · 문서 md 4종 | Download all ↓
 assets/logo/*.svg
 assets/motif/*.svg
 assets/v3/*.svg
@@ -314,14 +283,14 @@ md/*.md
 ### 카테고리별 받기
 
 ```tl-dl
-묶음 zip ↓ | 워드마크 6종=ohari-logos.zip | 모티프·거북이·실루엣·선그림 40종=ohari-motifs.zip | 케어 아이콘 7종 + 식품용 마크=ohari-care-icons.zip | 손글씨·패턴 4종=ohari-handwriting-patterns.zip | 패키지 시안=ohari-package-proofs.zip
+묶음 zip ↓ | 워드마크 6종=ohari-logos.zip | 클로버·거북이·실루엣·선그림 14종=ohari-motifs.zip | 케어 아이콘 7종 + 식품용 마크=ohari-care-icons.zip | 손글씨·패턴 4종=ohari-handwriting-patterns.zip | 패키지 시안=ohari-package-proofs.zip
 ```
 
 | 파일 | 용도 | 사양 |
 |---|---|---|
 | `logo-ohari-{ink,white}.svg` · `logo-ohari.svg` | 워드마크 OHARI (패키지) | 손글씨 벡터 · 350×135 · currentColor 판은 웹용 |
 | `logo-oharistore-{ink,white}.svg` · `logo-oharistore.svg` | 워드마크 OHARI STORE (채널·대문) | 손글씨 벡터 · 684×138 |
-| `motif-*.svg` 28종 · `char-turtle.svg` | 일러스트 정본 | viewBox 100 · currentColor · 단일 패스 · 색 기본값 `#262320` |
+| `motif-clover.svg` · `motif-sea-clover.svg` · `char-turtle.svg` | 클로버 2종 · 거북이 | viewBox 100 · currentColor · 단일 패스 · 색 기본값 `#262320` |
 | `care-*.svg` 7종 | 세척·가열 안내 아이콘 | viewBox 100 · currentColor |
 | `mark-food-contact.svg` | 식품용 기구 마크 (법정 표시 · 식약처 원본) | 원본 그대로 · 변형 금지 |
 | `line-*.svg` 4종 | 작은 상자 후면 선 그림 (무늬 변형) | Figma 내보내기 · currentColor |
