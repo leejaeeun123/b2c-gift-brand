@@ -320,14 +320,14 @@ SUMMARY = """<section id="summary">
     <div class="vcard">
       <div class="vh"><h3>③ <a href="https://hangarampackage.shop/" target="_blank" rel="noopener">래포리패키지</a> — 끈</h3><span class="vs">10-18 가격 · 배송비 3,500원 (10만 원 이상 무료)</span></div>
       <ul>
-        <li><span>컬러 마끈 블랙 2mm × 50m (품목 리본) <span class="tag t-best">필수</span></span><span class="num">2,300원</span></li>
-        <li><span>공단리본끈 버건디 6mm × 22m (상자 묶음) <span class="tag t-acc">추가</span></span><span class="num">900원</span></li>
-        <li><span>공단리본끈 블랙 (상자 묶음 기본색 후보) <span class="tag t-warn">보류</span><small>양면 블랙 3mm × 45m 2,700원(60원/m) 확인됨 · 버건디와 같은 6mm 폭이 있는지 확인 후 결정</small></span><span class="num">—</span></li>
-        <li><span>공단리본끈 녹색 (크리스마스 시즌 오픈 대비) <span class="tag t-warn">보류</span><small>시즌 한정색 · 가격·규격 미확인(버건디 6mm × 22m 900원과 같은 라인일 것) · 오픈 시점 확정 후 추가</small></span><span class="num">—</span></li>
+        <li><span>컬러 마끈 블랙 2mm × 50m (품목 리본) <span class="tag t-best">기본 발주</span></span><span class="num">2,300원</span></li>
+        <li><span>공단리본끈 블랙 양면 3mm × 45m (상자 묶음 기본색) <span class="tag t-best">기본 발주</span><small>60원/m · 상자 묶음은 블랙이 기본 · 6mm 폭이 있으면 그걸로 교체</small></span><span class="num">2,700원</span></li>
+        <li><span>공단리본끈 버건디 6mm × 22m (크리스마스 에디션) <span class="tag t-warn">추가 발주 보류</span><small>시즌 한정색 · 900원 · 크리스마스 에디션 확정 뒤 같은 주문에 얹기</small></span><span class="num">—</span></li>
+        <li><span>공단리본끈 녹색 (크리스마스 에디션) <span class="tag t-warn">추가 발주 보류</span><small>시즌 한정색 · 가격·규격 미확인(버건디 6mm × 22m 900원과 같은 라인일 것) · 에디션 확정 뒤 추가</small></span><span class="num">—</span></li>
         <li><span>고급 쇼핑백 화이트 40×28×12 / 30×25×15 (추가 구성)<small>10-25 재확인: 두 규격 모두 SOLD OUT · 재입고 시 2,500 / 3,300원</small></span><span class="num">—</span></li>
       </ul>
-      <div class="vt"><span>래포리패키지 합계 <small>1롤씩 · 배송비 별도</small></span><span class="num">3,200원</span></div>
-      <p class="vn">합계는 마끈 + 공단 버건디 1롤씩. 보류 2종(공단 블랙·녹색)은 오픈 시즌·기본색 확정 뒤 같은 주문에 얹으면 됨. 물량 기준 소모량(마끈 21롤 · 공단 59롤)은 04 세트 원가 표 참고. 스웨이드로 바꾸면 90m 롤 10,800원.</p>
+      <div class="vt"><span>래포리패키지 합계 <small>기본 2롤 · 배송비 별도</small></span><span class="num">5,000원</span></div>
+      <p class="vn">기본 발주는 마끈 블랙 + 공단 블랙 1롤씩(끈은 전부 검정이 기본). 크리스마스 에디션 2종(공단 버건디·녹색)은 추가 발주 보류, 에디션 확정 뒤 같은 주문에 얹으면 됨. 물량 기준 소모량(마끈 21롤 · 공단 59롤)은 04 세트 원가 표 참고. 스웨이드로 바꾸면 90m 롤 10,800원.</p>
     </div>
     <div class="vcard">
       <div class="vh"><h3>④ <a href="https://hanapapermall.co.kr/" target="_blank" rel="noopener">하나페이퍼몰</a> — 종이류</h3><span class="vs">배송비 별도</span></div>
@@ -350,7 +350,7 @@ SUMMARY = """<section id="summary">
       </ul>
     </div>
   </div>
-  <div class="grand"><span>1회 최소 발주 합계 <small>상자 700장 + 인쇄물 최소수량 + 끈·종이 1단위 · VAT 포함</small></span><span><span class="num">약 1,531,000원</span> <small>+ 택배비 3건(성원·래포리·하나)</small></span></div>
+  <div class="grand"><span>1회 최소 발주 합계 <small>상자 700장 + 인쇄물 최소수량 + 끈·종이 1단위 · VAT 포함</small></span><span><span class="num">약 1,533,000원</span> <small>+ 택배비 3건(성원·래포리·하나)</small></span></div>
 </section>"""
 html = _re.sub(r'<section id="summary">.*?</section>', lambda m: SUMMARY, html, count=1, flags=_re.S)
 assert 'class="vendors"' in html
@@ -436,6 +436,32 @@ sub('품목마다 습자지로 싸고 마끈 십자 매듭, 네임택·사각 �
     '품목마다 습자지로 싸고 마끈 십자 매듭, 네임택(세트당 1매)은 한 품목 끈 아래에', 2)
 sub('품목당 1매라 200매부터 시작해도 됨',
     '세트당 1매 = 엽서와 같은 수량')
+
+# 11-01 끈 기본색 = 블랙 (재은). 공단 버건디·녹색은 크리스마스 에디션 추가 발주 보류 → 02 끈 표·04 원가 표도 블랙 기준으로
+sub('<td class="r num">900원</td><td class="r num">41원</td><td><span class="tag t-best">상자 묶음 (기본)</span></td></tr>',
+    '<td class="r num">900원</td><td class="r num">41원</td><td><span class="tag t-warn">크리스마스 에디션 · 추가 발주 보류</span></td></tr>')
+sub('<td class="r num">2,700원</td><td class="r num">60원</td><td>상자 묶음 대안</td></tr>',
+    '<td class="r num">2,700원</td><td class="r num">60원</td><td><span class="tag t-best">상자 묶음 (기본)</span></td></tr>')
+sub('래포리패키지 단일 후보 · 품목 리본은 마끈, 상자 묶음은 공단 또는 스웨이드',
+    '래포리패키지 단일 후보 · 품목 리본은 마끈 블랙, 상자 묶음은 공단 블랙 (버건디·녹색은 크리스마스 에디션)')
+sub('<span>상자 묶는 끈 약 2m (공단 버건디)</span><span class="num">82원</span>',
+    '<span>상자 묶는 끈 약 2m (공단 블랙 60원/m)</span><span class="num">120원</span>')
+sub('<span class="tot">합계</span><span class="tot num">약 2,990 ~ 3,170원</span>',
+    '<span class="tot">합계</span><span class="tot num">약 3,030 ~ 3,210원</span>')
+sub('묶는 끈을 스웨이드로 하면</span><span class="tot sub num" style="font-weight:400">+ 160원</span>',
+    '묶는 끈을 스웨이드로 하면</span><span class="tot sub num" style="font-weight:400">+ 120원</span>')
+sub('<span>상자 묶는 끈 약 1.7m (공단 버건디)</span><span class="num">70원</span>',
+    '<span>상자 묶는 끈 약 1.7m (공단 블랙 60원/m)</span><span class="num">102원</span>')
+sub('<span class="tot">합계 (품목 1개)</span><span class="tot num">약 2,000 ~ 2,100원</span>',
+    '<span class="tot">합계 (품목 1개)</span><span class="tot num">약 2,030 ~ 2,130원</span>')
+sub('<span class="tot">합계 (품목 2개)</span><span class="tot num">약 2,140 ~ 2,290원</span>',
+    '<span class="tot">합계 (품목 2개)</span><span class="tot num">약 2,170 ~ 2,320원</span>')
+sub('>공단 버건디 22m</a> 900원 / ', '>공단 블랙 45m</a> 2,700원 / ')
+sub('%EB%B2%84%EA%B1%B4%EB%94%94-6mm-22m/9784/category/261/display/1/" target="_blank" rel="noopener">공단 블랙 45m</a>',
+    '%EC%96%91%EB%A9%B4-%EB%B8%94%EB%9E%99-3mm-45m/9789/category/261/display/1/" target="_blank" rel="noopener">공단 블랙 45m</a>')
+sub('<td class="r num">59롤 / 15롤</td><td class="r num">53,100 / 162,000원</td>',
+    '<td class="r num">29롤 / 15롤</td><td class="r num">78,300 / 162,000원</td>')
+sub('물량 기준 소모량(마끈 21롤 · 공단 59롤)', '물량 기준 소모량(마끈 21롤 · 공단 블랙 29롤)')
 
 OUT.write_text(html, encoding="utf-8")
 print(OUT, f"{OUT.stat().st_size/1024:.0f} KB")
