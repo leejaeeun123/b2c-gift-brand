@@ -228,7 +228,7 @@ def r_shots(lines, flags, kv):
 
 
 def r_sheets(lines, flags, kv):
-    """경로 | 라벨      (플래그 land = 가로 판형 그리드)"""
+    """경로 | 라벨      (플래그 land = 가로 판형 그리드 · cols=N 으로 열 수 고정)"""
     out, files = [], []
     for ln in lines:
         c = cells(ln)
@@ -239,8 +239,9 @@ def r_sheets(lines, flags, kv):
         out.append('<a class="sheet" href="%s" download><img src="%s" alt="%s" loading="lazy">'
                    '<div class="cap"><b>%s</b><small>%s ↓</small></div></a>'
                    % (esc(path), esc(path), esc(label), inline(label), esc(ext)))
-    return group_head(kv, files, flags) + ('<div class="sheets%s">%s</div>'
-                                    % (" land" if "land" in flags else "", "".join(out)))
+    style = ' style="grid-template-columns:repeat(%d,1fr)"' % int(kv["cols"]) if kv.get("cols", "").isdigit() else ""
+    return group_head(kv, files, flags) + ('<div class="sheets%s"%s>%s</div>'
+                                    % (" land" if "land" in flags else "", style, "".join(out)))
 
 
 def r_spec(lines, flags, kv):

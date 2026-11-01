@@ -53,20 +53,23 @@ assets/proofs/box-small/side-left.png | 작은 상자 · 좌측
 assets/proofs/box-small/side-right.png | 작은 상자 · 우측
 ```
 
-### 인쇄물 — 엽서 · 명함 · 네임택 (앞·뒤 한 세트)
+### 인쇄물 — 엽서 · 네임택 · 명함 (앞·뒤 한 세트)
 세트마다 들어가는 종이 인쇄물 3종, 앞뒤 6면. 「전체 받기」로 6장을 한 번에 내려받는다.
 
-```tl-sheets zip=ohari-print-set.zip
+```tl-sheets cols=4 zip=ohari-print-set.zip
 assets/proofs/postcard-front.png | 엽서 앞 100×148
 assets/proofs/postcard-back.png | 엽서 뒤
-assets/proofs/namecard-front.png | 명함 앞 90×50
-assets/proofs/namecard-back.png | 명함 뒤
 assets/proofs/nametag-front.png | 네임택 앞 80×140
 assets/proofs/nametag-back.png | 네임택 뒤
 ```
 
+```tl-sheets quiet cols=2 zip=ohari-print-set.zip
+assets/proofs/namecard-front.png | 명함 앞 90×50
+assets/proofs/namecard-back.png | 명함 뒤
+```
+
 ### 스티커 — 원형 봉인 · 쇼핑백
-```tl-sheets land zip=ohari-stickers.zip
+```tl-sheets cols=4 zip=ohari-stickers.zip
 assets/proofs/sticker-round.png | 원형 스티커 50×50 (뚜껑 안쪽 봉인)
 assets/proofs/sticker-bag.png | 쇼핑백 스티커 70×160
 ```
