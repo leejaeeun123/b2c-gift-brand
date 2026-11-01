@@ -460,5 +460,20 @@ sub('%EB%B2%84%EA%B1%B4%EB%94%94-6mm-22m/9784/category/261/display/1/" target="_
     '%EB%B8%94%EB%9E%99-6mm-22m/9783/category/275/display/1/" target="_blank" rel="noopener">공단 블랙 22m</a> 900원 / ')
 sub('물량 기준 소모량(마끈 21롤 · 공단 59롤)', '물량 기준 소모량(마끈 21롤 · 공단 블랙 59롤)')
 
+# 11-01 쇼핑백: 래포리(품절) → 아트쇼핑백·이담쇼핑백 코팅/럭셔리 후보 (재은 11-01)
+import re as _re
+_bag = (ROOT / "04-packaging" / "sourcing-bag-block-261101.html").read_text(encoding="utf-8")
+assert html.count('<div class="block" id="bag">') == 1
+html = _re.sub(r'<div class="block" id="bag">.*?\n  </div>\n', lambda m: _bag, html, count=1, flags=_re.S)
+sub('쇼핑백 자체는 래포리 재입고 대기.', '쇼핑백은 아트쇼핑백·이담쇼핑백 코팅/럭셔리 무지 후보(11-01).')
+sub('상자 묶는 끈과 쇼핑백은 10-18 결론 그대로.', '쇼핑백은 11-01 아트쇼핑백·이담쇼핑백 후보로 교체(색·라인 미정).')
+sub('<li><span>고급 쇼핑백 화이트 40×28×12 / 30×25×15 (추가 구성)<small>10-25 재확인: 두 규격 모두 SOLD OUT · 재입고 시 2,500 / 3,300원</small></span><span class="num">—</span></li>',
+    '<li><span>고급 쇼핑백 화이트 40×28×12 / 30×25×15 <span class="tag t-no">제외</span><small>계속 품절 · 11-01부터 쇼핑백은 아트쇼핑백·이담쇼핑백으로 (아래 ⑥)</small></span><span class="num">—</span></li>')
+sub('쇼핑백 추가 시</span><span class="tot sub num" style="font-weight:400">+ 2,500원 + 사각 스티커</span>',
+    '쇼핑백 추가 시</span><span class="tot sub num" style="font-weight:400">+ 712원(코팅 W2호) ~ 1,650원(럭셔리) + 사각 스티커 27원</span>')
+sub('쇼핑백 추가 시</span><span class="tot sub num" style="font-weight:400">+ 3,300원 + 사각 스티커</span>',
+    '쇼핑백 추가 시</span><span class="tot sub num" style="font-weight:400">+ 683원(코팅 W3호) ~ 1,353원(럭셔리) + 사각 스티커 27원</span>')
+sub('<div class="vh"><h3>⑤ 동네 철물점·잡화상 — 에어캡</h3>', '<div class="vh"><h3>⑥ <a href="https://artbag.co.kr/" target="_blank" rel="noopener">아트쇼핑백</a> / <a href="https://www.edambag.com/" target="_blank" rel="noopener">이담쇼핑백</a> — 쇼핑백 (추가 구성 · 미확정)</h3><span class="vs">11-01 사이트 표시가 · VAT 포함 · 이담 배송비 4,000원(10만 원 이상 무료) · 합계 미포함</span></div>\n      <ul>\n        <li><span>코팅 화이트 무광 W2호(와이드2호) 37×32×13 · 큰 상자 · 50장<small>장당 712~715원 · 블랙 없음</small></span><span class="num">35,580~35,750원</span></li>\n        <li><span>코팅 화이트 무광 W3호(와이드3호) 35×30×12 · 작은 상자 · 50장<small>장당 683~693원 · 블랙 없음</small></span><span class="num">34,130~34,650원</span></li>\n        <li><span>럭셔리 스페셜 블랙 중 / 화이트펄 중 40.5×30.5×15 · 큰 상자 · 25장<small>장당 1,650원 · 매립형 손잡이</small></span><span class="num">41,250원</span></li>\n        <li><span>럭셔리 CK-M 블랙 37×25×14 / 화이트펄 SM 37×28×13 · 작은 상자 · 25장<small>장당 1,320~1,353원</small></span><span class="num">33,000~33,825원</span></li>\n      </ul>\n      <div class="vt"><span>쇼핑백 1회분 <small>코팅 화이트 100장 / 럭셔리 50장 기준</small></span><span class="num">약 70,000 / 75,000원</span></div>\n      <p class="vn">색(화이트/블랙)과 라인(코팅/럭셔리)은 발주 때 결정. 코팅 블랙은 와이드 사이즈가 없어 숄더 소 한 사이즈 공용만 가능. 상세는 <a href="#bag">02-8 쇼핑백</a>.</p>\n    </div>\n    <div class="vcard">\n      <div class="vh"><h3>⑤ 동네 철물점·잡화상 — 에어캡</h3>')
+
 OUT.write_text(html, encoding="utf-8")
 print(OUT, f"{OUT.stat().st_size/1024:.0f} KB")
