@@ -166,7 +166,11 @@ assets/proofs/mockup/boxes-02.jpg | 목업 | 윗면 인쇄 | 워드마크 OHARI 
 | 4 | 주소 | 소재지 | 위 2·3의 소재지 |
 | 5 | 원산지 | 대한민국 / 중국 등 | 구성품별 |
 | 6 | 반품 및 교환 | 구입처 | |
-| 7 | '식품용' 표시 | 아이콘 | **식약처 공식 도안 원본** 사용. 손그림 변형 금지, 자리를 먼저 비워 두고 디자인 |
+| 7 | '식품용' 표시 | 아이콘 | **식약처 공식 도안 원본** 사용(아래 다운로드). 손그림 변형 금지, 자리를 먼저 비워 두고 디자인 |
+
+```tl-pictos quiet zip=ohari-care-icons.zip
+assets/v3/mark-food-contact.svg | 식품용 기구 마크 (식약처 원본 · 변형 금지)
+```
 
 | 면 | 들어가는 것 |
 |---|---|
@@ -195,7 +199,7 @@ assets/proofs/mockup/boxes-02.jpg | 목업 | 윗면 인쇄 | 워드마크 OHARI 
 ## 08. 다운로드
 
 ```tl-dl
-시안 ↓ | 패키지 시안 전체=ohari-package-proofs.zip | 인쇄물 6면(엽서·명함·네임택)=ohari-print-set.zip | 스티커 2종=ohari-stickers.zip | 워드마크 6종=ohari-logos.zip | 케어 아이콘 7종=ohari-care-icons.zip
+시안 ↓ | 패키지 시안 전체=ohari-package-proofs.zip | 케어 아이콘 + 식품용 마크=ohari-care-icons.zip | 인쇄물 6면(엽서·명함·네임택)=ohari-print-set.zip | 스티커 2종=ohari-stickers.zip | 워드마크 6종=ohari-logos.zip | 케어 아이콘 7종=ohari-care-icons.zip
 ```
 
 | 무엇 | 어디 |

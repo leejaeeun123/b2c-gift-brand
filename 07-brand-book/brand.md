@@ -225,6 +225,13 @@ assets/v3/silhouette-turtle.svg | 실루엣 · 거북이
 assets/v3/silhouette-clover.svg | 실루엣 · 클로버
 ```
 
+### 법정 표시 — '식품용' 마크
+식약처가 정한 **식품용 기구 도안**. 브랜드 요소가 아니라 법정 표시라 **손그림으로 다시 그리거나 색·비율을 바꾸지 않는다.** 네임택 뒷면·라벨 스티커의 표시 사항 자리에 원본 그대로 넣는다(→ Packaging 「06」).
+
+```tl-pictos zip=ohari-care-icons.zip
+assets/v3/mark-food-contact.svg | 식품용 기구 마크 (식약처 원본)
+```
+
 ### 손글씨 문구 · 패턴 (v3)
 
 손글씨 문구 3종은 **제목 자리**를 맡는다(→ 03. Typography). 해초 띠 패턴은 박스 윗면·띠지의 면 요소.
@@ -297,7 +304,7 @@ md/*.md
 ### 카테고리별 받기
 
 ```tl-dl
-묶음 zip ↓ | 워드마크 6종=ohari-logos.zip | 모티프·거북이·실루엣 36종=ohari-motifs.zip | 케어 아이콘 7종=ohari-care-icons.zip | 손글씨·패턴 4종=ohari-handwriting-patterns.zip | 패키지 시안=ohari-package-proofs.zip
+묶음 zip ↓ | 워드마크 6종=ohari-logos.zip | 모티프·거북이·실루엣 36종=ohari-motifs.zip | 케어 아이콘 7종 + 식품용 마크=ohari-care-icons.zip | 손글씨·패턴 4종=ohari-handwriting-patterns.zip | 패키지 시안=ohari-package-proofs.zip
 ```
 
 | 파일 | 용도 | 사양 |
@@ -306,6 +313,7 @@ md/*.md
 | `logo-oharistore-{ink,white}.svg` · `logo-oharistore.svg` | 워드마크 OHARI STORE (채널·대문) | 손글씨 벡터 · 684×138 |
 | `motif-*.svg` 28종 · `char-turtle.svg` | 일러스트 정본 | viewBox 100 · currentColor · 단일 패스 · 색 기본값 `#262320` |
 | `care-*.svg` 7종 | 세척·가열 안내 아이콘 | viewBox 100 · currentColor |
+| `mark-food-contact.svg` | 식품용 기구 마크 (법정 표시 · 식약처 원본) | 원본 그대로 · 변형 금지 |
 | `silhouette-*.svg` 7종 | 실루엣 모티프 (면 채움) | viewBox 100 · currentColor |
 | `text-*.svg` 3 · `pattern-seaweed-band.svg` | 손글씨 제목 · 해초 띠 패턴 | currentColor |
 | `proofs/` | 패키지 확정 시안 7종 + 목업 | jpg/png · 발주 원본은 Figma (→ Packaging) |
