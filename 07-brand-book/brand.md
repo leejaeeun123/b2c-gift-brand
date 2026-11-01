@@ -1,7 +1,7 @@
 # OHARI — Brand
 
 > 오하리상점 비주얼 아이덴티티 시스템.
-> 확정본 (2026-11-01). 로고=손글씨 영문 워드마크 2종(심볼 없음) · 컬러=종이·잉크 2색 · 폰트=Pretendard Light/Regular, 제목은 손글씨 · 일러스트=모티프 28종 + 거북이.
+> 확정본 (2026-11-01). 로고=손글씨 영문 워드마크 2종(심볼 없음) · 컬러=종이·잉크 2색 · 폰트=Pretendard Light/Regular, 제목은 손글씨 · 일러스트=모티프 28종 + 실루엣 7종 + 거북이.
 
 **목차**: Logo · Color · Typography · Illustration · Imagery · Assets
 
@@ -191,7 +191,6 @@ assets/motif/motif-crab.svg | 게
 
 ```tl-pictos quiet zip=ohari-motifs.zip
 assets/motif/char-turtle.svg | 거북이 (정본)
-assets/motif/char-dog.svg | 강아지 (예비 · 기본 사용 없음)
 ```
 
 | ✅ 거북이가 사는 자리 | ❌ 쓰지 않는 자리 |
@@ -213,21 +212,28 @@ assets/v3/care-no-oven.svg | 오븐 불가
 assets/v3/care-no-fire-oven.svg | 직화 · 오븐 불가
 ```
 
-### 손글씨 문구 · 패턴 · 실루엣 (v3)
+### 실루엣 모티프 7종
+선 그림과 짝을 이루는 **면 채움** 버전. 패키지에 쓰인 것만 정본으로 둔다 — 큰 상자 후면(주전자·볼·포크·수저·머그), 작은 상자 윗면(거북이·클로버). 선 그림과 한 면에 섞지 않는다 — 실루엣은 실루엣끼리.
 
-손글씨 문구 3종은 **제목 자리**를 맡는다(→ 03. Typography). 패턴은 띠·배경용, 실루엣은 박스 옆면·띠지의 면 요소.
+```tl-pictos zip=ohari-motifs.zip
+assets/v3/silhouette-pitcher.svg | 실루엣 · 주전자
+assets/v3/silhouette-bowl.svg | 실루엣 · 볼
+assets/v3/silhouette-fork.svg | 실루엣 · 포크
+assets/v3/silhouette-spoon.svg | 실루엣 · 수저
+assets/v3/silhouette-mug.svg | 실루엣 · 머그
+assets/v3/silhouette-turtle.svg | 실루엣 · 거북이
+assets/v3/silhouette-clover.svg | 실루엣 · 클로버
+```
+
+### 손글씨 문구 · 패턴 (v3)
+
+손글씨 문구 3종은 **제목 자리**를 맡는다(→ 03. Typography). 해초 띠 패턴은 박스 윗면·띠지의 면 요소.
 
 ```tl-sheets land zip=ohari-handwriting-patterns.zip
 assets/v3/text-a-little-care.svg | A Little Care
 assets/v3/text-use-and-care.svg | Use & Care
 assets/v3/text-slowly.svg | Slowly is wonderful.
 assets/v3/pattern-seaweed-band.svg | 패턴 · 해초 띠
-assets/v3/pattern-seaweed-bubbles.svg | 패턴 · 해초와 거품
-assets/v3/pattern-wave-band.svg | 패턴 · 물결 띠
-assets/v3/pattern-wave-turtle.svg | 패턴 · 파도 속 거북이
-assets/v3/silhouette-tableware.svg | 실루엣 · 식기 띠
-assets/v3/silhouette-sea.svg | 실루엣 · 바다생물
-assets/v3/silhouette-board.svg | 실루엣 · 보드
 ```
 
 ### 조합 규칙
@@ -246,15 +252,15 @@ assets/v3/silhouette-board.svg | 실루엣 · 보드
 
 ## 05. Imagery
 
-무드 키워드 3개. 이 셋으로 설명 안 되는 결정은 하지 않는다.
+사진·화면·인쇄물이 지켜야 할 세 가지. 이 셋만 지키면 오하리상점 그림이 된다.
 
-| 키워드 | 뜻 | 어디서 보이나 |
+| 규칙 | 뜻 | 어디서 보이나 |
 |---|---|---|
-| **손의 흔적** | 자로 잰 선이 아니라 사람이 그은 선 | 로고 · 일러스트 · 손글씨 문구 |
-| **담백한 밝음** | 밝지만 달지 않다. 종이 흰색이 바탕 | 컬러 · 촬영 · 배경 |
-| **넉넉한 여백** | 꽉 채우지 않는다. 그림이 놓일 자리를 남긴다 | 레이아웃 · 패키지 · 상세페이지 |
+| **손으로 그린 선** | 로고·그림·글씨는 사람이 펜으로 그린 것만 쓴다. 폰트나 벡터 아이콘으로 흉내 내지 않는다 | 로고 · 일러스트 · 손글씨 문구 |
+| **흰 바탕, 색은 그릇만** | 배경은 흰색, 선은 잉크 한 색. 화면에서 색이 있는 건 **그릇 사진뿐**이다. 파스텔·필터·색 소품을 쓰지 않는다 | 컬러 · 촬영 · 배경 |
+| **비워 둔다** | 꽉 채우지 않는다. 한 면에 그림은 3~5개, 거북이는 하나. 요소를 더 넣고 싶을 때가 멈출 때다 | 레이아웃 · 패키지 · 상세페이지 |
 
-세 키워드가 함께 만드는 인상: **누가 손으로 그려서 싸 준 것 같은데, 지저분하지는 않은.**
+이 셋이 함께 만드는 인상: **누가 손으로 그려서 싸 준 것 같은데, 지저분하지는 않은.**
 
 ```tl-cards half
 # Do
@@ -276,7 +282,7 @@ assets/v3/silhouette-board.svg | 실루엣 · 보드
 ## 06. Assets
 
 ```tl-kit zip=ohari-brand-kit.zip
-브랜드 킷 전체 | 워드마크 6종 · 모티프 28종 + 캐릭터 2종 · 케어 아이콘 7종 · 손글씨·패턴·실루엣 10종 · 패키지 시안 · 문서 md 4종 | Download all ↓
+브랜드 킷 전체 | 워드마크 6종 · 모티프 28종 + 거북이 + 실루엣 7종 · 케어 아이콘 7종 · 손글씨·패턴 4종 · 패키지 시안 · 문서 md 4종 | Download all ↓
 assets/logo/*.svg
 assets/motif/*.svg
 assets/v3/*.svg
@@ -291,16 +297,17 @@ md/*.md
 ### 카테고리별 받기
 
 ```tl-dl
-묶음 zip ↓ | 워드마크 6종=ohari-logos.zip | 모티프·캐릭터 30종=ohari-motifs.zip | 케어 아이콘 7종=ohari-care-icons.zip | 손글씨·패턴 10종=ohari-handwriting-patterns.zip | 패키지 시안=ohari-package-proofs.zip
+묶음 zip ↓ | 워드마크 6종=ohari-logos.zip | 모티프·거북이·실루엣 36종=ohari-motifs.zip | 케어 아이콘 7종=ohari-care-icons.zip | 손글씨·패턴 4종=ohari-handwriting-patterns.zip | 패키지 시안=ohari-package-proofs.zip
 ```
 
 | 파일 | 용도 | 사양 |
 |---|---|---|
 | `logo-ohari-{ink,white}.svg` · `logo-ohari.svg` | 워드마크 OHARI (패키지) | 손글씨 벡터 · 350×135 · currentColor 판은 웹용 |
 | `logo-oharistore-{ink,white}.svg` · `logo-oharistore.svg` | 워드마크 OHARI STORE (채널·대문) | 손글씨 벡터 · 684×138 |
-| `motif-*.svg` 28종 · `char-*.svg` 2종 | 일러스트 정본 | viewBox 100 · currentColor · 단일 패스 · 색 기본값 `#262320` |
+| `motif-*.svg` 28종 · `char-turtle.svg` | 일러스트 정본 | viewBox 100 · currentColor · 단일 패스 · 색 기본값 `#262320` |
 | `care-*.svg` 7종 | 세척·가열 안내 아이콘 | viewBox 100 · currentColor |
-| `text-*.svg` 3 · `pattern-*.svg` 4 · `silhouette-*.svg` 3 | 손글씨 제목 · 패턴 · 실루엣 | currentColor |
+| `silhouette-*.svg` 7종 | 실루엣 모티프 (면 채움) | viewBox 100 · currentColor |
+| `text-*.svg` 3 · `pattern-seaweed-band.svg` | 손글씨 제목 · 해초 띠 패턴 | currentColor |
 | `proofs/` | 패키지 확정 시안 7종 + 목업 | jpg/png · 발주 원본은 Figma (→ Packaging) |
 
 > 원본(소스): `03-identity/`(로고·모티프·v3) · `assets/package-proofs-261025/`(시안). 브랜드북 사본: `07-brand-book/assets/`. 원본을 고치면 사본도 같이 고친다.

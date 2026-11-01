@@ -1,7 +1,7 @@
 # OHARI — Packaging (패키지 시스템)
 
 > 오하리상점 패키지 시스템 — 확정 시안 7종과 사이즈, 박스 안 포장 순서, 끈·쇼핑백, 라벨.
-> 확정본 (2026-10-25 시안 · 2026-11-01 끈·쇼핑백 갱신). 발주 원본은 [Figma](https://www.figma.com/design/gBU5G6YNK0ILgW9v2nsWVF/%EC%98%A4%ED%95%98%EB%A6%AC%EC%83%81%EC%A0%90?node-id=171-18), 단가·발주처는 [발주처 비교 시트](https://github.com/nmwc-ai/b2c-gift-brand/blob/main/04-packaging/sourcing-comparison-2026-10-25.html)가 정본이다.
+> 확정본 (시안 = 2026-11-01 Figma 최종본 내보내기 · 끈·쇼핑백 11-01 갱신). 발주 원본은 [Figma](https://www.figma.com/design/gBU5G6YNK0ILgW9v2nsWVF/%EC%98%A4%ED%95%98%EB%A6%AC%EC%83%81%EC%A0%90?node-id=171-18), 단가·발주처는 [발주처 비교 시트](https://github.com/nmwc-ai/b2c-gift-brand/blob/main/04-packaging/sourcing-comparison-2026-10-25.html)가 정본이다.
 
 **목차**: Principles · 구성품 인벤토리 · 박스 안 포장 순서 · 끈 · 쇼핑백 · 라벨 · 발주처 · 다운로드
 
@@ -22,7 +22,7 @@
 
 ## 02. 구성품 인벤토리 (확정 7종)
 
-사이즈는 10-25 시안 기준 확정값이다. 시안 이미지를 누르면 내려받아진다.
+사이즈는 확정값이고, 이미지는 **Figma 최종 시안(11-01)을 그대로 내보낸 것**이다(상자 2배, 인쇄물 3배 PNG). 시안 이미지를 누르면 내려받아진다.
 
 | # | 구성품 | 사이즈 (mm) | 수량 | 인쇄 | 발주처 |
 |---|---|---|---|---|---|
@@ -37,35 +37,45 @@
 
 ### 상자 — 큰 360×270×110
 ```tl-sheets land zip=ohari-package-proofs.zip
-assets/proofs/box-large/top.jpg | 큰 상자 · 윗면
-assets/proofs/box-large/side-front.jpg | 큰 상자 · 정면
-assets/proofs/box-large/side-back.jpg | 큰 상자 · 후면
-assets/proofs/box-large/side-left.jpg | 큰 상자 · 좌측
-assets/proofs/box-large/side-right.jpg | 큰 상자 · 우측
+assets/proofs/box-large/top.png | 큰 상자 · 윗면
+assets/proofs/box-large/side-front.png | 큰 상자 · 정면
+assets/proofs/box-large/side-back.png | 큰 상자 · 후면
+assets/proofs/box-large/side-left.png | 큰 상자 · 좌측
+assets/proofs/box-large/side-right.png | 큰 상자 · 우측
 ```
 
 ### 상자 — 작은 270×220×110
 ```tl-sheets land quiet zip=ohari-package-proofs.zip
-assets/proofs/box-small/top.jpg | 작은 상자 · 윗면
-assets/proofs/box-small/side-front.jpg | 작은 상자 · 정면
-assets/proofs/box-small/side-back.jpg | 작은 상자 · 후면
-assets/proofs/box-small/side-left.jpg | 작은 상자 · 좌측
-assets/proofs/box-small/side-right.jpg | 작은 상자 · 우측
+assets/proofs/box-small/top.png | 작은 상자 · 윗면
+assets/proofs/box-small/side-front.png | 작은 상자 · 정면
+assets/proofs/box-small/side-back.png | 작은 상자 · 후면
+assets/proofs/box-small/side-left.png | 작은 상자 · 좌측
+assets/proofs/box-small/side-right.png | 작은 상자 · 우측
 ```
 
 ### 인쇄물 — 스티커 · 엽서 · 네임택 · 명함
 ```tl-sheets quiet zip=ohari-package-proofs.zip
 assets/proofs/sticker-round.png | 원형 스티커 50×50
-assets/proofs/postcard-front.jpg | 엽서 앞 100×148
-assets/proofs/postcard-back.jpg | 엽서 뒤
-assets/proofs/nametag-front.jpg | 네임택 앞 80×140
-assets/proofs/nametag-back.jpg | 네임택 뒤
-assets/proofs/namecard-front.jpg | 명함 앞 90×50
-assets/proofs/namecard-back.jpg | 명함 뒤
-assets/proofs/sticker-bag.jpg | 쇼핑백 스티커 70×160
+assets/proofs/postcard-front.png | 엽서 앞 100×148
+assets/proofs/postcard-back.png | 엽서 뒤
+assets/proofs/nametag-front.png | 네임택 앞 80×140
+assets/proofs/nametag-back.png | 네임택 뒤
+assets/proofs/namecard-front.png | 명함 앞 90×50
+assets/proofs/namecard-back.png | 명함 뒤
+assets/proofs/sticker-bag.png | 쇼핑백 스티커 70×160
 ```
 
-> 엽서 뒷면 문안은 BX 「05. Sample Copy」 A안이 정본. 네임택은 세척·가열 케어 아이콘(Brand 「04」) + 텍스트 병행.
+### 시안에 들어간 문구 (정본)
+| 자리 | 문구 |
+|---|---|
+| 엽서 뒤 | BX 「05. Sample Copy」의 엽서 문안 + 클로버 3 + QR |
+| 네임택 앞 | `There's no need to rush. Slowly is wonderful!` + 거북이 |
+| 네임택 뒤 | `USE & CARE` 손글씨 + 케어 아이콘 4(전자레인지 ○ · 식기세척기 ○ · 오븐 ✕ · 직화 ✕) + "이 안내는 함께 구성된 모든 그릇에 동일하게 적용됩니다." |
+| 상자 옆면(왼) | `OHARI` + 영문 한 단락 "I'm OHARI! The world can be so fast, but I think it's nice to take it slow. … There's no need to rush. Slowly is wonderful!" |
+| 상자 옆면(오) | `Slowly is wonderful.` 손글씨 + 거북이 + 클로버 3 |
+| 명함 뒤 | 전화번호 · 스마트스토어 주소 — **임시 기입**, 발주 전 확정 |
+
+네임택의 케어 아이콘 4종은 세트마다 바뀔 수 있다(전 구성품에 동일 적용되는 조합으로). 아이콘 정본은 Brand 「04」.
 
 ---
 
