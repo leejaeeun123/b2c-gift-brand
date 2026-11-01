@@ -1,7 +1,7 @@
 # OHARI — Brand
 
 > 오하리상점 비주얼 아이덴티티 시스템.
-> 확정본 (2026-11-01). 로고=손글씨 영문 워드마크 2종(심볼 없음) · 컬러=종이·잉크 2색 · 폰트=Pretendard Light/Regular, 제목은 손글씨 · 일러스트=모티프 28종 + 실루엣 7종 + 거북이.
+> 확정본 (2026-11-01). 로고=손글씨 영문 워드마크 2종(심볼 없음) · 컬러=종이·잉크 2색 · 폰트=Pretendard Light/Regular, 제목은 손글씨 · 일러스트=모티프 28종 + 선 그림 4종 + 실루엣 7종 + 거북이.
 
 **목차**: Logo · Color · Typography · Illustration · Imagery · Assets
 
@@ -212,6 +212,16 @@ assets/v3/care-no-oven.svg | 오븐 불가
 assets/v3/care-no-fire-oven.svg | 직화 · 오븐 불가
 ```
 
+### 선 그림 — 작은 상자 후면 4종
+작은 상자 뒷면에 한 줄로 들어가는 선 그림. 시트 v1·v2와 같은 손이지만 **무늬가 들어간 변형**(클로버 머그 · 점 접시 · 수저포크 · 물결 볼)이라 따로 둔다. Figma 최종 시안에서 그대로 내보낸 패스.
+
+```tl-pictos quiet zip=ohari-motifs.zip
+assets/v3/line-mug-clover.svg | 머그 (클로버)
+assets/v3/line-plate-dots.svg | 접시 (점)
+assets/v3/line-spoon-fork.svg | 수저 · 포크
+assets/v3/line-bowl-wave.svg | 볼 (물결)
+```
+
 ### 실루엣 모티프 7종
 선 그림과 짝을 이루는 **면 채움** 버전. 패키지에 쓰인 것만 정본으로 둔다 — 큰 상자 후면(주전자·볼·포크·수저·머그), 작은 상자 윗면(거북이·클로버). 선 그림과 한 면에 섞지 않는다 — 실루엣은 실루엣끼리.
 
@@ -289,7 +299,7 @@ assets/v3/pattern-seaweed-band.svg | 패턴 · 해초 띠
 ## 06. Assets
 
 ```tl-kit zip=ohari-brand-kit.zip
-브랜드 킷 전체 | 워드마크 6종 · 모티프 28종 + 거북이 + 실루엣 7종 · 케어 아이콘 7종 · 손글씨·패턴 4종 · 패키지 시안 · 문서 md 4종 | Download all ↓
+브랜드 킷 전체 | 워드마크 6종 · 모티프 28종 + 거북이 + 실루엣 7종 + 선 그림 4종 · 케어 아이콘 7종 · 손글씨·패턴 4종 · 패키지 시안 · 문서 md 4종 | Download all ↓
 assets/logo/*.svg
 assets/motif/*.svg
 assets/v3/*.svg
@@ -304,7 +314,7 @@ md/*.md
 ### 카테고리별 받기
 
 ```tl-dl
-묶음 zip ↓ | 워드마크 6종=ohari-logos.zip | 모티프·거북이·실루엣 36종=ohari-motifs.zip | 케어 아이콘 7종 + 식품용 마크=ohari-care-icons.zip | 손글씨·패턴 4종=ohari-handwriting-patterns.zip | 패키지 시안=ohari-package-proofs.zip
+묶음 zip ↓ | 워드마크 6종=ohari-logos.zip | 모티프·거북이·실루엣·선그림 40종=ohari-motifs.zip | 케어 아이콘 7종 + 식품용 마크=ohari-care-icons.zip | 손글씨·패턴 4종=ohari-handwriting-patterns.zip | 패키지 시안=ohari-package-proofs.zip
 ```
 
 | 파일 | 용도 | 사양 |
@@ -314,6 +324,7 @@ md/*.md
 | `motif-*.svg` 28종 · `char-turtle.svg` | 일러스트 정본 | viewBox 100 · currentColor · 단일 패스 · 색 기본값 `#262320` |
 | `care-*.svg` 7종 | 세척·가열 안내 아이콘 | viewBox 100 · currentColor |
 | `mark-food-contact.svg` | 식품용 기구 마크 (법정 표시 · 식약처 원본) | 원본 그대로 · 변형 금지 |
+| `line-*.svg` 4종 | 작은 상자 후면 선 그림 (무늬 변형) | Figma 내보내기 · currentColor |
 | `silhouette-*.svg` 7종 | 실루엣 모티프 (면 채움) | viewBox 100 · currentColor |
 | `text-*.svg` 3 · `pattern-seaweed-band.svg` | 손글씨 제목 · 해초 띠 패턴 | currentColor |
 | `proofs/` | 패키지 확정 시안 7종 + 목업 | jpg/png · 발주 원본은 Figma (→ Packaging) |
