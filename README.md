@@ -31,6 +31,11 @@
 | 네이밍 | 🟡 40안 → 결선 4안 **건네 · 겸상 · 포개 · 나란히** (전부 검색 충돌 없음). 방향 선택 대기 |
 | 레퍼런스 | 29CM 룩북 211890 · inapsquare |
 
+## 브랜드북 (2026-11-01)
+
+[`07-brand-book/`](./07-brand-book/) — 타입라운지 브랜드북과 같은 구조. **md가 단일 소스**(`brand.md` · `bx.md` · `packaging.md` · `commerce.md`), `python 07-brand-book/build_book.py`로 `site/`와 단일 파일 `site/standalone/index.html`(4탭, 로고·모티프·시안·md·zip 전부 내장, 오프라인 다운로드 동작)을 빌드한다. `site/`는 손으로 고치지 않는다.
+로고는 영문 워드마크 `OHARI` / `OHARI STORE` 2종만(한글 로고·거북이 락업 폐기, 구버전은 `03-identity/_legacy/`). 계획·결정 이력은 [`07-brand-book/PLAN.md`](./07-brand-book/PLAN.md).
+
 ## 한 장으로 보기
 
 [`deck.html`](./deck.html) — 전략·큐레이션 기준·아이덴티티·남은 결정을 한 페이지로 정리. `python build_deck.py`로 빌드.

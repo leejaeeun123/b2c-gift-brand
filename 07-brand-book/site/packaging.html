@@ -1,0 +1,1089 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- 배포 마운트는 /brand 다. 슬래시 없이 /brand 로 들어오면 상대경로가 루트(/assets/…)로
+     잡혀 이미지·탭이 전부 깨지므로 base 를 못박는다. 단일 파일(standalone)에서는 제거된다. -->
+
+<title>OHARI — Packaging (패키지 시스템)</title>
+<meta name="description" content="패키지 시스템 — 확정 시안 7종 · 사이즈 · 박스 안 포장 순서 · 끈 · 쇼핑백 · 라벨.">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  :root{
+    --orange:#262320; --white:#ffffff; --ink:#262320;
+    --paper:#ffffff; --line:rgba(38,35,32,.14);
+    --ff:'Pretendard','Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    --maxw:1200px; --side:212px; --headh:59px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;scroll-padding-top:calc(var(--headh) + 20px)}
+  /* 오하리상점: 자간 규칙 없음(0). 굵기는 300/400/500 — 700 볼드는 쓰지 않는다 (brand.md 「03. Typography」) */
+  body{background:var(--white);color:var(--ink);font-family:var(--ff);font-weight:400;line-height:1.65;
+       letter-spacing:0;-webkit-font-smoothing:antialiased}
+  /* 코드·원본 마크다운은 문자 정렬이 목적이라 자간을 걸지 않는다 */
+  code,pre,.mdsrc,.sw .hex,.toc a .n,.ddmenu a small,.spec .sm,.mdbar .p{letter-spacing:normal}
+  a{color:inherit}
+
+  /* ---------- top bar ---------- */
+  header{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.94);backdrop-filter:blur(8px);border-bottom:1.5px solid var(--ink)}
+  .nav{max-width:var(--maxw);margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:20px}
+  .brandmark{display:flex;align-items:center;flex:0 0 auto}
+  .brandmark img{height:22px;width:auto;display:block}
+  .tabs{display:flex;gap:4px;flex:1 1 auto;overflow-x:auto;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tabs a{font-weight:500;font-size:13px;letter-spacing:.08em;text-transform:uppercase;
+    text-decoration:none;border:1.5px solid transparent;color:var(--ink);padding:7px 13px;border-radius:2px;
+    white-space:nowrap;transition:.12s ease-out}
+  .tabs a:hover{border-color:var(--line)}
+  .tabs a.on{background:var(--ink);color:var(--white)}
+  .navtools{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+
+  .tbtn{font-family:var(--ff);font-weight:500;font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+    background:none;border:1.5px solid var(--line);color:var(--ink);padding:6px 11px;border-radius:3px;cursor:pointer;
+    display:inline-flex;align-items:center;gap:5px;transition:.12s ease-out;white-space:nowrap}
+  .tbtn:hover{border-color:var(--orange);color:var(--orange)}
+  .tbtn[aria-pressed="true"]{background:var(--orange);border-color:var(--orange);color:#fff}
+
+  /* download dropdown */
+  .dd{position:relative}
+  .dd>summary{list-style:none;cursor:pointer}
+  .dd>summary::-webkit-details-marker{display:none}
+  .dd[open]>summary .caret{transform:rotate(180deg)}
+  .caret{font-size:9px;transition:.14s}
+  .ddmenu{position:absolute;right:0;top:calc(100% + 7px);min-width:216px;background:var(--white);
+    border:1.5px solid var(--ink);border-radius:5px;box-shadow:0 10px 30px rgba(38,35,32,.13);padding:5px;z-index:70}
+  .ddmenu a{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+    padding:9px 11px;border-radius:3px;text-decoration:none;font-size:13.5px;font-weight:500;transition:.1s}
+  .ddmenu a:hover{background:rgba(38,35,32,.06);color:var(--orange)}
+  .ddmenu a small{font-family:var(--mono);font-size:10.5px;font-weight:400;color:rgba(38,35,32,.45);white-space:nowrap}
+  .ddmenu a:hover small{color:var(--orange)}
+  .ddmenu hr{border:0;border-top:1px solid var(--line);margin:4px 6px}
+
+  /* ---------- layout ---------- */
+  .shell{max-width:var(--maxw);margin:0 auto;padding:0 24px;display:grid;grid-template-columns:var(--side) 1fr;gap:44px;align-items:start}
+  main{min-width:0;padding-bottom:140px}
+
+  /* ---------- sidebar TOC ---------- */
+  .toc{position:sticky;top:calc(var(--headh) + 34px);padding:34px 0 40px;font-size:13px}
+  .toc .tt{font-weight:500;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(38,35,32,.42);margin-bottom:12px}
+  .toc ol{list-style:none}
+  .toc li{margin:0}
+  .toc a{display:flex;gap:9px;padding:5px 0 5px 10px;text-decoration:none;color:rgba(38,35,32,.62);
+    border-left:2px solid var(--line);line-height:1.4;transition:.12s ease-out}
+  .toc a:hover{color:var(--ink);border-left-color:rgba(38,35,32,.4)}
+  .toc a.on{color:var(--orange);border-left-color:var(--orange);font-weight:500}
+  .toc a .n{font-family:var(--mono);font-size:11px;opacity:.62;flex:0 0 auto}
+  .toc .other{margin-top:26px;border-top:1px solid var(--line);padding-top:14px}
+  .toc .other a{border-left:0;padding-left:0;font-size:12.5px}
+  .toc .other .tt{margin-bottom:8px}
+
+  /* ---------- hero ---------- */
+  .hero{padding:60px 0 38px;border-bottom:1.5px solid var(--ink)}
+  .kicker{font-weight:500;font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--orange)}
+  .hero h1{font-weight:400;font-size:clamp(38px,6.4vw,62px);line-height:1;letter-spacing:-.01em;margin:14px 0 16px}
+  .hero .lede{max-width:620px;font-size:16.5px;font-weight:300;color:rgba(38,35,32,.72)}
+  .hero .lede p{margin:0 0 6px}
+  .hero .lede code{font-size:.9em}
+
+  /* ---------- sections ---------- */
+  section{padding:50px 0;border-bottom:1px solid var(--line);scroll-margin-top:calc(var(--headh) + 20px)}
+  .snum{font-weight:500;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--orange)}
+  h2{font-weight:400;font-size:28px;letter-spacing:-.01em;margin:6px 0 20px}
+  h3{font-weight:500;font-size:17.5px;margin:28px 0 10px}
+  h4{font-weight:500;font-size:15px;margin:20px 0 8px;color:rgba(38,35,32,.75)}
+  p{margin:0 0 12px}
+  ul,ol{margin:0 0 14px;padding-left:20px}li{margin:5px 0}
+  strong{font-weight:500}
+  a.ext{color:var(--orange)}
+  code{font-family:var(--mono);font-size:.87em;background:rgba(38,35,32,.07);padding:2px 6px;border-radius:3px}
+  pre{background:rgba(38,35,32,.05);border:1px solid var(--line);border-radius:6px;padding:14px 16px;overflow-x:auto;margin:14px 0}
+  pre code{background:none;padding:0;font-size:12.5px;line-height:1.75}
+  hr{border:0;border-top:1px solid var(--line);margin:26px 0}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0 20px;font-size:14.5px}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-weight:500;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:rgba(38,35,32,.6);border-bottom:1.5px solid var(--ink)}
+  tr:hover td{background:rgba(38,35,32,.03)}
+  .tablewrap{overflow-x:auto;margin:14px 0 20px}
+  .tablewrap table{margin:0}
+  /* 식별자 열(E-1 · 토큰명)이 글자 단위로 접히지 않게 — 넘치면 표가 가로로 스크롤된다 */
+  td:first-child,th:first-child{white-space:nowrap}
+  td code{white-space:nowrap}
+
+  /* blockquote → note callout */
+  blockquote{background:var(--paper);border-left:3px solid var(--orange);padding:12px 16px;
+    border-radius:0 4px 4px 0;font-size:14px;margin:16px 0}
+  blockquote p:last-child{margin-bottom:0}
+
+  /* ---------- swatches ---------- */
+  .swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:14px;margin:18px 0}
+  .sw{border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--paper)}
+  .sw .chip{height:78px}
+  .sw .meta{padding:10px 12px}
+  .sw .nm{font-weight:500;font-size:14px}
+  .sw .hex{font-family:var(--mono);font-size:12px;color:rgba(38,35,32,.6);margin-top:3px}
+  .sw .use{font-size:12px;color:rgba(38,35,32,.6);margin-top:6px;line-height:1.4}
+
+  /* ---------- logo chips ---------- */
+  .logobox{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:16px;margin:18px 0}
+  .lchip{min-width:0;padding:32px 20px;border-radius:6px;display:flex;flex-direction:column;align-items:center;gap:7px;
+    border:1px solid var(--line);text-decoration:none;color:inherit;cursor:pointer;transition:.12s ease-out}
+  .lchip:hover{border-color:var(--orange)}
+  .lchip.light{background:var(--paper)}
+  .lchip.dark{background:var(--ink);color:var(--white)}
+  .lchip.orange{background:var(--orange);color:#fff}
+  .lchip .dlhint{font-size:9px;letter-spacing:.06em;color:var(--orange);opacity:0;transition:.12s}
+  .lchip:hover .dlhint{opacity:1}
+  .lchip.dark .dlhint,.lchip.orange .dlhint{color:#fff}
+  .lchip img{height:70px;width:auto;display:block;max-width:100%}
+  .lchip.h img{height:34px}
+  .plabel{font-weight:500;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;opacity:.55}
+
+  /* inline download row */
+  .dl{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin:6px 0 10px}
+  .dl-label{font-weight:500;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:rgba(38,35,32,.55)}
+  .dl a{font-size:12.5px;font-weight:500;text-decoration:none;border:1.5px solid var(--line);border-radius:3px;padding:5px 11px;transition:.12s ease-out}
+  .dl a:hover{border-color:var(--orange);color:var(--orange)}
+
+  /* ---------- cards ---------- */
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(228px,1fr));gap:14px;margin:16px 0}
+  .card{border:1.5px solid var(--ink);border-radius:6px;padding:18px 18px 20px;background:var(--paper)}
+  .card .t{font-weight:500;font-size:16px;margin-bottom:2px}
+  .card .t.warn{color:var(--orange)}
+  .card .anb{font-size:13px;color:var(--orange);font-weight:500;margin-bottom:10px}
+  .card ul{margin:0;padding-left:17px;font-size:13.5px}
+  .say{font-size:13.5px;margin-top:8px}
+  .say.no{color:rgba(38,35,32,.5)}
+  .say b{font-weight:500}
+
+  .pill{display:inline-block;font-weight:400;font-size:12px;letter-spacing:.03em;text-transform:uppercase;
+    padding:5px 12px;border:1.5px solid var(--ink);border-radius:3px;margin:0 6px 6px 0}
+  .pill.on{background:var(--orange);color:#fff;border-color:var(--orange)}
+
+  /* ---------- picto / mode grids ---------- */
+  .pictos{display:grid;grid-template-columns:repeat(auto-fill,minmax(94px,1fr));gap:10px;margin:16px 0}
+  .picto{display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 8px 10px;
+    border:1px solid var(--line);border-radius:6px;background:var(--paper);text-decoration:none;color:inherit;transition:.12s ease-out}
+  .picto:hover{border-color:var(--orange)}
+  .picto img{width:38px;height:38px;object-fit:contain}
+  .picto span{font-size:11.5px;font-weight:500;color:rgba(38,35,32,.7);text-align:center;line-height:1.3}
+  .picto small{font-size:9px;letter-spacing:.06em;color:var(--orange);opacity:0;transition:.12s}
+  .picto:hover small{opacity:1}
+
+  .modetags{display:flex;flex-wrap:wrap;gap:12px;margin:14px 0}
+  .mtag{display:flex;flex-direction:column;align-items:center;gap:7px;padding:16px 20px;border:1px solid var(--line);
+    border-radius:6px;background:var(--paper);text-decoration:none;color:inherit;transition:.12s ease-out}
+  .mtag:hover{border-color:var(--orange)}
+  .mtag img{height:32px;width:auto;display:block}
+  .mtag small{font-size:9px;letter-spacing:.06em;color:var(--orange);opacity:0;transition:.12s}
+  .mtag:hover small{opacity:1}
+
+  /* ---------- photos ---------- */
+  .shots{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin:20px 0}
+  .shot{border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--paper);display:flex;flex-direction:column}
+  .shot .ph{background:#EFEDE9;display:flex;align-items:center;justify-content:center;height:300px}
+  .shot .ph img{max-width:100%;max-height:100%;object-fit:contain;display:block}
+  .shot .cap{padding:11px 13px;border-top:1px solid var(--line)}
+  .shot .cap .tag{display:inline-block;font-size:10px;font-weight:500;letter-spacing:.1em;color:var(--orange);margin-bottom:4px}
+  .shot .cap b{font-weight:500;font-size:14.5px;display:block}
+  .shot .cap span{font-size:12.5px;color:rgba(38,35,32,.62);line-height:1.45;display:block;margin-top:4px}
+  .shots.wide{grid-template-columns:repeat(auto-fit,minmax(255px,1fr))}
+  .shots.wide .ph{height:340px}
+
+  /* ---------- A5 sheets ---------- */
+  .sheets{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:14px;margin:18px 0}
+  .sheets.land{grid-template-columns:repeat(auto-fill,minmax(224px,1fr))}
+  .sheet{border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--paper);
+    text-decoration:none;color:inherit;display:block;transition:.12s ease-out}
+  .sheet:hover{border-color:var(--orange)}
+  .sheet img{width:100%;height:auto;display:block;background:#fff}
+  .sheet .cap{padding:8px 10px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:baseline;gap:6px}
+  .sheet .cap b{font-weight:500;font-size:12.5px}
+  .sheet .cap small{font-size:9px;letter-spacing:.06em;color:var(--orange);opacity:0;transition:.12s;white-space:nowrap}
+  .sheet:hover .cap small{opacity:1}
+
+  /* ---------- type specimen ---------- */
+  .spec{border:1px solid var(--line);border-radius:6px;overflow:hidden;margin:16px 0}
+  .spec div{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;align-items:baseline;justify-content:space-between;gap:18px}
+  .spec div:last-child{border-bottom:0}
+  .spec .sm{font-family:var(--mono);font-size:10.5px;color:rgba(38,35,32,.42);white-space:nowrap;flex:0 0 auto}
+  .spec .sv{min-width:0;flex:1 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+  /* ---------- sequence ---------- */
+  .seq{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:16px 18px;margin:18px 0;
+    font-size:13.5px;line-height:1.9;overflow-x:auto;white-space:nowrap}
+  .seq b{font-weight:500}
+  .seq .ar{color:var(--orange);margin:0 8px}
+
+  /* ---------- asset download center ---------- */
+  .kit{border:1.5px solid var(--ink);border-radius:6px;padding:18px 20px;margin:18px 0;display:flex;
+    align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+  .kit .kt{font-weight:500;font-size:16px}
+  .kit .ks{font-size:13px;color:rgba(38,35,32,.6);margin-top:3px}
+  .kit a{background:var(--ink);color:var(--white);text-decoration:none;font-weight:500;font-size:13px;
+    letter-spacing:.06em;text-transform:uppercase;padding:11px 20px;border-radius:3px;transition:.12s}
+  .kit a:hover{background:var(--orange)}
+  .grouphead{display:flex;align-items:baseline;justify-content:space-between;gap:14px;margin:30px 0 4px}
+  .grouphead h3{margin:0}
+  .grouphead a{font-size:12px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--orange);
+    text-decoration:none;border-bottom:1.5px solid transparent;transition:.12s}
+  .grouphead a:hover{border-bottom-color:var(--orange)}
+
+  /* ---------- MD view ---------- */
+  #mdview{display:none;padding:34px 0 0}
+  #mdview.on{display:block}
+  body.md main>.hero,body.md main>section{display:none}
+  body.md #toc ol,body.md #toc>.tt{display:none}   /* 원본 보기에는 앵커가 없다 */
+  .mdbar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:12px}
+  .mdbar .p{font-family:var(--mono);font-size:12px;color:rgba(38,35,32,.5)}
+  .mdsrc{background:rgba(38,35,32,.04);border:1px solid var(--line);border-radius:6px;padding:20px 22px;
+    font-family:var(--mono);font-size:12.5px;line-height:1.85;white-space:pre-wrap;word-break:break-word;overflow-x:auto;tab-size:2}
+
+  .foot{padding:44px 0 0;font-size:13px;color:rgba(38,35,32,.5)}
+  .foot a{color:var(--orange);text-decoration:none}
+
+  @media(max-width:900px){
+    :root{--headh:56px}
+    .shell{grid-template-columns:1fr;gap:0}
+    .toc{position:static;padding:26px 0 0;border-bottom:1px solid var(--line);padding-bottom:20px}
+    .toc ol{display:flex;flex-wrap:wrap;gap:4px 0}
+    .toc a{border-left:0;padding:5px 11px 5px 0}
+    .toc a.on{border-left:0}
+    .toc .other{width:100%}
+    .hero{padding:38px 0 30px}
+    section{padding:40px 0}
+    .nav{padding:11px 16px;gap:12px;flex-wrap:wrap}
+    .shell{padding:0 16px}
+    .brandmark{order:1}.navtools{order:2;margin-left:auto}.tabs{order:3;width:100%;flex:1 0 100%}
+  }
+  @media(max-width:520px){
+    /* 좁은 화면에서 헤더가 뷰포트를 넘기면 문서 전체가 가로로 밀린다 */
+    .nav{padding:10px 14px;gap:8px}
+    .shell{padding:0 14px}
+    .brandmark img{height:19px}
+    .tbtn{font-size:11px;padding:5px 9px;letter-spacing:.05em}
+    .ddmenu{min-width:200px}
+    .lchip{padding:24px 14px}
+    .lchip img{height:56px}
+    .lchip.h img{height:26px}
+    .kit{flex-direction:column;align-items:stretch}
+    .kit a{text-align:center}
+  }
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a class="brandmark" href="index.html"><img src="assets/logo/logo-oharistore-ink.svg" alt="OHARI STORE" height="22"></a>
+    <nav class="tabs"><a href="index.html">Brand</a><a href="bx.html">BX</a><a href="packaging.html" class="on">Packaging</a><a href="commerce.html">Commerce</a></nav>
+    <div class="navtools">
+      <button class="tbtn" id="mdtoggle" aria-pressed="false" title="원본 마크다운 보기">MD</button>
+      <details class="dd" id="dd">
+        <summary class="tbtn">Download <span class="caret">▼</span></summary>
+        <div class="ddmenu">
+          <a href="standalone/index.html" download="261101 ohari_brandbook_index.html" id="dl-html">HTML page <small>4개 탭 · 단일 파일</small></a>
+          <a href="md/packaging.md" download="packaging.md" id="dl-md">MD source <small>packaging.md</small></a>
+          <a href="ohari-logos.zip" download="ohari-logos.zip">Logo (SVG) <small>워드마크 6종 zip</small></a>
+          <hr>
+          <a href="ohari-brand-kit.zip" download="ohari-brand-kit.zip">Download all <small>1.9 MB</small></a>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="toc" id="toc">
+    <div class="tt">On this page</div>
+    <ol><li><a href="#principles"><span class="n">01</span><span>Principles</span></a></li><li><a href="#구성품-인벤토리-확정-7종"><span class="n">02</span><span>구성품 인벤토리 (확정 7종)</span></a></li><li><a href="#박스-안-포장-순서"><span class="n">03</span><span>박스 안 포장 순서</span></a></li><li><a href="#끈"><span class="n">04</span><span>끈</span></a></li><li><a href="#쇼핑백-추가-구성"><span class="n">05</span><span>쇼핑백 (추가 구성)</span></a></li><li><a href="#라벨-법정-표기"><span class="n">06</span><span>라벨 — 법정 표기</span></a></li><li><a href="#발주처"><span class="n">07</span><span>발주처</span></a></li><li><a href="#다운로드"><span class="n">08</span><span>다운로드</span></a></li></ol>
+    <div class="other">
+      <div class="tt">Brand book</div>
+      <a href="index.html">Brand</a><a href="bx.html">BX</a><a href="packaging.html" class="on">Packaging</a><a href="commerce.html">Commerce</a>
+    </div>
+  </aside>
+
+  <main id="top">
+    <div class="hero">
+      <div class="kicker">Brand Book · 03</div>
+      <h1>Packaging (패키지 시스템)</h1>
+      <div class="lede"><p>오하리상점 패키지 시스템 — 확정 시안 7종과 사이즈, 박스 안 포장 순서, 끈·쇼핑백, 라벨.
+확정본 (2026-10-25 시안 · 2026-11-01 끈·쇼핑백 갱신). 발주 원본은 <a href="https://www.figma.com/design/gBU5G6YNK0ILgW9v2nsWVF/%EC%98%A4%ED%95%98%EB%A6%AC%EC%83%81%EC%A0%90?node-id=171-18">Figma</a>, 단가·발주처는 <a href="https://github.com/nmwc-ai/b2c-gift-brand/blob/main/04-packaging/sourcing-comparison-2026-10-25.html">발주처 비교 시트</a>가 정본이다.</p></div>
+    </div>
+
+    <section id="principles">
+      <div class="snum">01 — PRINCIPLES</div>
+      <h2>Principles</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>원칙</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>흰 박스 · 검정 1도</strong></td>
+<td>종이·잉크 2색 그대로. 모티프 정본을 그대로 쓸 수 있고, 별색·CMYK 매칭이 없다</td>
+</tr>
+<tr>
+<td><strong>2겹 구조</strong></td>
+<td>겉 무지 택배 상자 + 안 선물 박스. 흰 박스는 운송을 겪지 않는다</td>
+</tr>
+<tr>
+<td><strong>점 단위 포장</strong></td>
+<td>세트를 통째로 싸지 않는다. 상품 한 점 한 점을 에어캡 → 습자지 → 검정 마끈으로 따로 묶는다 — 세트를 사면 <strong>작은 선물 여러 개</strong>가 온다</td>
+</tr>
+<tr>
+<td><strong>보이는 표면은 전부 종이</strong></td>
+<td>에어캡은 습자지 아래에 숨긴다. 뚜껑을 열면 트레이싱지 한 겹을 먼저 걷는다</td>
+</tr>
+<tr>
+<td><strong>기본 포장료 포함</strong></td>
+<td>세트가에 포장(에어캡·습자지·마끈·엽서·네임택)이 들어 있다. 쇼핑백만 추가 구성</td>
+</tr>
+<tr>
+<td><strong>그림은 자리를 나눈다</strong></td>
+<td>박스 윗면 = 워드마크 + 모티프, 옆면 = 실루엣 띠. 품목을 특정하는 그림은 엽서·네임택에만</td>
+</tr>
+</tbody>
+</table></div>
+    </section>
+    <section id="구성품-인벤토리-확정-7종">
+      <div class="snum">02 — 구성품 인벤토리 (확정 7종)</div>
+      <h2>구성품 인벤토리 (확정 7종)</h2>
+<p>사이즈는 10-25 시안 기준 확정값이다. 시안 이미지를 누르면 내려받아진다.</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>구성품</th>
+<th>사이즈 (mm)</th>
+<th>수량</th>
+<th>인쇄</th>
+<th>발주처</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>선물세트 상자 · 큰</td>
+<td><strong>360 × 270 × 110</strong> (내경 345×267×107)</td>
+<td>세트당 1</td>
+<td>먹1도 · 윗면 + 옆 4면 (아랫면 인쇄 없음)</td>
+<td>유패키지 · G형 일체형 · E골 · 300장</td>
+</tr>
+<tr>
+<td>1</td>
+<td>선물세트 상자 · 작은</td>
+<td><strong>270 × 220 × 110</strong> (내경 255×217×107)</td>
+<td>세트당 1</td>
+<td>〃</td>
+<td>유패키지 · 400장</td>
+</tr>
+<tr>
+<td>2</td>
+<td>포장 스티커 (원형 · 봉인)</td>
+<td><strong>50 × 50</strong></td>
+<td>세트당 1</td>
+<td>단면 칼라 · 아트 75g</td>
+<td>성원애드피아 · 500장</td>
+</tr>
+<tr>
+<td>3</td>
+<td>브랜드 엽서</td>
+<td><strong>100 × 148</strong></td>
+<td>세트당 1</td>
+<td>양면 먹1도 · 랑데뷰 240g</td>
+<td>성원애드피아 · 100~200매</td>
+</tr>
+<tr>
+<td>4</td>
+<td>주의사항 네임택</td>
+<td><strong>80 × 140</strong></td>
+<td><strong>세트당 1</strong> (품목당 아님)</td>
+<td>양면 먹1도 · 랑데뷰 240g</td>
+<td>성원애드피아 · 100~200매</td>
+</tr>
+<tr>
+<td>5</td>
+<td>명함</td>
+<td><strong>90 × 50</strong></td>
+<td>운영용</td>
+<td>양면 칼라 · 반누보 204g</td>
+<td>성원애드피아 · 200매</td>
+</tr>
+<tr>
+<td>6</td>
+<td>쇼핑백 스티커 (사각)</td>
+<td><strong>70 × 160</strong></td>
+<td>쇼핑백 추가 시 1</td>
+<td>단면 칼라 · 아트 75g</td>
+<td>성원애드피아 · 500매</td>
+</tr>
+<tr>
+<td>7</td>
+<td>트레이싱지 (맨 위 덮기)</td>
+<td>4절</td>
+<td>세트당 1</td>
+<td>무지</td>
+<td>하나페이퍼몰 / 오픈마켓</td>
+</tr>
+</tbody>
+</table></div>
+<h3>상자 — 큰 360×270×110</h3>
+<div class="grouphead"><span></span><a href="ohari-package-proofs.zip" download="ohari-package-proofs.zip">전체 받기 · zip ↓</a></div><div class="sheets land"><a class="sheet" href="assets/proofs/box-large/top.jpg" download="top.jpg"><img src="assets/proofs/box-large/top.jpg" alt="큰 상자 · 윗면" loading="lazy"><div class="cap"><b>큰 상자 · 윗면</b><small>JPG ↓</small></div></a><a class="sheet" href="assets/proofs/box-large/side-front.jpg" download="side-front.jpg"><img src="assets/proofs/box-large/side-front.jpg" alt="큰 상자 · 정면" loading="lazy"><div class="cap"><b>큰 상자 · 정면</b><small>JPG ↓</small></div></a><a class="sheet" href="assets/proofs/box-large/side-back.jpg" download="side-back.jpg"><img src="assets/proofs/box-large/side-back.jpg" alt="큰 상자 · 후면" loading="lazy"><div class="cap"><b>큰 상자 · 후면</b><small>JPG ↓</small></div></a><a class="sheet" href="assets/proofs/box-large/side-left.jpg" download="side-left.jpg"><img src="assets/proofs/box-large/side-left.jpg" alt="큰 상자 · 좌측" loading="lazy"><div class="cap"><b>큰 상자 · 좌측</b><small>JPG ↓</small></div></a><a class="sheet" href="assets/proofs/box-large/side-right.jpg" download="side-right.jpg"><img src="assets/proofs/box-large/side-right.jpg" alt="큰 상자 · 우측" loading="lazy"><div class="cap"><b>큰 상자 · 우측</b><small>JPG ↓</small></div></a></div>
+
+<h3>상자 — 작은 270×220×110</h3>
+<div class="sheets land"><a class="sheet" href="assets/proofs/box-small/top.jpg" download="top.jpg"><img src="assets/proofs/box-small/top.jpg" alt="작은 상자 · 윗면" loading="lazy"><div class="cap"><b>작은 상자 · 윗면</b><small>JPG ↓</small></div></a><a class="sheet" href="assets/proofs/box-small/side-front.jpg" download="side-front.jpg"><img src="assets/proofs/box-small/side-front.jpg" alt="작은 상자 · 정면" loading="lazy"><div class="cap"><b>작은 상자 · 정면</b><small>JPG ↓</small></div></a><a class="sheet" href="assets/proofs/box-small/side-back.jpg" download="side-back.jpg"><img src="assets/proofs/box-small/side-back.jpg" alt="작은 상자 · 후면" loading="lazy"><div class="cap"><b>작은 상자 · 후면</b><small>JPG ↓</small></div></a><a class="sheet" href="assets/proofs/box-small/side-left.jpg" download="side-left.jpg"><img src="assets/proofs/box-small/side-left.jpg" alt="작은 상자 · 좌측" loading="lazy"><div class="cap"><b>작은 상자 · 좌측</b><small>JPG ↓</small></div></a><a class="sheet" href="assets/proofs/box-small/side-right.jpg" download="side-right.jpg"><img src="assets/proofs/box-small/side-right.jpg" alt="작은 상자 · 우측" loading="lazy"><div class="cap"><b>작은 상자 · 우측</b><small>JPG ↓</small></div></a></div>
+
+<h3>인쇄물 — 스티커 · 엽서 · 네임택 · 명함</h3>
+<div class="sheets"><a class="sheet" href="assets/proofs/sticker-round.png" download="sticker-round.png"><img src="assets/proofs/sticker-round.png" alt="원형 스티커 50×50" loading="lazy"><div class="cap"><b>원형 스티커 50×50</b><small>PNG ↓</small></div></a><a class="sheet" href="assets/proofs/postcard-front.jpg" download="postcard-front.jpg"><img src="assets/proofs/postcard-front.jpg" alt="엽서 앞 100×148" loading="lazy"><div class="cap"><b>엽서 앞 100×148</b><small>JPG ↓</small></div></a><a class="sheet" href="assets/proofs/postcard-back.jpg" download="postcard-back.jpg"><img src="assets/proofs/postcard-back.jpg" alt="엽서 뒤" loading="lazy"><div class="cap"><b>엽서 뒤</b><small>JPG ↓</small></div></a><a class="sheet" href="assets/proofs/nametag-front.jpg" download="nametag-front.jpg"><img src="assets/proofs/nametag-front.jpg" alt="네임택 앞 80×140" loading="lazy"><div class="cap"><b>네임택 앞 80×140</b><small>JPG ↓</small></div></a><a class="sheet" href="assets/proofs/nametag-back.jpg" download="nametag-back.jpg"><img src="assets/proofs/nametag-back.jpg" alt="네임택 뒤" loading="lazy"><div class="cap"><b>네임택 뒤</b><small>JPG ↓</small></div></a><a class="sheet" href="assets/proofs/namecard-front.jpg" download="namecard-front.jpg"><img src="assets/proofs/namecard-front.jpg" alt="명함 앞 90×50" loading="lazy"><div class="cap"><b>명함 앞 90×50</b><small>JPG ↓</small></div></a><a class="sheet" href="assets/proofs/namecard-back.jpg" download="namecard-back.jpg"><img src="assets/proofs/namecard-back.jpg" alt="명함 뒤" loading="lazy"><div class="cap"><b>명함 뒤</b><small>JPG ↓</small></div></a><a class="sheet" href="assets/proofs/sticker-bag.jpg" download="sticker-bag.jpg"><img src="assets/proofs/sticker-bag.jpg" alt="쇼핑백 스티커 70×160" loading="lazy"><div class="cap"><b>쇼핑백 스티커 70×160</b><small>JPG ↓</small></div></a></div>
+
+<blockquote>
+<p>엽서 뒷면 문안은 BX 「05. Sample Copy」 A안이 정본. 네임택은 세척·가열 케어 아이콘(Brand 「04」) + 텍스트 병행.</p>
+</blockquote>
+    </section>
+    <section id="박스-안-포장-순서">
+      <div class="snum">03 — 박스 안 포장 순서</div>
+      <h2>박스 안 포장 순서</h2>
+<div class="seq"><b>에어캡으로 개별 감싸기</b><span class="ar">→</span><b>습자지로 감싸기</b><span class="ar">→</span><b>검정 마끈 십자 + 리본 매듭</b><span class="ar">→</span><b>같은 높이로 나란히</b><span class="ar">→</span><b>네임택 1매 (한 품목 끈 아래)</b><span class="ar">→</span><b>트레이싱지로 덮기</b><span class="ar">→</span><b>뚜껑 안쪽 원형 스티커 · 엽서</b></div>
+
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>순서</th>
+<th>무엇</th>
+<th>왜</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>①</td>
+<td><strong>에어캡으로 개별 감싸기</strong></td>
+<td>도자기끼리 부딪히는 걸 막는다. 완충은 여기서 끝낸다</td>
+</tr>
+<tr>
+<td>②</td>
+<td><strong>습자지로 감싸기</strong> (2~3장)</td>
+<td>에어캡을 보이지 않게 덮는다. 보이는 표면은 전부 종이</td>
+</tr>
+<tr>
+<td>③</td>
+<td><strong>검정 마끈 십자 + 리본 매듭</strong> (약 0.6m)</td>
+<td>한 점 한 점이 각각 하나의 선물이 된다 — 이 포장의 핵심</td>
+</tr>
+<tr>
+<td>④</td>
+<td><strong>같은 높이로 나란히</strong></td>
+<td>낮은 품목은 습자지를 더 감아 높이를 맞춘다. 받침·인서트는 만들지 않는다</td>
+</tr>
+<tr>
+<td>⑤</td>
+<td><strong>주의사항 네임택 1매</strong></td>
+<td>세트당 1매, 대표 품목의 끈 아래에 끼운다</td>
+</tr>
+<tr>
+<td>⑥</td>
+<td><strong>트레이싱지로 덮기</strong></td>
+<td>뚜껑을 열면 종이 한 겹을 먼저 걷게 한다</td>
+</tr>
+<tr>
+<td>⑦</td>
+<td><strong>원형 스티커 · 엽서</strong></td>
+<td>스티커는 뚜껑 안쪽 봉인, 엽서는 트레이싱지 위</td>
+</tr>
+</tbody>
+</table></div>
+<div class="shots wide"><div class="shot"><div class="ph"><img src="assets/proofs/mockup/inside-01.jpg" alt="상자를 열었을 때" loading="lazy"></div><div class="cap"><span class="tag">목업</span><b>상자를 열었을 때</b><span>품목마다 습자지 + 마끈 십자 매듭, 네임택은 한 품목 끈 아래</span></div></div><div class="shot"><div class="ph"><img src="assets/proofs/mockup/inside-02.jpg" alt="같은 높이 정렬" loading="lazy"></div><div class="cap"><span class="tag">목업</span><b>같은 높이 정렬</b><span>빈 자리는 구긴 습자지로 옆면에 끼워 흔들림을 잡는다</span></div></div><div class="shot"><div class="ph"><img src="assets/proofs/mockup/boxes-01.jpg" alt="큰 상자 · 작은 상자" loading="lazy"></div><div class="cap"><span class="tag">목업</span><b>큰 상자 · 작은 상자</b><span>종이 목업 (10-25)</span></div></div><div class="shot"><div class="ph"><img src="assets/proofs/mockup/boxes-02.jpg" alt="윗면 인쇄" loading="lazy"></div><div class="cap"><span class="tag">목업</span><b>윗면 인쇄</b><span>워드마크 OHARI + 모티프</span></div></div></div>
+
+<ul>
+<li>빈 자리는 <strong>구긴 습자지</strong>로 채운다 — 덩어리째 넣지 말고 옆면에 끼운다. 그래도 헐거우면 세트 구성이 박스에 안 맞는 것이다. 완충으로 메우지 말고 구성으로 돌아간다.</li>
+<li>완충 스티로폼은 <strong>보류</strong>(에어캡 + 습자지로만). 품명 스티커는 보류(자체 출력/발주 미정).</li>
+<li>상자를 묶는 겉 끈(공단)은 ⑦ 뒤, 뚜껑을 닫고 두른다.</li>
+</ul>
+    </section>
+    <section id="끈">
+      <div class="snum">04 — 끈</div>
+      <h2>끈</h2>
+<p><strong>끈은 전부 검정이 기본이다.</strong> 잉크 계열, 2색 원칙 안에 들어온다.</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>끈</th>
+<th>사양</th>
+<th>자리</th>
+<th>상태</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>마끈 블랙</strong></td>
+<td>2mm × 50m (래포리)</td>
+<td>박스 <strong>안</strong>, 상품 개별 포장 (③)</td>
+<td><strong>기본 발주</strong></td>
+</tr>
+<tr>
+<td><strong>공단리본끈 블랙</strong></td>
+<td>6mm × 22m (래포리)</td>
+<td>박스 <strong>밖</strong>, 뚜껑 위 묶음</td>
+<td><strong>기본 발주</strong></td>
+</tr>
+<tr>
+<td>공단리본끈 버건디</td>
+<td>6mm × 22m</td>
+<td>박스 밖</td>
+<td>크리스마스 에디션 · 추가 발주 보류</td>
+</tr>
+<tr>
+<td>공단리본끈 녹색</td>
+<td>6mm (규격 미확인)</td>
+<td>박스 밖</td>
+<td>크리스마스 에디션 · 추가 발주 보류</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>마끈은 매끈한 리본이 아니라 <strong>거친 결</strong> — 손그림 톤과 맞는다. 십자 한 번 + 리본 매듭, 고리를 크게 남긴다.</li>
+<li>소요: 마끈 세트당 품목 수 × 약 0.6m, 공단 큰 세트 약 2m / 작은 세트 약 1.7m.</li>
+<li>시즌 색은 <strong>에디션</strong>으로만 쓴다. 기본색을 바꾸지 않는다.</li>
+</ul>
+    </section>
+    <section id="쇼핑백-추가-구성">
+      <div class="snum">05 — 쇼핑백 (추가 구성)</div>
+      <h2>쇼핑백 (추가 구성)</h2>
+<p><strong>무지 쇼핑백 + 사각 스티커 70×160.</strong> 인쇄 없이 기성 무지를 쓰고, 스티커로 브랜드를 붙인다. 발주처는 아트쇼핑백 / 이담쇼핑백(같은 계열 제품, 규격·가격 거의 동일). 상자를 <strong>세워 넣는</strong> 기준으로 맞는 조합은 4가지, <strong>색(화이트/블랙)과 라인(코팅/럭셔리)은 발주 때 결정</strong>한다.</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>조합</th>
+<th>큰 상자용</th>
+<th>작은 상자용</th>
+<th>장당</th>
+<th>비고</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>① 코팅 화이트</td>
+<td>W2호 37×32×13</td>
+<td>W3호 35×30×12</td>
+<td>약 700원</td>
+<td>50장 단위 · <strong>블랙 없음</strong></td>
+</tr>
+<tr>
+<td>② 코팅 블랙</td>
+<td>숄더 소 블랙 41×31×13 (공용)</td>
+<td>〃</td>
+<td>770원</td>
+<td>와이드 라인에 블랙이 없어 한 사이즈 공용 · 긴 손잡이</td>
+</tr>
+<tr>
+<td>③ 럭셔리 블랙</td>
+<td>스페셜 블랙 중 40.5×30.5×15</td>
+<td>CK-M 블랙 37×25×14</td>
+<td>1,353~1,650원</td>
+<td>220~250g 흑지 · 매립형 손잡이 · 가장 무겁고 단단함 · 25장 단위</td>
+</tr>
+<tr>
+<td>④ 럭셔리 화이트펄</td>
+<td>화이트펄 중 40.5×30.5×15</td>
+<td>화이트펄 SM 37×28×13</td>
+<td>1,320~1,650원</td>
+<td>이담에만 SM</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>코팅 정3호(옆폭 10cm)는 상자(11cm)가 안 들어간다. 럭셔리 블랙 대(옆폭 11cm)는 여유가 없어 권장하지 않는다.</li>
+<li>색 판단: 상자·원형 스티커가 흰색이라 <strong>블랙 쇼핑백</strong>은 대비가 생기고 때가 덜 보인다. <strong>화이트</strong>는 한 덩어리로 읽히고 사각 스티커가 또렷하다. 블랙을 고르면 흰 바탕 사각 스티커를 라벨처럼 쓸지 따로 본다.</li>
+<li>쇼핑백 선택 시 세트 원가 +약 700원(코팅) ~ +1,650원(럭셔리) + 스티커 27원. 상세는 발주처 비교 시트 02-8.</li>
+</ul>
+    </section>
+    <section id="라벨-법정-표기">
+      <div class="snum">06 — 라벨 — 법정 표기</div>
+      <h2>라벨 — 법정 표기</h2>
+<p>자체 기획 세트의 라벨(네임택 뒷면 또는 별도 스티커)에 아래 7항목을 넣는다. 브랜드 요소와 <strong>시각적으로 층을 나눈다</strong> — 법정 표시는 작고 단정하게 뒤쪽에.</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>항목</th>
+<th>표기 예</th>
+<th>비고</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>재질</td>
+<td>도자기 / 스테인리스 스틸 / 유리</td>
+<td>품목이 섞인 세트는 <strong>구성품별로</strong></td>
+</tr>
+<tr>
+<td>2</td>
+<td>수입원</td>
+<td>상호</td>
+<td>수입품일 때</td>
+</tr>
+<tr>
+<td>3</td>
+<td>제조사</td>
+<td>상호</td>
+<td>국내 제조품일 때</td>
+</tr>
+<tr>
+<td>4</td>
+<td>주소</td>
+<td>소재지</td>
+<td>위 2·3의 소재지</td>
+</tr>
+<tr>
+<td>5</td>
+<td>원산지</td>
+<td>대한민국 / 중국 등</td>
+<td>구성품별</td>
+</tr>
+<tr>
+<td>6</td>
+<td>반품 및 교환</td>
+<td>구입처</td>
+<td></td>
+</tr>
+<tr>
+<td>7</td>
+<td>'식품용' 표시</td>
+<td>아이콘</td>
+<td><strong>식약처 공식 도안 원본</strong> 사용. 손그림 변형 금지, 자리를 먼저 비워 두고 디자인</td>
+</tr>
+</tbody>
+</table></div>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>면</th>
+<th>들어가는 것</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>앞</td>
+<td>워드마크 OHARI · 상황 이름 · 거북이 · 세트명</td>
+</tr>
+<tr>
+<td>뒤 / 라벨 스티커</td>
+<td>법정 표시 7항목 · 구성품 목록 · 세척 주의(케어 아이콘 + 텍스트)</td>
+</tr>
+</tbody>
+</table></div>
+    </section>
+    <section id="발주처">
+      <div class="snum">07 — 발주처</div>
+      <h2>발주처</h2>
+<p>숫자의 정본은 <a href="https://github.com/nmwc-ai/b2c-gift-brand/blob/main/04-packaging/sourcing-comparison-2026-10-25.html">발주처 비교 시트</a>다. 여기에는 <strong>누가 무엇을</strong> 만드는지만 둔다.</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>발주처</th>
+<th>품목</th>
+<th>비고</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>유패키지</strong></td>
+<td>선물세트 상자 2종 (큰 300 · 작은 400장)</td>
+<td>자동견적 · 목형비·인쇄판 별도 확인</td>
+</tr>
+<tr>
+<td><strong>성원애드피아</strong></td>
+<td>원형 스티커 · 엽서 · 네임택 · 명함 · 쇼핑백 스티커</td>
+<td>한 주문으로 묶어 배송비 1회</td>
+</tr>
+<tr>
+<td><strong>래포리패키지</strong></td>
+<td>마끈 블랙 · 공단 블랙 (+ 에디션 색)</td>
+<td>쇼핑백은 품절로 제외</td>
+</tr>
+<tr>
+<td><strong>하나페이퍼몰</strong></td>
+<td>색화지(습자지 대용) · 트레이싱지</td>
+<td>트레이싱지는 오픈마켓 대안</td>
+</tr>
+<tr>
+<td><strong>아트쇼핑백 / 이담쇼핑백</strong></td>
+<td>무지 쇼핑백 (추가 구성 · 미확정)</td>
+<td>색·라인 발주 때 결정</td>
+</tr>
+<tr>
+<td>동네 철물점</td>
+<td>에어캡 롤</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p>1회 최소 발주(상자 700장 + 인쇄물 최소수량 + 끈·종이 1단위) 약 153만 원, 세트당 자재비 큰 약 2,990~3,170원 / 작은 약 2,000~2,290원 — 10-25 견적 기준, 쇼핑백 제외.</p>
+    </section>
+    <section id="다운로드">
+      <div class="snum">08 — 다운로드</div>
+      <h2>다운로드</h2>
+<div class="dl"><span class="dl-label">시안 ↓</span><a href="ohari-package-proofs.zip" download="ohari-package-proofs.zip">패키지 시안 전체 (jpg/png)</a><a href="ohari-logos.zip" download="ohari-logos.zip">워드마크 6종</a><a href="ohari-care-icons.zip" download="ohari-care-icons.zip">케어 아이콘 7종</a></div>
+
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>무엇</th>
+<th>어디</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>발주용 원본 (벡터)</td>
+<td><a href="https://www.figma.com/design/gBU5G6YNK0ILgW9v2nsWVF/%EC%98%A4%ED%95%98%EB%A6%AC%EC%83%81%EC%A0%90?node-id=171-18">Figma · 오하리상점</a> — 발주는 여기서 내보낸 파일로</td>
+</tr>
+<tr>
+<td>시안 이미지 · 목업 사진</td>
+<td>위 zip / <code>assets/package-proofs-261025/</code></td>
+</tr>
+<tr>
+<td>단가 · 견적서</td>
+<td><code>04-packaging/sourcing-comparison-2026-10-25.html</code> · <code>assets/quotes-261025/</code></td>
+</tr>
+<tr>
+<td>포장 순서 · 결정 이력</td>
+<td><code>04-packaging/box-system.md</code></td>
+</tr>
+<tr>
+<td>라벨 법정 표기</td>
+<td><code>04-packaging/label-spec.md</code></td>
+</tr>
+</tbody>
+</table></div>
+    </section>
+
+
+    <div id="mdview">
+      <div class="mdbar">
+        <span class="p">07-brand-book/packaging.md</span>
+        <button class="tbtn" id="mdcopy">Copy</button>
+      </div>
+      <pre class="mdsrc" id="mdsrc"># OHARI — Packaging (패키지 시스템)
+
+&gt; 오하리상점 패키지 시스템 — 확정 시안 7종과 사이즈, 박스 안 포장 순서, 끈·쇼핑백, 라벨.
+&gt; 확정본 (2026-10-25 시안 · 2026-11-01 끈·쇼핑백 갱신). 발주 원본은 [Figma](https://www.figma.com/design/gBU5G6YNK0ILgW9v2nsWVF/%EC%98%A4%ED%95%98%EB%A6%AC%EC%83%81%EC%A0%90?node-id=171-18), 단가·발주처는 [발주처 비교 시트](https://github.com/nmwc-ai/b2c-gift-brand/blob/main/04-packaging/sourcing-comparison-2026-10-25.html)가 정본이다.
+
+**목차**: Principles · 구성품 인벤토리 · 박스 안 포장 순서 · 끈 · 쇼핑백 · 라벨 · 발주처 · 다운로드
+
+---
+
+## 01. Principles
+
+| 원칙 | 내용 |
+|---|---|
+| **흰 박스 · 검정 1도** | 종이·잉크 2색 그대로. 모티프 정본을 그대로 쓸 수 있고, 별색·CMYK 매칭이 없다 |
+| **2겹 구조** | 겉 무지 택배 상자 + 안 선물 박스. 흰 박스는 운송을 겪지 않는다 |
+| **점 단위 포장** | 세트를 통째로 싸지 않는다. 상품 한 점 한 점을 에어캡 → 습자지 → 검정 마끈으로 따로 묶는다 — 세트를 사면 **작은 선물 여러 개**가 온다 |
+| **보이는 표면은 전부 종이** | 에어캡은 습자지 아래에 숨긴다. 뚜껑을 열면 트레이싱지 한 겹을 먼저 걷는다 |
+| **기본 포장료 포함** | 세트가에 포장(에어캡·습자지·마끈·엽서·네임택)이 들어 있다. 쇼핑백만 추가 구성 |
+| **그림은 자리를 나눈다** | 박스 윗면 = 워드마크 + 모티프, 옆면 = 실루엣 띠. 품목을 특정하는 그림은 엽서·네임택에만 |
+
+---
+
+## 02. 구성품 인벤토리 (확정 7종)
+
+사이즈는 10-25 시안 기준 확정값이다. 시안 이미지를 누르면 내려받아진다.
+
+| # | 구성품 | 사이즈 (mm) | 수량 | 인쇄 | 발주처 |
+|---|---|---|---|---|---|
+| 1 | 선물세트 상자 · 큰 | **360 × 270 × 110** (내경 345×267×107) | 세트당 1 | 먹1도 · 윗면 + 옆 4면 (아랫면 인쇄 없음) | 유패키지 · G형 일체형 · E골 · 300장 |
+| 1 | 선물세트 상자 · 작은 | **270 × 220 × 110** (내경 255×217×107) | 세트당 1 | 〃 | 유패키지 · 400장 |
+| 2 | 포장 스티커 (원형 · 봉인) | **50 × 50** | 세트당 1 | 단면 칼라 · 아트 75g | 성원애드피아 · 500장 |
+| 3 | 브랜드 엽서 | **100 × 148** | 세트당 1 | 양면 먹1도 · 랑데뷰 240g | 성원애드피아 · 100~200매 |
+| 4 | 주의사항 네임택 | **80 × 140** | **세트당 1** (품목당 아님) | 양면 먹1도 · 랑데뷰 240g | 성원애드피아 · 100~200매 |
+| 5 | 명함 | **90 × 50** | 운영용 | 양면 칼라 · 반누보 204g | 성원애드피아 · 200매 |
+| 6 | 쇼핑백 스티커 (사각) | **70 × 160** | 쇼핑백 추가 시 1 | 단면 칼라 · 아트 75g | 성원애드피아 · 500매 |
+| 7 | 트레이싱지 (맨 위 덮기) | 4절 | 세트당 1 | 무지 | 하나페이퍼몰 / 오픈마켓 |
+
+### 상자 — 큰 360×270×110
+```tl-sheets land zip=ohari-package-proofs.zip
+assets/proofs/box-large/top.jpg | 큰 상자 · 윗면
+assets/proofs/box-large/side-front.jpg | 큰 상자 · 정면
+assets/proofs/box-large/side-back.jpg | 큰 상자 · 후면
+assets/proofs/box-large/side-left.jpg | 큰 상자 · 좌측
+assets/proofs/box-large/side-right.jpg | 큰 상자 · 우측
+```
+
+### 상자 — 작은 270×220×110
+```tl-sheets land quiet zip=ohari-package-proofs.zip
+assets/proofs/box-small/top.jpg | 작은 상자 · 윗면
+assets/proofs/box-small/side-front.jpg | 작은 상자 · 정면
+assets/proofs/box-small/side-back.jpg | 작은 상자 · 후면
+assets/proofs/box-small/side-left.jpg | 작은 상자 · 좌측
+assets/proofs/box-small/side-right.jpg | 작은 상자 · 우측
+```
+
+### 인쇄물 — 스티커 · 엽서 · 네임택 · 명함
+```tl-sheets quiet zip=ohari-package-proofs.zip
+assets/proofs/sticker-round.png | 원형 스티커 50×50
+assets/proofs/postcard-front.jpg | 엽서 앞 100×148
+assets/proofs/postcard-back.jpg | 엽서 뒤
+assets/proofs/nametag-front.jpg | 네임택 앞 80×140
+assets/proofs/nametag-back.jpg | 네임택 뒤
+assets/proofs/namecard-front.jpg | 명함 앞 90×50
+assets/proofs/namecard-back.jpg | 명함 뒤
+assets/proofs/sticker-bag.jpg | 쇼핑백 스티커 70×160
+```
+
+&gt; 엽서 뒷면 문안은 BX 「05. Sample Copy」 A안이 정본. 네임택은 세척·가열 케어 아이콘(Brand 「04」) + 텍스트 병행.
+
+---
+
+## 03. 박스 안 포장 순서
+
+```tl-seq
+에어캡으로 개별 감싸기 &gt; 습자지로 감싸기 &gt; 검정 마끈 십자 + 리본 매듭 &gt; 같은 높이로 나란히 &gt; 네임택 1매 (한 품목 끈 아래) &gt; 트레이싱지로 덮기 &gt; 뚜껑 안쪽 원형 스티커 · 엽서
+```
+
+| 순서 | 무엇 | 왜 |
+|---|---|---|
+| ① | **에어캡으로 개별 감싸기** | 도자기끼리 부딪히는 걸 막는다. 완충은 여기서 끝낸다 |
+| ② | **습자지로 감싸기** (2~3장) | 에어캡을 보이지 않게 덮는다. 보이는 표면은 전부 종이 |
+| ③ | **검정 마끈 십자 + 리본 매듭** (약 0.6m) | 한 점 한 점이 각각 하나의 선물이 된다 — 이 포장의 핵심 |
+| ④ | **같은 높이로 나란히** | 낮은 품목은 습자지를 더 감아 높이를 맞춘다. 받침·인서트는 만들지 않는다 |
+| ⑤ | **주의사항 네임택 1매** | 세트당 1매, 대표 품목의 끈 아래에 끼운다 |
+| ⑥ | **트레이싱지로 덮기** | 뚜껑을 열면 종이 한 겹을 먼저 걷게 한다 |
+| ⑦ | **원형 스티커 · 엽서** | 스티커는 뚜껑 안쪽 봉인, 엽서는 트레이싱지 위 |
+
+```tl-shots wide
+assets/proofs/mockup/inside-01.jpg | 목업 | 상자를 열었을 때 | 품목마다 습자지 + 마끈 십자 매듭, 네임택은 한 품목 끈 아래
+assets/proofs/mockup/inside-02.jpg | 목업 | 같은 높이 정렬 | 빈 자리는 구긴 습자지로 옆면에 끼워 흔들림을 잡는다
+assets/proofs/mockup/boxes-01.jpg | 목업 | 큰 상자 · 작은 상자 | 종이 목업 (10-25)
+assets/proofs/mockup/boxes-02.jpg | 목업 | 윗면 인쇄 | 워드마크 OHARI + 모티프
+```
+
+- 빈 자리는 **구긴 습자지**로 채운다 — 덩어리째 넣지 말고 옆면에 끼운다. 그래도 헐거우면 세트 구성이 박스에 안 맞는 것이다. 완충으로 메우지 말고 구성으로 돌아간다.
+- 완충 스티로폼은 **보류**(에어캡 + 습자지로만). 품명 스티커는 보류(자체 출력/발주 미정).
+- 상자를 묶는 겉 끈(공단)은 ⑦ 뒤, 뚜껑을 닫고 두른다.
+
+---
+
+## 04. 끈
+
+**끈은 전부 검정이 기본이다.** 잉크 계열, 2색 원칙 안에 들어온다.
+
+| 끈 | 사양 | 자리 | 상태 |
+|---|---|---|---|
+| **마끈 블랙** | 2mm × 50m (래포리) | 박스 **안**, 상품 개별 포장 (③) | **기본 발주** |
+| **공단리본끈 블랙** | 6mm × 22m (래포리) | 박스 **밖**, 뚜껑 위 묶음 | **기본 발주** |
+| 공단리본끈 버건디 | 6mm × 22m | 박스 밖 | 크리스마스 에디션 · 추가 발주 보류 |
+| 공단리본끈 녹색 | 6mm (규격 미확인) | 박스 밖 | 크리스마스 에디션 · 추가 발주 보류 |
+
+- 마끈은 매끈한 리본이 아니라 **거친 결** — 손그림 톤과 맞는다. 십자 한 번 + 리본 매듭, 고리를 크게 남긴다.
+- 소요: 마끈 세트당 품목 수 × 약 0.6m, 공단 큰 세트 약 2m / 작은 세트 약 1.7m.
+- 시즌 색은 **에디션**으로만 쓴다. 기본색을 바꾸지 않는다.
+
+---
+
+## 05. 쇼핑백 (추가 구성)
+
+**무지 쇼핑백 + 사각 스티커 70×160.** 인쇄 없이 기성 무지를 쓰고, 스티커로 브랜드를 붙인다. 발주처는 아트쇼핑백 / 이담쇼핑백(같은 계열 제품, 규격·가격 거의 동일). 상자를 **세워 넣는** 기준으로 맞는 조합은 4가지, **색(화이트/블랙)과 라인(코팅/럭셔리)은 발주 때 결정**한다.
+
+| 조합 | 큰 상자용 | 작은 상자용 | 장당 | 비고 |
+|---|---|---|---|---|
+| ① 코팅 화이트 | W2호 37×32×13 | W3호 35×30×12 | 약 700원 | 50장 단위 · **블랙 없음** |
+| ② 코팅 블랙 | 숄더 소 블랙 41×31×13 (공용) | 〃 | 770원 | 와이드 라인에 블랙이 없어 한 사이즈 공용 · 긴 손잡이 |
+| ③ 럭셔리 블랙 | 스페셜 블랙 중 40.5×30.5×15 | CK-M 블랙 37×25×14 | 1,353~1,650원 | 220~250g 흑지 · 매립형 손잡이 · 가장 무겁고 단단함 · 25장 단위 |
+| ④ 럭셔리 화이트펄 | 화이트펄 중 40.5×30.5×15 | 화이트펄 SM 37×28×13 | 1,320~1,650원 | 이담에만 SM |
+
+- 코팅 정3호(옆폭 10cm)는 상자(11cm)가 안 들어간다. 럭셔리 블랙 대(옆폭 11cm)는 여유가 없어 권장하지 않는다.
+- 색 판단: 상자·원형 스티커가 흰색이라 **블랙 쇼핑백**은 대비가 생기고 때가 덜 보인다. **화이트**는 한 덩어리로 읽히고 사각 스티커가 또렷하다. 블랙을 고르면 흰 바탕 사각 스티커를 라벨처럼 쓸지 따로 본다.
+- 쇼핑백 선택 시 세트 원가 +약 700원(코팅) ~ +1,650원(럭셔리) + 스티커 27원. 상세는 발주처 비교 시트 02-8.
+
+---
+
+## 06. 라벨 — 법정 표기
+
+자체 기획 세트의 라벨(네임택 뒷면 또는 별도 스티커)에 아래 7항목을 넣는다. 브랜드 요소와 **시각적으로 층을 나눈다** — 법정 표시는 작고 단정하게 뒤쪽에.
+
+| # | 항목 | 표기 예 | 비고 |
+|---|---|---|---|
+| 1 | 재질 | 도자기 / 스테인리스 스틸 / 유리 | 품목이 섞인 세트는 **구성품별로** |
+| 2 | 수입원 | 상호 | 수입품일 때 |
+| 3 | 제조사 | 상호 | 국내 제조품일 때 |
+| 4 | 주소 | 소재지 | 위 2·3의 소재지 |
+| 5 | 원산지 | 대한민국 / 중국 등 | 구성품별 |
+| 6 | 반품 및 교환 | 구입처 | |
+| 7 | &#x27;식품용&#x27; 표시 | 아이콘 | **식약처 공식 도안 원본** 사용. 손그림 변형 금지, 자리를 먼저 비워 두고 디자인 |
+
+| 면 | 들어가는 것 |
+|---|---|
+| 앞 | 워드마크 OHARI · 상황 이름 · 거북이 · 세트명 |
+| 뒤 / 라벨 스티커 | 법정 표시 7항목 · 구성품 목록 · 세척 주의(케어 아이콘 + 텍스트) |
+
+---
+
+## 07. 발주처
+
+숫자의 정본은 [발주처 비교 시트](https://github.com/nmwc-ai/b2c-gift-brand/blob/main/04-packaging/sourcing-comparison-2026-10-25.html)다. 여기에는 **누가 무엇을** 만드는지만 둔다.
+
+| 발주처 | 품목 | 비고 |
+|---|---|---|
+| **유패키지** | 선물세트 상자 2종 (큰 300 · 작은 400장) | 자동견적 · 목형비·인쇄판 별도 확인 |
+| **성원애드피아** | 원형 스티커 · 엽서 · 네임택 · 명함 · 쇼핑백 스티커 | 한 주문으로 묶어 배송비 1회 |
+| **래포리패키지** | 마끈 블랙 · 공단 블랙 (+ 에디션 색) | 쇼핑백은 품절로 제외 |
+| **하나페이퍼몰** | 색화지(습자지 대용) · 트레이싱지 | 트레이싱지는 오픈마켓 대안 |
+| **아트쇼핑백 / 이담쇼핑백** | 무지 쇼핑백 (추가 구성 · 미확정) | 색·라인 발주 때 결정 |
+| 동네 철물점 | 에어캡 롤 | |
+
+1회 최소 발주(상자 700장 + 인쇄물 최소수량 + 끈·종이 1단위) 약 153만 원, 세트당 자재비 큰 약 2,990~3,170원 / 작은 약 2,000~2,290원 — 10-25 견적 기준, 쇼핑백 제외.
+
+---
+
+## 08. 다운로드
+
+```tl-dl
+시안 ↓ | 패키지 시안 전체 (jpg/png)=ohari-package-proofs.zip | 워드마크 6종=ohari-logos.zip | 케어 아이콘 7종=ohari-care-icons.zip
+```
+
+| 무엇 | 어디 |
+|---|---|
+| 발주용 원본 (벡터) | [Figma · 오하리상점](https://www.figma.com/design/gBU5G6YNK0ILgW9v2nsWVF/%EC%98%A4%ED%95%98%EB%A6%AC%EC%83%81%EC%A0%90?node-id=171-18) — 발주는 여기서 내보낸 파일로 |
+| 시안 이미지 · 목업 사진 | 위 zip / `assets/package-proofs-261025/` |
+| 단가 · 견적서 | `04-packaging/sourcing-comparison-2026-10-25.html` · `assets/quotes-261025/` |
+| 포장 순서 · 결정 이력 | `04-packaging/box-system.md` |
+| 라벨 법정 표기 | `04-packaging/label-spec.md` |
+</pre>
+    </div>
+
+    <div class="foot">OHARI Brand Book · 오하리상점 · 2026-11 · <a href="https://github.com/nmwc-ai/b2c-gift-brand">GitHub</a></div>
+  </main>
+</div>
+
+
+<script>
+(function(){
+  // ---- MD view toggle ----
+  // 단일 파일(standalone/index.html)은 탭을 바꿀 때 .shell 안을 통째로 갈아끼운다.
+  // 그래서 '갈아끼운 뒤 다시 걸어야 하는 것'은 TLpage() 안에, 헤더에 한 번만 거는 것은 밖에 둔다.
+  var body=document.body, btn=document.getElementById('mdtoggle'), mdOn=false;
+  function setMd(on,push){
+    mdOn=on;
+    body.classList.toggle('md',on);
+    var view=document.getElementById('mdview');
+    if(view)view.classList.toggle('on',on);
+    btn.setAttribute('aria-pressed',on?'true':'false');
+    try{localStorage.setItem('oh-view',on?'md':'doc')}catch(e){}
+    if(push){
+      var u=new URL(location.href);
+      if(on)u.searchParams.set('view','md'); else u.searchParams.delete('view');
+      history.replaceState(null,'',u);
+    }
+  }
+
+  window.TLpage=function(){
+    setMd(mdOn,false);
+
+    // ---- copy md ----
+    var cp=document.getElementById('mdcopy');
+    if(cp)cp.addEventListener('click',function(){
+      navigator.clipboard.writeText(document.getElementById('mdsrc').textContent).then(function(){
+        cp.textContent='Copied'; setTimeout(function(){cp.textContent='Copy'},1400);
+      });
+    });
+
+    spy();
+  };
+
+  var q=new URLSearchParams(location.search).get('view'), stored=null;
+  try{stored=localStorage.getItem('oh-view')}catch(e){}
+  mdOn=(q==='md'||(q===null&&stored==='md'));
+  btn.addEventListener('click',function(){setMd(!body.classList.contains('md'),true);window.scrollTo({top:0,behavior:'instant'})});
+
+  // ---- 다운로드: 새 탭으로 열리지 않고 항상 파일로 떨어지게 ----
+  // SVG·MD 처럼 브라우저가 직접 렌더할 수 있는 타입은 download 속성만으로는 탐색이 일어난다.
+  // file:// 은 origin 이 불투명이라 download 속성도 fetch 도 통하지 않는다 — 그래서 텍스트 자산은
+  // 페이지 안에 미리 실어두고(#tl-files), md 는 이미 본문에 있는 원본(#mdsrc)에서 만들어 저장한다.
+  var FILES={};
+  try{var fj=document.getElementById('tl-files'); if(fj)FILES=JSON.parse(fj.textContent)}catch(e){}
+
+  function save(blob,name){
+    var u=URL.createObjectURL(blob),t=document.createElement('a');
+    t.href=u;t.download=name;document.body.appendChild(t);t.click();t.remove();
+    setTimeout(function(){URL.revokeObjectURL(u)},2000);
+  }
+  function basename(href){return href.split('/').pop().split('?')[0].split('#')[0]}
+
+  document.addEventListener('click',function(e){
+    var a=e.target.closest && e.target.closest('a[download]');
+    if(!a||a.dataset.dl)return;
+    var href=a.getAttribute('href')||'';
+    var name=(a.getAttribute('download')||'').trim()||basename(href);
+    if(!window.Blob||!window.URL||!URL.createObjectURL)return;
+
+    // 1) 이 페이지의 md 원본 — 본문에 이미 있으므로 어디서 열든 저장된다
+    if(/(^|\/)md\/[^\/]+\.md(\?|#|$)/.test(href)){
+      var src=document.getElementById('mdsrc');
+      if(src){e.preventDefault();save(new Blob([src.textContent],{type:'text/markdown;charset=utf-8'}),name);return;}
+    }
+
+    // 2) 페이지에 내장된 자산 — SVG 는 텍스트, zip 은 data URI 로 실려 있다
+    var key=href.replace(/^.*?(assets\/)/,'$1');
+    if(FILES[key]){
+      e.preventDefault();
+      var v=FILES[key];
+      if(v.slice(0,5)==='data:'){ fetch(v).then(function(r){return r.blob()})
+                                        .then(function(b){save(b,name)}); }
+      else save(new Blob([v],{type:'image/svg+xml;charset=utf-8'}),name);
+      return;
+    }
+
+    // 3) 나머지는 같은 출처에서 blob 으로 받아 저장 (zip·png·단일 HTML)
+    // 단일 HTML 안에서는 자산이 data: URI 라 file:// 로 열어도 fetch 로 저장할 수 있다
+    if(!window.fetch||(location.protocol==='file:'&&href.indexOf('data:')!==0))return;
+    if(/^[a-z]+:/i.test(href)&&href.indexOf(location.origin)!==0&&href.indexOf('data:')!==0)return;
+    e.preventDefault();
+    a.dataset.dl='1';
+    fetch(href).then(function(r){
+      if(!r.ok)throw new Error(r.status);
+      return r.blob();
+    }).then(function(b){
+      save(b,name);
+    }).catch(function(){
+      location.href=href;                                              // 실패하면 원래 동작으로
+    }).then(function(){delete a.dataset.dl});
+  });
+
+  // ---- dropdown: close on outside click / Esc ----
+  var dd=document.getElementById('dd');
+  document.addEventListener('click',function(e){if(!dd.contains(e.target))dd.removeAttribute('open')});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')dd.removeAttribute('open')});
+  dd.addEventListener('click',function(e){if(e.target.closest('.ddmenu a'))dd.removeAttribute('open')});
+
+  // ---- scroll spy ----
+  var spyio=null;
+  function spy(){
+    if(spyio){spyio.disconnect();spyio=null}
+    var links={}, secs=[].slice.call(document.querySelectorAll('main > section[id]'));
+    [].forEach.call(document.querySelectorAll('#toc ol a'),function(a){links[a.getAttribute('href').slice(1)]=a});
+    if(!secs.length || !('IntersectionObserver' in window))return;
+    var seen={};
+    spyio=new IntersectionObserver(function(es){
+      es.forEach(function(e){seen[e.target.id]=e.isIntersecting?e.intersectionRatio:0});
+      var best=null,bv=-1;
+      secs.forEach(function(s){var v=seen[s.id]||0; if(v>bv){bv=v;best=s.id}});
+      if(bv<=0){ // nothing visible: pick last section above the fold
+        for(var i=0;i<secs.length;i++){if(secs[i].getBoundingClientRect().top<160)best=secs[i].id}
+      }
+      Object.keys(links).forEach(function(k){links[k].classList.toggle('on',k===best)});
+    },{rootMargin:'-70px 0px -55% 0px',threshold:[0,.05,.25,.5,1]});
+    secs.forEach(function(s){spyio.observe(s)});
+  }
+
+  TLpage();
+})();
+</script>
+</body>
+</html>
