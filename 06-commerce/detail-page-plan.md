@@ -336,4 +336,5 @@ Use & Care                                  ← 손글씨 SVG text-use-and-care.
 
 - Figma 레이어 이름은 §5 그대로. 색은 로컬 변수 컬렉션 `OHARI`(paper·ink·line·muted·faint)에 바인딩.
 - 재은 Figma에 Pretendard 미설치 → 임시로 Noto Sans KR Light/Regular. 설치 후 전체 교체.
-- 남은 일: 손글씨 제목 7개 스캔·벡터화 → 레퍼런스(푸드프롬·씸리빙·쓰임 상세) 스크린샷 대조 → 컴포넌트화 → 실촬영 슬롯 교체 → `detail-single` 파생.
+- **블록 제목 영문화 (2026-11-15 추가 결정)**: 한글 제목 대신 **영문 손글씨 6종**. 조합의 이유→`SET` · 구성품→`WHAT'S INSIDE` · 불량이 아닌 예시→`NOT A DEFECT` · 배송 · 교환→`SHIPPING & RETURNS` · 표시 사항→`DETAILS` · 낱개로 사기→`SINGLE ITEM`. **"이렇게 골랐습니다" 제목은 삭제**하고 3줄을 블록 2 본문에 바로 잇는다. 에셋=`03-identity/v3/title-*.svg`(재현 `gen_titles.py`, 원본 `assets/motif-source/titles-en-v1.png`). **`Use & Care`와 한 벌로 보이게** 맞춘다: 획 두께(큰 대문자 높이의 0.137)·기울기를 Use & Care 실측값에 맞추고 강한 블러로 외곽을 둥글게 다듬어 딴 뒤, Figma에 원본 px의 0.5배로 삽입(큰 대문자 약 63px = Use & Care와 동일). 색은 `color/ink` 바인딩.
+- 남은 일: 레퍼런스(푸드프롬·씸리빙·쓰임 상세) 스크린샷 대조 → 컴포넌트화 → 실촬영 슬롯 교체 → `detail-single` 파생.
